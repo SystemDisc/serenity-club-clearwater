@@ -11,8 +11,8 @@ export default async function PoliciesPage() {
     <main>
       <PageHeader eyebrow="Policies" title="Clubhouse policies">
         <p>
-          Policies help keep Serenity Club safe, welcoming, and useful for meetings, members, and
-          visitors.
+          These clubhouse-use rules help keep Serenity Club safe, welcoming, and useful for
+          meetings, members, and visitors.
         </p>
       </PageHeader>
 

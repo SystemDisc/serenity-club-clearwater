@@ -26,16 +26,16 @@ export default async function AboutPage() {
           <div>
             <SectionHeader eyebrow="Mission" title="Safe, supportive, and member supported">
               <p>
-                Serenity Club exists to provide a dependable home for meetings, fellowship, and
-                recovery-focused service. Members, volunteers, groups, and supporters help keep the
-                space open and useful every day.
+                Serenity Club opened more than 50 years ago as a safe, sober place to go. The club
+                was incorporated in 1993 to provide assistance, encouragement, and reassurance to
+                people seeking recovery.
               </p>
             </SectionHeader>
             <div className="grid gap-5 text-base leading-8 text-slate-700">
               <p>
-                The clubhouse at {data.settings.address} hosts daily meetings and gives people in
-                recovery a place to connect between meetings, support newcomers, and take part in
-                service.
+                The clubhouse at {data.settings.address} serves people irrespective of race, color,
+                creed, or gender, and supports the moral, mental, social, and physical betterment of
+                its members.
               </p>
               <p>
                 The board and club manager steward the space, policies, events, and membership

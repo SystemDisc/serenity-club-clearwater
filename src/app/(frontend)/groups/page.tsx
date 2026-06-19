@@ -26,7 +26,7 @@ export default async function GroupsPage() {
                 service opportunities.
               </p>
             </SectionHeader>
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-4 md:grid-cols-3">
               <article className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
                 <CalendarDays aria-hidden="true" className="size-7 text-emerald-900" />
                 <h2 className="mt-4 text-lg font-semibold text-slate-950">Meeting schedule</h2>
@@ -39,6 +39,15 @@ export default async function GroupsPage() {
                 <h2 className="mt-4 text-lg font-semibold text-slate-950">Service work</h2>
                 <p className="mt-2 text-sm leading-6 text-slate-700">
                   Coordinate volunteers, events, and practical clubhouse support.
+                </p>
+              </article>
+              <article className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+                <Mail aria-hidden="true" className="size-7 text-emerald-900" />
+                <h2 className="mt-4 text-lg font-semibold text-slate-950">
+                  Your meeting could be here
+                </h2>
+                <p className="mt-2 text-sm leading-6 text-slate-700">
+                  Reach out if your recovery group needs a consistent clubhouse meeting space.
                 </p>
               </article>
             </div>

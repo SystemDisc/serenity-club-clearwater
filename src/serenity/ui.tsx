@@ -447,13 +447,13 @@ export function FeatureTiles() {
   const features = [
     {
       icon: CalendarDays,
-      title: 'Daily meetings',
-      text: 'AA, NA, speaker meetings, and club service meetings throughout the week.',
+      title: '12-Step support',
+      text: 'Recovery principles and support for one another help people pursue and maintain abstinence.',
     },
     {
       icon: Users,
       title: 'Fellowship space',
-      text: 'A clubhouse for members, visitors, groups, and the broader recovery community.',
+      text: 'A safe, supportive, and empowering clubhouse for members, visitors, groups, and the broader recovery community.',
     },
     {
       icon: HeartHandshake,

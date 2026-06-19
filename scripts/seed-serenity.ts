@@ -28,7 +28,45 @@ const ensureDatabaseUrl = () => {
   }
 }
 
-type SerenityCollection = 'events' | 'meetings' | 'policies' | 'products' | 'sponsors' | 'teamMembers'
+type SerenityCollection =
+  | 'events'
+  | 'meetings'
+  | 'policies'
+  | 'products'
+  | 'sponsors'
+  | 'teamMembers'
+
+const legacyLookupValues: Partial<Record<SerenityCollection, Record<string, string[]>>> = {
+  events: {
+    'May 2026 Events': ['Monthly Events Flyer'],
+  },
+  policies: {
+    'Guest and Membership Use': ['Respect the Meetings'],
+    'Clubhouse Safety': ['Keep the Clubhouse Safe'],
+    'House Rules': ['Help Keep the Space Clean'],
+    'Posting, Discipline, and Permissions': ['Group and Event Use'],
+  },
+}
+
+const collectionsWithExternalImages = new Set<SerenityCollection>([
+  'events',
+  'products',
+  'sponsors',
+  'teamMembers',
+])
+
+const normalizeSeedData = (collection: SerenityCollection, data: Record<string, unknown>) => {
+  const { imageUrl, ...rest } = data
+
+  if (collectionsWithExternalImages.has(collection) && typeof imageUrl === 'string' && imageUrl) {
+    return {
+      ...rest,
+      externalImageUrl: imageUrl,
+    }
+  }
+
+  return data
+}
 
 async function upsertCollectionDoc<TCollection extends SerenityCollection>({
   collection,
@@ -43,19 +81,28 @@ async function upsertCollectionDoc<TCollection extends SerenityCollection>({
   payload: Payload
   value: string
 }) {
-  const existing = await payload.find({
-    collection,
-    limit: 1,
-    pagination: false,
-    where: {
-      [field]: {
-        equals: value,
+  const lookupValues = [value, ...(legacyLookupValues[collection]?.[value] || [])]
+  let existingDoc: { id: number | string } | undefined
+
+  for (const lookupValue of lookupValues) {
+    const existing = await payload.find({
+      collection,
+      limit: 1,
+      pagination: false,
+      where: {
+        [field]: {
+          equals: lookupValue,
+        },
       },
-    },
-  })
+    })
+
+    existingDoc = existing.docs[0] as { id: number | string } | undefined
+
+    if (existingDoc) break
+  }
 
   const publishableData = {
-    ...data,
+    ...normalizeSeedData(collection, data),
     _status: 'published' as const,
   }
   const collectionPayload = payload as unknown as {
@@ -67,11 +114,11 @@ async function upsertCollectionDoc<TCollection extends SerenityCollection>({
     }) => Promise<unknown>
   }
 
-  if (existing.docs[0]) {
+  if (existingDoc) {
     await collectionPayload.update({
       collection,
       data: publishableData,
-      id: existing.docs[0].id,
+      id: existingDoc.id,
     })
     return
   }

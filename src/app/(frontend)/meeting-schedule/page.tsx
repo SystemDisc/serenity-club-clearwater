@@ -8,6 +8,46 @@ export const dynamic = 'force-dynamic'
 
 const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
 
+const groupNotes = [
+  {
+    title: 'AA group formats',
+    items: [
+      'Feelings Group rotates book study and discussion formats Monday through Saturday.',
+      'TGIF meets at noon daily, with Big Book study on Tuesday and 12 Steps and 12 Traditions on Thursday.',
+      'Mid-Day meets daily at 3pm for open discussion.',
+      'Turner Street meets nightly, with the Saturday campfire meeting.',
+      'Women With Freedom is a closed women-only meeting on Wednesday mornings.',
+    ],
+  },
+  {
+    title: 'NA group formats',
+    items: [
+      'Serenity in Addiction rotates open discussion, literature study, beginner, speaker, celebration, and IP discussion formats.',
+      'Serenity in Addiction holds its business meeting the first Monday of the month at 8pm.',
+      'The Noon Group meets Sundays at noon in the back room.',
+    ],
+  },
+]
+
+const amenities = [
+  {
+    title: 'Coffee bar',
+    text: 'Coffee, snacks, merchandise, and books are available in the remodeled coffee bar.',
+  },
+  {
+    title: 'Free store',
+    text: 'Donated clothing, shoes, and similar items are available to anyone in need.',
+  },
+  {
+    title: 'Computer center',
+    text: 'Members can use the computer center for news, opportunities, and social service research.',
+  },
+  {
+    title: 'Pool table',
+    text: 'Members have access to the pool table and seasonal pool tournaments.',
+  },
+]
+
 function meetingRunsToday(meeting: Meeting, today: string) {
   const days = meeting.days.toLowerCase()
   const todayName = today.toLowerCase()
@@ -37,7 +77,10 @@ export default async function MeetingSchedulePage() {
   return (
     <main>
       <PageHeader eyebrow="Meeting Schedule" title="Find a meeting at Serenity Club">
-        <p>{data.settings.hours}</p>
+        <p>
+          {data.settings.hours} Serenity Club hosts multiple AA and NA recovery groups. Non-members
+          may access the club 30 minutes before and after the meetings they attend.
+        </p>
       </PageHeader>
       <ContactBand settings={data.settings} />
 
@@ -91,6 +134,60 @@ export default async function MeetingSchedulePage() {
         <div className="container">
           <SectionHeader eyebrow="Club" title="Club meetings and service" />
           <MeetingList meetings={clubMeetings} />
+        </div>
+      </section>
+
+      <section className="bg-[#fbfaf7] px-4 py-10 md:py-12">
+        <div className="container">
+          <SectionHeader eyebrow="Group details" title="Meeting formats and group notes">
+            <p>
+              These notes mirror the group-level details from the club schedule and help visitors
+              choose the right room, day, and format.
+            </p>
+          </SectionHeader>
+          <div className="grid gap-5 lg:grid-cols-2">
+            {groupNotes.map((group) => (
+              <article
+                className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm"
+                key={group.title}
+              >
+                <h2 className="text-xl font-semibold text-slate-950">{group.title}</h2>
+                <ul className="mt-4 grid gap-3 text-sm leading-6 text-slate-700">
+                  {group.items.map((item) => (
+                    <li className="flex gap-3" key={item}>
+                      <span
+                        aria-hidden="true"
+                        className="mt-2 size-1.5 shrink-0 rounded-full bg-emerald-800"
+                      />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-white px-4 py-10 md:py-12">
+        <div className="container">
+          <SectionHeader eyebrow="Around the club" title="Between meetings">
+            <p>
+              The clubhouse also gives members and visitors practical places to connect, get coffee,
+              and use shared resources.
+            </p>
+          </SectionHeader>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            {amenities.map((amenity) => (
+              <article
+                className="rounded-lg border border-slate-200 bg-[#fbfaf7] p-5"
+                key={amenity.title}
+              >
+                <h2 className="text-lg font-semibold text-slate-950">{amenity.title}</h2>
+                <p className="mt-2 text-sm leading-6 text-slate-700">{amenity.text}</p>
+              </article>
+            ))}
+          </div>
         </div>
       </section>
     </main>
