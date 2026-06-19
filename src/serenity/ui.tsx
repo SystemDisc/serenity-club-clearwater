@@ -208,29 +208,29 @@ export function HomeHero({ settings }: { settings: ClubSettings }) {
 export function ContactBand({ settings }: { settings: ClubSettings }) {
   return (
     <section className="border-y border-slate-200 bg-white px-4 py-3">
-      <div className="container grid gap-2 text-sm text-slate-700 md:grid-cols-3">
+      <div className="container grid gap-x-5 gap-y-2 text-sm text-slate-700 sm:grid-cols-2 lg:grid-cols-[minmax(8rem,0.8fr)_minmax(0,1.35fr)_minmax(0,1.55fr)]">
         <a
-          className="flex min-h-11 items-center gap-3 rounded-md hover:text-emerald-900"
+          className="flex min-h-11 min-w-0 items-center gap-3 rounded-md hover:text-emerald-900"
           href={`tel:${settings.phone}`}
         >
-          <Phone aria-hidden="true" className="size-5 text-emerald-900" />
-          <span>{settings.phone}</span>
+          <Phone aria-hidden="true" className="size-5 shrink-0 text-emerald-900" />
+          <span className="min-w-0 whitespace-nowrap">{settings.phone}</span>
         </a>
         <a
-          className="flex min-h-11 items-center gap-3 rounded-md hover:text-emerald-900"
+          className="flex min-h-11 min-w-0 items-center gap-3 rounded-md hover:text-emerald-900"
           href={`mailto:${settings.email}`}
         >
-          <Mail aria-hidden="true" className="size-5 text-emerald-900" />
-          <span>{settings.email}</span>
+          <Mail aria-hidden="true" className="size-5 shrink-0 text-emerald-900" />
+          <span className="min-w-0 break-all">{settings.email}</span>
         </a>
         <a
-          className="flex min-h-11 items-center gap-3 rounded-md hover:text-emerald-900"
+          className="flex min-h-11 min-w-0 items-center gap-3 rounded-md hover:text-emerald-900 sm:col-span-2 lg:col-span-1"
           href="https://maps.google.com/?q=631%20Turner%20Street%20Clearwater%20FL%2033756"
           rel="noreferrer"
           target="_blank"
         >
-          <MapPin aria-hidden="true" className="size-5 text-emerald-900" />
-          <span>
+          <MapPin aria-hidden="true" className="size-5 shrink-0 text-emerald-900" />
+          <span className="min-w-0 break-words">
             {settings.address}, {settings.cityStateZip}
           </span>
         </a>
