@@ -36,7 +36,7 @@ export default async function HomePage() {
       <section className="bg-white px-4 py-12">
         <div className="container">
           <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
-            <SectionHeader eyebrow="Recovery meetings" title="A full weekly meeting schedule">
+            <SectionHeader eyebrow="Recovery meetings" flush title="A full weekly meeting schedule">
               <p>
                 The clubhouse hosts AA, NA, speaker meetings, and service meetings from morning
                 through evening.
@@ -47,7 +47,9 @@ export default async function HomePage() {
               Full schedule
             </ButtonLink>
           </div>
-          <MeetingList compact meetings={featuredMeetings} />
+          <div className="mt-6 md:mt-8">
+            <MeetingList compact meetings={featuredMeetings} />
+          </div>
         </div>
       </section>
 
@@ -82,7 +84,7 @@ export default async function HomePage() {
       <section className="bg-white px-4 py-12">
         <div className="container">
           <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
-            <SectionHeader eyebrow="Events" title="Fellowship, fundraisers, and service">
+            <SectionHeader eyebrow="Events" flush title="Fellowship, fundraisers, and service">
               <p>
                 Find current club events, speaker meetings, fundraisers, and service gatherings.
               </p>
@@ -92,7 +94,9 @@ export default async function HomePage() {
               <ArrowRight aria-hidden="true" />
             </ButtonLink>
           </div>
-          <EventGrid events={featuredEvents} />
+          <div className="mt-6 md:mt-8">
+            <EventGrid events={featuredEvents} />
+          </div>
         </div>
       </section>
 

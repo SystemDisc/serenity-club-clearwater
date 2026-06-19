@@ -141,13 +141,15 @@ export function SectionHeader({
   eyebrow,
   title,
   children,
+  flush = false,
 }: {
   children?: React.ReactNode
   eyebrow?: string
+  flush?: boolean
   title: string
 }) {
   return (
-    <div className="mb-6 max-w-3xl">
+    <div className={`${flush ? 'mb-0' : 'mb-6'} max-w-3xl`}>
       {eyebrow ? (
         <p className="mb-2 text-sm font-semibold uppercase tracking-[0.14em] text-emerald-800">
           {eyebrow}
