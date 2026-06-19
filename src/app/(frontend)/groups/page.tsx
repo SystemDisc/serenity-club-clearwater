@@ -17,7 +17,7 @@ export default async function GroupsPage() {
         </p>
       </PageHeader>
 
-      <section className="bg-white px-4 py-16">
+      <section className="bg-white px-4 py-10 md:py-12">
         <div className="container grid gap-10 lg:grid-cols-[1fr_0.9fr] lg:items-center">
           <div>
             <SectionHeader eyebrow="Use the space" title="Coordinate meeting and event needs">

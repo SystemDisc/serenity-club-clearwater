@@ -29,10 +29,12 @@ export default async function PortfolioPage() {
   return (
     <main>
       <PageHeader eyebrow="Portfolio" title="Clubhouse photos and flyers">
-        <p>Photos and flyer images from the current Serenity Club site and editable event records.</p>
+        <p>
+          Photos and flyer images from the current Serenity Club site and editable event records.
+        </p>
       </PageHeader>
 
-      <section className="bg-white px-4 py-16">
+      <section className="bg-white px-4 py-10 md:py-12">
         <div className="container">
           <SectionHeader eyebrow="Gallery" title="Serenity Club media" />
           <div className="grid gap-5 md:grid-cols-3">

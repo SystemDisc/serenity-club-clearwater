@@ -1,17 +1,44 @@
-import { test, expect, Page } from '@playwright/test'
+import { expect, test } from '@playwright/test'
 
 test.describe('Frontend', () => {
-  let page: Page
+  test('can load homepage', async ({ page }) => {
+    await page.goto('/')
 
-  test.beforeAll(async ({ browser }, testInfo) => {
-    const context = await browser.newContext()
-    page = await context.newPage()
+    await expect(page).toHaveTitle(/Serenity Club of Clearwater/)
+    await expect(
+      page.getByRole('heading', { level: 1, name: 'Serenity Club of Clearwater' }),
+    ).toBeVisible()
+    await expect(page.getByRole('link', { name: /Find a meeting/i })).toBeVisible()
   })
 
-  test('can load homepage', async ({ page }) => {
-    await page.goto('http://localhost:3000')
-    await expect(page).toHaveTitle(/Payload Website Template/)
-    const heading = page.locator('h1').first()
-    await expect(heading).toHaveText('Payload Website Template')
+  test('can navigate core public pages', async ({ page }) => {
+    const pages = [
+      ['/meeting-schedule', 'Find a meeting at Serenity Club'],
+      ['/ways-to-give', 'Support Serenity Club'],
+      ['/reach-out', 'Contact Serenity Club'],
+    ] as const
+
+    for (const [url, heading] of pages) {
+      await page.goto(url)
+      await expect(page.getByRole('heading', { level: 1, name: heading })).toBeVisible()
+    }
+  })
+
+  test('mobile navigation stays compact and opens the full menu', async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 812 })
+    await page.goto('/ways-to-give')
+
+    const headerHeight = await page
+      .locator('header')
+      .evaluate((element) => Math.round(element.getBoundingClientRect().height))
+
+    expect(headerHeight).toBeLessThanOrEqual(82)
+
+    await page.getByRole('button', { name: 'Open navigation menu' }).click()
+    await expect(
+      page.getByRole('navigation', { name: 'Mobile navigation' }).getByRole('link', {
+        name: 'Policies',
+      }),
+    ).toBeVisible()
   })
 })

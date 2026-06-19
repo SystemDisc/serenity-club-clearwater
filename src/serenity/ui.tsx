@@ -24,18 +24,18 @@ import Link from 'next/link'
 import React from 'react'
 
 export const primaryNavItems = [
-  { href: '/about', label: 'About' },
   { href: '/meeting-schedule', label: 'Meetings' },
   { href: '/events', label: 'Events' },
   { href: '/shop', label: 'Shop' },
-  { href: '/policies', label: 'Policies' },
+  { href: '/about', label: 'About' },
   { href: '/reach-out', label: 'Reach Out' },
 ]
 
 export const secondaryNavItems = [
+  { href: '/ways-to-give', label: 'Ways to Give' },
+  { href: '/policies', label: 'Policies' },
   { href: '/groups', label: 'Groups' },
   { href: '/portfolio', label: 'Portfolio' },
-  { href: '/ways-to-give', label: 'Ways to Give' },
 ]
 
 const isExternalHref = (href: string) => href.startsWith('http')
@@ -119,16 +119,18 @@ export function PageHeader({
   title: string
 }) {
   return (
-    <section className="bg-[#f7f2e8] px-4 py-16 text-slate-950 md:py-20">
+    <section className="bg-[#f7f2e8] px-4 py-10 text-slate-950 md:py-14">
       <div className="container max-w-5xl">
         {eyebrow ? (
           <p className="mb-3 text-sm font-semibold uppercase tracking-[0.14em] text-emerald-900">
             {eyebrow}
           </p>
         ) : null}
-        <h1 className="max-w-4xl text-4xl font-semibold leading-tight md:text-6xl">{title}</h1>
+        <h1 className="max-w-4xl text-3xl font-semibold leading-tight md:text-5xl">{title}</h1>
         {children ? (
-          <div className="mt-5 max-w-3xl text-lg leading-8 text-slate-700">{children}</div>
+          <div className="mt-4 max-w-3xl text-base leading-7 text-slate-700 md:text-lg md:leading-8">
+            {children}
+          </div>
         ) : null}
       </div>
     </section>
@@ -145,7 +147,7 @@ export function SectionHeader({
   title: string
 }) {
   return (
-    <div className="mb-8 max-w-3xl">
+    <div className="mb-6 max-w-3xl">
       {eyebrow ? (
         <p className="mb-2 text-sm font-semibold uppercase tracking-[0.14em] text-emerald-800">
           {eyebrow}
@@ -159,11 +161,11 @@ export function SectionHeader({
 
 export function HomeHero({ settings }: { settings: ClubSettings }) {
   return (
-    <section className="relative min-h-[72vh] overflow-hidden bg-slate-950 px-4 py-20 text-white md:py-24">
+    <section className="relative overflow-hidden bg-slate-950 px-4 py-14 text-white md:py-20">
       {settings.heroImageUrl ? (
         <Image
           alt="Serenity Club of Clearwater building sign"
-          className="absolute inset-0 h-full w-full object-cover opacity-50"
+          className="absolute inset-0 h-full w-full object-cover object-center opacity-55"
           fill
           priority
           sizes="100vw"
@@ -171,21 +173,24 @@ export function HomeHero({ settings }: { settings: ClubSettings }) {
         />
       ) : null}
       <div className="absolute inset-0 bg-slate-950/45" />
-      <div className="container relative flex min-h-[52vh] items-end">
-        <div className="max-w-4xl pb-4">
+      <div className="container relative flex min-h-[430px] items-end md:min-h-[520px]">
+        <div className="max-w-4xl pb-2">
           <p className="mb-4 text-sm font-semibold uppercase tracking-[0.16em] text-amber-200">
             {settings.legalName}
           </p>
-          <h1 className="max-w-4xl text-5xl font-semibold leading-[1.02] md:text-7xl">
+          <h1 className="max-w-4xl text-4xl font-semibold leading-[1.05] md:text-7xl">
             {settings.name}
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-100 md:text-xl">
             {settings.tagline}
           </p>
+          <p className="mt-4 max-w-2xl text-sm font-medium text-amber-100 md:text-base">
+            {settings.hours} Located at {settings.address}, {settings.cityStateZip}.
+          </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <ButtonLink href="/meeting-schedule" variant="light">
               <CalendarDays aria-hidden="true" />
-              Meeting schedule
+              Find a meeting
             </ButtonLink>
             <ButtonLink href={settings.donationUrl} variant="primary">
               <HeartHandshake aria-hidden="true" />
@@ -200,21 +205,24 @@ export function HomeHero({ settings }: { settings: ClubSettings }) {
 
 export function ContactBand({ settings }: { settings: ClubSettings }) {
   return (
-    <section className="border-y border-slate-200 bg-white px-4 py-5">
-      <div className="container grid gap-4 text-sm text-slate-700 md:grid-cols-3">
-        <a className="flex items-center gap-3 hover:text-emerald-900" href={`tel:${settings.phone}`}>
+    <section className="border-y border-slate-200 bg-white px-4 py-3">
+      <div className="container grid gap-2 text-sm text-slate-700 md:grid-cols-3">
+        <a
+          className="flex min-h-11 items-center gap-3 rounded-md hover:text-emerald-900"
+          href={`tel:${settings.phone}`}
+        >
           <Phone aria-hidden="true" className="size-5 text-emerald-900" />
           <span>{settings.phone}</span>
         </a>
         <a
-          className="flex items-center gap-3 hover:text-emerald-900"
+          className="flex min-h-11 items-center gap-3 rounded-md hover:text-emerald-900"
           href={`mailto:${settings.email}`}
         >
           <Mail aria-hidden="true" className="size-5 text-emerald-900" />
           <span>{settings.email}</span>
         </a>
         <a
-          className="flex items-center gap-3 hover:text-emerald-900"
+          className="flex min-h-11 items-center gap-3 rounded-md hover:text-emerald-900"
           href="https://maps.google.com/?q=631%20Turner%20Street%20Clearwater%20FL%2033756"
           rel="noreferrer"
           target="_blank"
@@ -328,8 +336,8 @@ export function ProductGrid({ products }: { products: Product[] }) {
               src={product.imageUrl}
             />
           ) : (
-            <div className="mb-4 flex aspect-square w-full items-center justify-center rounded-md bg-emerald-50 text-emerald-900">
-              <ShoppingBag aria-hidden="true" className="size-10" />
+            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-md bg-emerald-50 text-emerald-900">
+              <ShoppingBag aria-hidden="true" className="size-7" />
             </div>
           )}
           <div className="flex items-start justify-between gap-3">

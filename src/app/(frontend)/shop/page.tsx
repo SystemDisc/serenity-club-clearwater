@@ -16,9 +16,11 @@ export default async function ShopPage() {
         </p>
       </PageHeader>
 
-      <section className="bg-white px-4 py-16">
+      <section className="bg-white px-4 py-10 md:py-12">
         <div className="container">
-          <SectionHeader eyebrow="Items" title="Available from Serenity Club" />
+          <SectionHeader eyebrow="Items" title="Memberships first, clubhouse items below">
+            <p>Memberships are the clearest way to support the club year-round.</p>
+          </SectionHeader>
           <ProductGrid products={data.products} />
         </div>
       </section>

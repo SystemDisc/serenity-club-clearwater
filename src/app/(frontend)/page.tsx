@@ -27,13 +27,13 @@ export default async function HomePage() {
       <HomeHero settings={data.settings} />
       <ContactBand settings={data.settings} />
 
-      <section className="bg-[#fbfaf7] px-4 py-16">
+      <section className="bg-[#fbfaf7] px-4 py-12">
         <div className="container">
           <FeatureTiles />
         </div>
       </section>
 
-      <section className="bg-white px-4 py-16">
+      <section className="bg-white px-4 py-12">
         <div className="container">
           <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
             <SectionHeader eyebrow="Recovery meetings" title="A full weekly meeting schedule">
@@ -51,7 +51,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="bg-[#f7f2e8] px-4 py-16">
+      <section className="bg-[#f7f2e8] px-4 py-12">
         <div className="container grid gap-10 lg:grid-cols-[1fr_0.85fr] lg:items-center">
           <div>
             <SectionHeader eyebrow="Clubhouse" title="A member-supported space for recovery">
@@ -79,11 +79,13 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="bg-white px-4 py-16">
+      <section className="bg-white px-4 py-12">
         <div className="container">
           <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
             <SectionHeader eyebrow="Events" title="Fellowship, fundraisers, and service">
-              <p>Find current club events, speaker meetings, fundraisers, and service gatherings.</p>
+              <p>
+                Find current club events, speaker meetings, fundraisers, and service gatherings.
+              </p>
             </SectionHeader>
             <ButtonLink href="/events" variant="secondary">
               All events
@@ -94,7 +96,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="bg-slate-950 px-4 py-16 text-white">
+      <section className="bg-slate-950 px-4 py-12 text-white">
         <div className="container">
           <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
             <div className="max-w-3xl">

@@ -13,7 +13,7 @@ export default async function AboutPage() {
         <p>{data.settings.tagline}</p>
       </PageHeader>
 
-      <section className="bg-white px-4 py-16">
+      <section className="bg-white px-4 py-10 md:py-12">
         <div className="container grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
           {data.settings.logoImageUrl ? (
             <SerenityImage
@@ -46,7 +46,7 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      <section className="bg-[#fbfaf7] px-4 py-16">
+      <section className="bg-[#fbfaf7] px-4 py-10 md:py-12">
         <div className="container">
           <SectionHeader eyebrow="Team" title="Board and clubhouse leadership" />
           <TeamGrid teamMembers={data.teamMembers} />

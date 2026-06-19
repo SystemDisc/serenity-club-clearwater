@@ -10,7 +10,7 @@ export async function Footer() {
 
   return (
     <footer className="mt-auto border-t border-slate-800 bg-slate-950 px-4 text-white">
-      <div className="container grid gap-10 py-10 lg:grid-cols-[1.2fr_1fr_1fr]">
+      <div className="container grid gap-6 py-7 md:grid-cols-2 md:py-8 lg:grid-cols-[1.1fr_1fr_1.1fr] lg:gap-8 lg:py-10">
         <div>
           <Link className="inline-flex items-center gap-3" href="/">
             <span className="flex size-11 items-center justify-center rounded-md bg-amber-300 text-lg font-semibold text-slate-950">
@@ -18,35 +18,49 @@ export async function Footer() {
             </span>
             <span className="text-lg font-semibold">{settings.name}</span>
           </Link>
-          <p className="mt-4 max-w-md text-sm leading-6 text-slate-300">{settings.summary}</p>
+          <p className="mt-4 hidden max-w-md text-sm leading-6 text-slate-300 sm:block">
+            {settings.summary}
+          </p>
         </div>
 
-        <nav className="grid gap-2 text-sm" aria-label="Footer navigation">
-          <p className="mb-2 font-semibold uppercase tracking-[0.14em] text-amber-200">Site</p>
-          {navItems.map((item) => (
-            <Link className="text-slate-300 hover:text-white" href={item.href} key={item.href}>
-              {item.label}
-            </Link>
-          ))}
+        <nav aria-label="Footer navigation">
+          <p className="mb-3 font-semibold uppercase tracking-[0.14em] text-amber-200">Site</p>
+          <div className="grid grid-cols-3 gap-x-4 gap-y-1 text-sm lg:grid-cols-2 lg:gap-x-6">
+            {navItems.map((item) => (
+              <Link
+                className="flex min-h-11 items-center text-slate-300 hover:text-white"
+                href={item.href}
+                key={item.href}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </div>
         </nav>
 
         <div className="grid gap-3 text-sm text-slate-300">
           <p className="mb-1 font-semibold uppercase tracking-[0.14em] text-amber-200">Contact</p>
-          <a className="flex items-start gap-3 hover:text-white" href={`tel:${settings.phone}`}>
-            <Phone aria-hidden="true" className="mt-0.5 size-4 text-amber-200" />
+          <a
+            className="flex min-h-11 items-center gap-3 hover:text-white"
+            href={`tel:${settings.phone}`}
+          >
+            <Phone aria-hidden="true" className="size-4 text-amber-200" />
             {settings.phone}
           </a>
-          <a className="flex items-start gap-3 hover:text-white" href={`mailto:${settings.email}`}>
-            <Mail aria-hidden="true" className="mt-0.5 size-4 text-amber-200" />
+          <a
+            className="flex min-h-11 items-center gap-3 hover:text-white"
+            href={`mailto:${settings.email}`}
+          >
+            <Mail aria-hidden="true" className="size-4 text-amber-200" />
             {settings.email}
           </a>
           <a
-            className="flex items-start gap-3 hover:text-white"
+            className="flex min-h-11 items-center gap-3 hover:text-white"
             href="https://maps.google.com/?q=631%20Turner%20Street%20Clearwater%20FL%2033756"
             rel="noreferrer"
             target="_blank"
           >
-            <MapPin aria-hidden="true" className="mt-0.5 size-4 text-amber-200" />
+            <MapPin aria-hidden="true" className="size-4 text-amber-200" />
             <span>
               {settings.address}
               <br />

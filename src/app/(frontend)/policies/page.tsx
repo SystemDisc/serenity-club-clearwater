@@ -16,7 +16,7 @@ export default async function PoliciesPage() {
         </p>
       </PageHeader>
 
-      <section className="bg-[#fbfaf7] px-4 py-16">
+      <section className="bg-[#fbfaf7] px-4 py-10 md:py-12">
         <div className="container max-w-4xl">
           <PolicyList policies={data.policies} />
         </div>
