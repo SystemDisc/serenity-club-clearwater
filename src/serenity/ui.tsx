@@ -1,0 +1,466 @@
+import type {
+  ClubSettings,
+  EventItem,
+  Meeting,
+  Policy,
+  Product,
+  Sponsor,
+  TeamMember,
+} from './content'
+
+import {
+  ArrowRight,
+  CalendarDays,
+  Clock,
+  HeartHandshake,
+  Mail,
+  MapPin,
+  Phone,
+  ShoppingBag,
+  Users,
+} from 'lucide-react'
+import Image from 'next/image'
+import Link from 'next/link'
+import React from 'react'
+
+export const primaryNavItems = [
+  { href: '/about', label: 'About' },
+  { href: '/meeting-schedule', label: 'Meetings' },
+  { href: '/events', label: 'Events' },
+  { href: '/shop', label: 'Shop' },
+  { href: '/policies', label: 'Policies' },
+  { href: '/reach-out', label: 'Reach Out' },
+]
+
+export const secondaryNavItems = [
+  { href: '/groups', label: 'Groups' },
+  { href: '/portfolio', label: 'Portfolio' },
+  { href: '/ways-to-give', label: 'Ways to Give' },
+]
+
+const isExternalHref = (href: string) => href.startsWith('http')
+
+export function SerenityImage({
+  alt,
+  className,
+  priority = false,
+  sizes = '(min-width: 1024px) 33vw, 100vw',
+  src,
+}: {
+  alt: string
+  className?: string
+  priority?: boolean
+  sizes?: string
+  src: string
+}) {
+  return (
+    <Image
+      alt={alt}
+      className={className}
+      height={900}
+      priority={priority}
+      quality={90}
+      sizes={sizes}
+      src={src}
+      width={1200}
+    />
+  )
+}
+
+export function ButtonLink({
+  children,
+  className = '',
+  href,
+  variant = 'primary',
+}: {
+  children: React.ReactNode
+  className?: string
+  href: string
+  variant?: 'primary' | 'secondary' | 'light'
+}) {
+  const classes = [
+    'inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-semibold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2',
+    variant === 'primary'
+      ? 'bg-emerald-900 text-white hover:bg-emerald-800 focus-visible:outline-emerald-900'
+      : '',
+    variant === 'secondary'
+      ? 'border border-slate-300 bg-white text-slate-950 hover:bg-slate-50 focus-visible:outline-slate-900'
+      : '',
+    variant === 'light'
+      ? 'bg-white text-slate-950 hover:bg-amber-100 focus-visible:outline-white'
+      : '',
+    className,
+  ]
+    .filter(Boolean)
+    .join(' ')
+
+  if (isExternalHref(href)) {
+    return (
+      <a className={classes} href={href} rel="noreferrer" target="_blank">
+        {children}
+      </a>
+    )
+  }
+
+  return (
+    <Link className={classes} href={href}>
+      {children}
+    </Link>
+  )
+}
+
+export function PageHeader({
+  eyebrow,
+  title,
+  children,
+}: {
+  children?: React.ReactNode
+  eyebrow?: string
+  title: string
+}) {
+  return (
+    <section className="bg-[#f7f2e8] px-4 py-16 text-slate-950 md:py-20">
+      <div className="container max-w-5xl">
+        {eyebrow ? (
+          <p className="mb-3 text-sm font-semibold uppercase tracking-[0.14em] text-emerald-900">
+            {eyebrow}
+          </p>
+        ) : null}
+        <h1 className="max-w-4xl text-4xl font-semibold leading-tight md:text-6xl">{title}</h1>
+        {children ? (
+          <div className="mt-5 max-w-3xl text-lg leading-8 text-slate-700">{children}</div>
+        ) : null}
+      </div>
+    </section>
+  )
+}
+
+export function SectionHeader({
+  eyebrow,
+  title,
+  children,
+}: {
+  children?: React.ReactNode
+  eyebrow?: string
+  title: string
+}) {
+  return (
+    <div className="mb-8 max-w-3xl">
+      {eyebrow ? (
+        <p className="mb-2 text-sm font-semibold uppercase tracking-[0.14em] text-emerald-800">
+          {eyebrow}
+        </p>
+      ) : null}
+      <h2 className="text-3xl font-semibold leading-tight text-slate-950 md:text-4xl">{title}</h2>
+      {children ? <div className="mt-3 text-base leading-7 text-slate-700">{children}</div> : null}
+    </div>
+  )
+}
+
+export function HomeHero({ settings }: { settings: ClubSettings }) {
+  return (
+    <section className="relative min-h-[72vh] overflow-hidden bg-slate-950 px-4 py-20 text-white md:py-24">
+      {settings.heroImageUrl ? (
+        <Image
+          alt="Serenity Club of Clearwater building sign"
+          className="absolute inset-0 h-full w-full object-cover opacity-50"
+          fill
+          priority
+          sizes="100vw"
+          src={settings.heroImageUrl}
+        />
+      ) : null}
+      <div className="absolute inset-0 bg-slate-950/45" />
+      <div className="container relative flex min-h-[52vh] items-end">
+        <div className="max-w-4xl pb-4">
+          <p className="mb-4 text-sm font-semibold uppercase tracking-[0.16em] text-amber-200">
+            {settings.legalName}
+          </p>
+          <h1 className="max-w-4xl text-5xl font-semibold leading-[1.02] md:text-7xl">
+            {settings.name}
+          </h1>
+          <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-100 md:text-xl">
+            {settings.tagline}
+          </p>
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <ButtonLink href="/meeting-schedule" variant="light">
+              <CalendarDays aria-hidden="true" />
+              Meeting schedule
+            </ButtonLink>
+            <ButtonLink href={settings.donationUrl} variant="primary">
+              <HeartHandshake aria-hidden="true" />
+              Donate
+            </ButtonLink>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+export function ContactBand({ settings }: { settings: ClubSettings }) {
+  return (
+    <section className="border-y border-slate-200 bg-white px-4 py-5">
+      <div className="container grid gap-4 text-sm text-slate-700 md:grid-cols-3">
+        <a className="flex items-center gap-3 hover:text-emerald-900" href={`tel:${settings.phone}`}>
+          <Phone aria-hidden="true" className="size-5 text-emerald-900" />
+          <span>{settings.phone}</span>
+        </a>
+        <a
+          className="flex items-center gap-3 hover:text-emerald-900"
+          href={`mailto:${settings.email}`}
+        >
+          <Mail aria-hidden="true" className="size-5 text-emerald-900" />
+          <span>{settings.email}</span>
+        </a>
+        <a
+          className="flex items-center gap-3 hover:text-emerald-900"
+          href="https://maps.google.com/?q=631%20Turner%20Street%20Clearwater%20FL%2033756"
+          rel="noreferrer"
+          target="_blank"
+        >
+          <MapPin aria-hidden="true" className="size-5 text-emerald-900" />
+          <span>
+            {settings.address}, {settings.cityStateZip}
+          </span>
+        </a>
+      </div>
+    </section>
+  )
+}
+
+export function MeetingList({
+  meetings,
+  compact = false,
+}: {
+  compact?: boolean
+  meetings: Meeting[]
+}) {
+  return (
+    <div className="grid gap-3">
+      {meetings.map((meeting) => (
+        <article
+          className="grid gap-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm md:grid-cols-[9rem_1fr_8rem]"
+          key={`${meeting.name}-${meeting.time}-${meeting.days}`}
+        >
+          <div>
+            <p className="flex items-center gap-2 text-sm font-semibold text-emerald-900">
+              <Clock aria-hidden="true" className="size-4" />
+              {meeting.time}
+            </p>
+            <p className="mt-1 text-sm text-slate-600">{meeting.days}</p>
+          </div>
+          <div>
+            <h3 className="text-lg font-semibold text-slate-950">{meeting.name}</h3>
+            {!compact && meeting.description ? (
+              <p className="mt-2 text-sm leading-6 text-slate-700">{meeting.description}</p>
+            ) : null}
+            <div className="mt-3 flex flex-wrap gap-2 text-xs font-semibold uppercase tracking-[0.1em]">
+              <span className="rounded-md bg-emerald-50 px-2 py-1 text-emerald-900">
+                {meeting.fellowship}
+              </span>
+              {meeting.format ? (
+                <span className="rounded-md bg-amber-50 px-2 py-1 text-amber-900">
+                  {meeting.format}
+                </span>
+              ) : null}
+            </div>
+          </div>
+          <div className="text-sm text-slate-600 md:text-right">{meeting.room}</div>
+        </article>
+      ))}
+    </div>
+  )
+}
+
+export function EventGrid({ events }: { events: EventItem[] }) {
+  return (
+    <div className="grid gap-5 md:grid-cols-3">
+      {events.map((event) => (
+        <article
+          className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm"
+          key={event.title}
+        >
+          {event.imageUrl ? (
+            <SerenityImage
+              alt={event.imageAlt || event.title}
+              className="aspect-[4/3] w-full object-cover"
+              src={event.imageUrl}
+            />
+          ) : null}
+          <div className="p-5">
+            <p className="text-sm font-semibold uppercase tracking-[0.12em] text-emerald-900">
+              {event.category}
+            </p>
+            <h3 className="mt-2 text-xl font-semibold text-slate-950">{event.title}</h3>
+            <p className="mt-2 text-sm font-medium text-slate-700">
+              {event.dateLabel}
+              {event.timeLabel ? ` | ${event.timeLabel}` : ''}
+            </p>
+            <p className="mt-3 text-sm leading-6 text-slate-700">{event.summary}</p>
+            {event.url ? (
+              <ButtonLink className="mt-5" href={event.url} variant="secondary">
+                Details
+                <ArrowRight aria-hidden="true" />
+              </ButtonLink>
+            ) : null}
+          </div>
+        </article>
+      ))}
+    </div>
+  )
+}
+
+export function ProductGrid({ products }: { products: Product[] }) {
+  return (
+    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      {products.map((product) => (
+        <Link
+          className="group flex min-h-full flex-col rounded-lg border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-emerald-700 hover:shadow-md"
+          href={`/shop/${product.slug}`}
+          key={product.slug}
+        >
+          {product.imageUrl ? (
+            <SerenityImage
+              alt={product.imageAlt || product.title}
+              className="mb-4 aspect-square w-full rounded-md object-cover"
+              sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+              src={product.imageUrl}
+            />
+          ) : (
+            <div className="mb-4 flex aspect-square w-full items-center justify-center rounded-md bg-emerald-50 text-emerald-900">
+              <ShoppingBag aria-hidden="true" className="size-10" />
+            </div>
+          )}
+          <div className="flex items-start justify-between gap-3">
+            <h3 className="text-lg font-semibold text-slate-950">{product.title}</h3>
+            <p className="font-semibold text-emerald-900">{product.price}</p>
+          </div>
+          {product.badge ? (
+            <p className="mt-2 w-fit rounded-md bg-amber-100 px-2 py-1 text-xs font-semibold uppercase tracking-[0.1em] text-amber-950">
+              {product.badge}
+            </p>
+          ) : null}
+          <p className="mt-3 line-clamp-3 text-sm leading-6 text-slate-700">
+            {product.description}
+          </p>
+          <p className="mt-auto pt-5 text-sm font-semibold text-emerald-900 group-hover:text-emerald-700">
+            View item
+          </p>
+        </Link>
+      ))}
+    </div>
+  )
+}
+
+export function TeamGrid({ teamMembers }: { teamMembers: TeamMember[] }) {
+  return (
+    <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+      {teamMembers.map((member) => (
+        <article
+          className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm"
+          key={`${member.name}-${member.role}`}
+        >
+          {member.imageUrl ? (
+            <SerenityImage
+              alt={member.imageAlt || member.name}
+              className="mb-4 aspect-[4/3] w-full rounded-md object-cover"
+              src={member.imageUrl}
+            />
+          ) : null}
+          <h3 className="text-xl font-semibold text-slate-950">{member.name}</h3>
+          <p className="mt-1 text-sm font-semibold uppercase tracking-[0.12em] text-emerald-900">
+            {member.role}
+          </p>
+          <p className="mt-3 text-sm leading-6 text-slate-700">{member.bio}</p>
+        </article>
+      ))}
+    </div>
+  )
+}
+
+export function PolicyList({ policies }: { policies: Policy[] }) {
+  return (
+    <div className="grid gap-4">
+      {policies.map((policy) => (
+        <article
+          className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm"
+          key={policy.title}
+        >
+          <h2 className="text-xl font-semibold text-slate-950">{policy.title}</h2>
+          <p className="mt-3 leading-7 text-slate-700">{policy.body}</p>
+        </article>
+      ))}
+    </div>
+  )
+}
+
+export function SponsorStrip({ sponsors }: { sponsors: Sponsor[] }) {
+  if (!sponsors.length) return null
+
+  return (
+    <section className="bg-white px-4 py-12">
+      <div className="container">
+        <SectionHeader eyebrow="Supporters" title="Community sponsors" />
+        <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4">
+          {sponsors.map((sponsor) => {
+            const content = (
+              <div className="flex min-h-28 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 p-4 text-center font-semibold text-slate-800">
+                {sponsor.imageUrl ? (
+                  <SerenityImage
+                    alt={sponsor.imageAlt || sponsor.name}
+                    className="max-h-20 max-w-full object-contain"
+                    sizes="(min-width: 768px) 25vw, 50vw"
+                    src={sponsor.imageUrl}
+                  />
+                ) : (
+                  sponsor.name
+                )}
+              </div>
+            )
+
+            return sponsor.url ? (
+              <a href={sponsor.url} key={sponsor.name} rel="noreferrer" target="_blank">
+                {content}
+              </a>
+            ) : (
+              <div key={sponsor.name}>{content}</div>
+            )
+          })}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+export function FeatureTiles() {
+  const features = [
+    {
+      icon: CalendarDays,
+      title: 'Daily meetings',
+      text: 'AA, NA, speaker meetings, and club service meetings throughout the week.',
+    },
+    {
+      icon: Users,
+      title: 'Fellowship space',
+      text: 'A clubhouse for members, visitors, groups, and the broader recovery community.',
+    },
+    {
+      icon: HeartHandshake,
+      title: 'Member supported',
+      text: 'Memberships, donations, events, and volunteers help keep the doors open.',
+    },
+  ]
+
+  return (
+    <div className="grid gap-5 md:grid-cols-3">
+      {features.map(({ icon: Icon, title, text }) => (
+        <article className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm" key={title}>
+          <Icon aria-hidden="true" className="size-7 text-emerald-900" />
+          <h3 className="mt-4 text-xl font-semibold text-slate-950">{title}</h3>
+          <p className="mt-3 text-sm leading-6 text-slate-700">{text}</p>
+        </article>
+      ))}
+    </div>
+  )
+}

@@ -1,14 +1,22 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
+import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 import sharp from 'sharp'
 import path from 'path'
 import { buildConfig, PayloadRequest } from 'payload'
 import { fileURLToPath } from 'url'
 
 import { Categories } from './collections/Categories'
+import { Events } from './collections/Events'
 import { Media } from './collections/Media'
+import { Meetings } from './collections/Meetings'
 import { Pages } from './collections/Pages'
+import { Policies } from './collections/Policies'
 import { Posts } from './collections/Posts'
+import { Products } from './collections/Products'
+import { Sponsors } from './collections/Sponsors'
+import { TeamMembers } from './collections/TeamMembers'
 import { Users } from './collections/Users'
+import { ClubSettings } from './ClubSettings/config'
 import { Footer } from './Footer/config'
 import { Header } from './Header/config'
 import { plugins } from './plugins'
@@ -62,10 +70,31 @@ export default buildConfig({
       connectionString: process.env.DATABASE_URL || '',
     },
   }),
-  collections: [Pages, Posts, Media, Categories, Users],
+  collections: [
+    Pages,
+    Meetings,
+    Events,
+    TeamMembers,
+    Products,
+    Policies,
+    Sponsors,
+    Posts,
+    Media,
+    Categories,
+    Users,
+  ],
   cors: [getServerSideURL()].filter(Boolean),
-  globals: [Header, Footer],
-  plugins,
+  globals: [ClubSettings, Header, Footer],
+  plugins: [
+    ...plugins,
+    vercelBlobStorage({
+      collections: {
+        media: true,
+      },
+      enabled: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
+      token: process.env.BLOB_READ_WRITE_TOKEN,
+    }),
+  ],
   secret: process.env.PAYLOAD_SECRET,
   sharp,
   typescript: {

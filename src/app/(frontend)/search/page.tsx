@@ -7,57 +7,19 @@ import React from 'react'
 import { Search } from '@/search/Component'
 import PageClient from './page.client'
 import { CardPostData } from '@/components/Card'
+import { hasUsableDatabaseUrl } from '@/serenity/data'
 
 type Args = {
   searchParams: Promise<{
     q: string
   }>
 }
+
+export const dynamic = 'force-dynamic'
+
 export default async function Page({ searchParams: searchParamsPromise }: Args) {
   const { q: query } = await searchParamsPromise
-  const payload = await getPayload({ config: configPromise })
-
-  const posts = await payload.find({
-    collection: 'search',
-    depth: 1,
-    limit: 12,
-    select: {
-      title: true,
-      slug: true,
-      categories: true,
-      meta: true,
-    },
-    // pagination: false reduces overhead if you don't need totalDocs
-    pagination: false,
-    ...(query
-      ? {
-          where: {
-            or: [
-              {
-                title: {
-                  like: query,
-                },
-              },
-              {
-                'meta.description': {
-                  like: query,
-                },
-              },
-              {
-                'meta.title': {
-                  like: query,
-                },
-              },
-              {
-                slug: {
-                  like: query,
-                },
-              },
-            ],
-          },
-        }
-      : {}),
-  })
+  const posts = await querySearchPosts(query)
 
   return (
     <div className="pt-24 pb-24">
@@ -83,6 +45,81 @@ export default async function Page({ searchParams: searchParamsPromise }: Args) 
 
 export function generateMetadata(): Metadata {
   return {
-    title: `Payload Website Template Search`,
+    title: `Search | Serenity Club of Clearwater`,
+  }
+}
+
+async function querySearchPosts(query: string) {
+  if (!hasUsableDatabaseUrl()) {
+    return {
+      docs: [],
+      hasNextPage: false,
+      hasPrevPage: false,
+      limit: 12,
+      nextPage: null,
+      page: 1,
+      pagingCounter: 1,
+      prevPage: null,
+      totalDocs: 0,
+      totalPages: 0,
+    }
+  }
+
+  try {
+    const payload = await getPayload({ config: configPromise })
+
+    return await payload.find({
+      collection: 'search',
+      depth: 1,
+      limit: 12,
+      select: {
+        title: true,
+        slug: true,
+        categories: true,
+        meta: true,
+      },
+      pagination: false,
+      ...(query
+        ? {
+            where: {
+              or: [
+                {
+                  title: {
+                    like: query,
+                  },
+                },
+                {
+                  'meta.description': {
+                    like: query,
+                  },
+                },
+                {
+                  'meta.title': {
+                    like: query,
+                  },
+                },
+                {
+                  slug: {
+                    like: query,
+                  },
+                },
+              ],
+            },
+          }
+        : {}),
+    })
+  } catch (_error) {
+    return {
+      docs: [],
+      hasNextPage: false,
+      hasPrevPage: false,
+      limit: 12,
+      nextPage: null,
+      page: 1,
+      pagingCounter: 1,
+      prevPage: null,
+      totalDocs: 0,
+      totalPages: 0,
+    }
   }
 }

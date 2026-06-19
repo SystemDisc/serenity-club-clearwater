@@ -7,25 +7,12 @@ import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import React from 'react'
 import PageClient from './page.client'
+import { hasUsableDatabaseUrl } from '@/serenity/data'
 
-export const dynamic = 'force-static'
-export const revalidate = 600
+export const dynamic = 'force-dynamic'
 
 export default async function Page() {
-  const payload = await getPayload({ config: configPromise })
-
-  const posts = await payload.find({
-    collection: 'posts',
-    depth: 1,
-    limit: 12,
-    overrideAccess: false,
-    select: {
-      title: true,
-      slug: true,
-      categories: true,
-      meta: true,
-    },
-  })
+  const posts = await queryPosts()
 
   return (
     <div className="pt-24 pb-24">
@@ -58,6 +45,53 @@ export default async function Page() {
 
 export function generateMetadata(): Metadata {
   return {
-    title: `Payload Website Template Posts`,
+    title: `Posts | Serenity Club of Clearwater`,
+  }
+}
+
+async function queryPosts() {
+  if (!hasUsableDatabaseUrl()) {
+    return {
+      docs: [],
+      hasNextPage: false,
+      hasPrevPage: false,
+      limit: 12,
+      nextPage: null,
+      page: 1,
+      pagingCounter: 1,
+      prevPage: null,
+      totalDocs: 0,
+      totalPages: 0,
+    }
+  }
+
+  try {
+    const payload = await getPayload({ config: configPromise })
+
+    return await payload.find({
+      collection: 'posts',
+      depth: 1,
+      limit: 12,
+      overrideAccess: false,
+      select: {
+        title: true,
+        slug: true,
+        categories: true,
+        meta: true,
+      },
+    })
+  } catch (_error) {
+    return {
+      docs: [],
+      hasNextPage: false,
+      hasPrevPage: false,
+      limit: 12,
+      nextPage: null,
+      page: 1,
+      pagingCounter: 1,
+      prevPage: null,
+      totalDocs: 0,
+      totalPages: 0,
+    }
   }
 }
