@@ -26,6 +26,25 @@ import { getServerSideURL } from './utilities/getURL'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
+const getDatabaseURL = () => {
+  const databaseURL = process.env.DATABASE_URL || ''
+
+  if (!databaseURL) return ''
+
+  try {
+    const parsedURL = new URL(databaseURL)
+    const sslMode = parsedURL.searchParams.get('sslmode')
+
+    if (sslMode === 'prefer' || sslMode === 'require' || sslMode === 'verify-ca') {
+      parsedURL.searchParams.set('sslmode', 'verify-full')
+    }
+
+    return parsedURL.toString()
+  } catch {
+    return databaseURL
+  }
+}
+
 export default buildConfig({
   admin: {
     components: {
@@ -67,7 +86,7 @@ export default buildConfig({
   editor: defaultLexical,
   db: postgresAdapter({
     pool: {
-      connectionString: process.env.DATABASE_URL || '',
+      connectionString: getDatabaseURL(),
     },
   }),
   collections: [

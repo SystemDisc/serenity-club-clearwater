@@ -1,7 +1,6 @@
 import dotenv from 'dotenv'
-import { getPayload } from 'payload'
+import { getPayload, type Payload } from 'payload'
 
-import configPromise from '../src/payload.config'
 import {
   fallbackClubSettings,
   fallbackEvents,
@@ -14,6 +13,12 @@ import {
 
 dotenv.config({ path: '.env.local' })
 dotenv.config()
+
+const getPayloadConfig = async () => {
+  const { default: configPromise } = await import('../src/payload.config')
+
+  return configPromise
+}
 
 const ensureDatabaseUrl = () => {
   const databaseUrl = process.env.DATABASE_URL
@@ -29,14 +34,15 @@ async function upsertCollectionDoc<TCollection extends SerenityCollection>({
   collection,
   data,
   field,
+  payload,
   value,
 }: {
   collection: TCollection
   data: Record<string, unknown>
   field: string
+  payload: Payload
   value: string
 }) {
-  const payload = await getPayload({ config: configPromise })
   const existing = await payload.find({
     collection,
     limit: 1,
@@ -79,6 +85,7 @@ async function upsertCollectionDoc<TCollection extends SerenityCollection>({
 async function seedSerenity() {
   ensureDatabaseUrl()
 
+  const configPromise = await getPayloadConfig()
   const payload = await getPayload({ config: configPromise })
 
   await payload.updateGlobal({
@@ -91,6 +98,7 @@ async function seedSerenity() {
       collection: 'meetings',
       data: meeting,
       field: 'name',
+      payload,
       value: meeting.name,
     })
   }
@@ -100,6 +108,7 @@ async function seedSerenity() {
       collection: 'events',
       data: event,
       field: 'title',
+      payload,
       value: event.title,
     })
   }
@@ -109,6 +118,7 @@ async function seedSerenity() {
       collection: 'teamMembers',
       data: member,
       field: 'name',
+      payload,
       value: member.name,
     })
   }
@@ -118,6 +128,7 @@ async function seedSerenity() {
       collection: 'products',
       data: product,
       field: 'slug',
+      payload,
       value: product.slug,
     })
   }
@@ -127,6 +138,7 @@ async function seedSerenity() {
       collection: 'policies',
       data: policy,
       field: 'title',
+      payload,
       value: policy.title,
     })
   }
@@ -136,6 +148,7 @@ async function seedSerenity() {
       collection: 'sponsors',
       data: sponsor,
       field: 'name',
+      payload,
       value: sponsor.name,
     })
   }

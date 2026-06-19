@@ -64,23 +64,18 @@ Use the Vercel Marketplace Neon integration for Postgres and Vercel Blob for upl
    vercel env pull .env.local --yes
    ```
 
-5. Create and run Payload migrations against the live Neon database:
-
-   ```bash
-   npm run migrate:create
-   npm run migrate
-   ```
-
-6. Seed launch content:
+5. Seed launch content. On a new database, this also lets Payload initialize the schema from the local development process before the production deployment runs:
 
    ```bash
    npm run seed:serenity
    ```
 
-7. Deploy:
+6. Deploy:
 
    ```bash
    vercel --prod
    ```
 
 After deployment, visit `/admin` to create the first admin user and edit content.
+
+For future schema changes, generate and commit Payload migrations before deploying the code that depends on them.
