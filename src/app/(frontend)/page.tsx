@@ -4,7 +4,6 @@ import {
   EventGrid,
   FeatureTiles,
   HomeHero,
-  MeetingList,
   ProductGrid,
   SectionHeader,
   SerenityImage,
@@ -13,12 +12,16 @@ import {
 import { ArrowRight, CalendarDays, HeartHandshake, ShoppingBag } from 'lucide-react'
 
 import { getSerenityData } from '@/serenity/data'
+import { sortedMeetingsByTime } from '@/serenity/meetings'
 
 export const dynamic = 'force-dynamic'
 
 export default async function HomePage() {
   const data = await getSerenityData()
-  const featuredMeetings = data.meetings.slice(0, 5)
+  const sortedMeetings = sortedMeetingsByTime(data.meetings)
+  const recoveryMeetings = sortedMeetings.filter((meeting) => meeting.fellowship !== 'Club')
+  const firstMeeting = recoveryMeetings[0]
+  const lastMeeting = recoveryMeetings[recoveryMeetings.length - 1]
   const featuredEvents = data.events.slice(0, 3)
   const featuredProducts = data.products.slice(0, 4)
 
@@ -36,10 +39,10 @@ export default async function HomePage() {
       <section className="bg-white px-4 py-12">
         <div className="container">
           <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
-            <SectionHeader eyebrow="Recovery meetings" flush title="A full weekly meeting schedule">
+            <SectionHeader eyebrow="Recovery meetings" flush title="Meetings throughout the day">
               <p>
-                The clubhouse hosts AA, NA, speaker meetings, and service meetings from morning
-                through evening.
+                The full schedule changes by day and fellowship, so the home page points directly to
+                the complete list instead of showing a partial schedule.
               </p>
             </SectionHeader>
             <ButtonLink href="/meeting-schedule" variant="secondary">
@@ -48,7 +51,45 @@ export default async function HomePage() {
             </ButtonLink>
           </div>
           <div className="mt-6 md:mt-8">
-            <MeetingList compact meetings={featuredMeetings} />
+            <div className="grid gap-4 md:grid-cols-3">
+              <article className="rounded-lg border border-slate-200 bg-[#fbfaf7] p-5">
+                <p className="text-sm font-semibold uppercase tracking-[0.14em] text-emerald-900">
+                  First listed meeting
+                </p>
+                <h3 className="mt-3 text-2xl font-semibold text-slate-950">
+                  {firstMeeting?.time || 'Morning'}
+                </h3>
+                <p className="mt-2 text-sm leading-6 text-slate-700">
+                  {firstMeeting
+                    ? `${firstMeeting.name} runs ${firstMeeting.days}.`
+                    : data.settings.hours}
+                </p>
+              </article>
+              <article className="rounded-lg border border-slate-200 bg-[#fbfaf7] p-5">
+                <p className="text-sm font-semibold uppercase tracking-[0.14em] text-emerald-900">
+                  Evening options
+                </p>
+                <h3 className="mt-3 text-2xl font-semibold text-slate-950">
+                  {lastMeeting?.time || 'Evening'}
+                </h3>
+                <p className="mt-2 text-sm leading-6 text-slate-700">
+                  {lastMeeting
+                    ? `${lastMeeting.name} is one of the later recovery meetings.`
+                    : 'Meetings continue into the evening.'}
+                </p>
+              </article>
+              <article className="rounded-lg border border-slate-200 bg-[#fbfaf7] p-5">
+                <p className="text-sm font-semibold uppercase tracking-[0.14em] text-emerald-900">
+                  Complete schedule
+                </p>
+                <h3 className="mt-3 text-2xl font-semibold text-slate-950">
+                  {data.meetings.length} meetings
+                </h3>
+                <p className="mt-2 text-sm leading-6 text-slate-700">
+                  See the complete AA, NA, and club service schedule before visiting.
+                </p>
+              </article>
+            </div>
           </div>
         </div>
       </section>

@@ -2,6 +2,7 @@ import { ContactBand, MeetingList, PageHeader, SectionHeader } from '@/serenity/
 
 import { getSerenityData } from '@/serenity/data'
 import type { Meeting } from '@/serenity/content'
+import { sortedMeetingsByTime } from '@/serenity/meetings'
 
 export const dynamic = 'force-dynamic'
 
@@ -23,14 +24,15 @@ function meetingRunsToday(meeting: Meeting, today: string) {
 
 export default async function MeetingSchedulePage() {
   const data = await getSerenityData()
-  const aaMeetings = data.meetings.filter((meeting) => meeting.fellowship === 'AA')
-  const naMeetings = data.meetings.filter((meeting) => meeting.fellowship === 'NA')
-  const clubMeetings = data.meetings.filter((meeting) => meeting.fellowship === 'Club')
+  const sortedMeetings = sortedMeetingsByTime(data.meetings)
+  const aaMeetings = sortedMeetings.filter((meeting) => meeting.fellowship === 'AA')
+  const naMeetings = sortedMeetings.filter((meeting) => meeting.fellowship === 'NA')
+  const clubMeetings = sortedMeetings.filter((meeting) => meeting.fellowship === 'Club')
   const today = new Intl.DateTimeFormat('en-US', {
     timeZone: 'America/New_York',
     weekday: 'long',
   }).format(new Date())
-  const todayMeetings = data.meetings.filter((meeting) => meetingRunsToday(meeting, today))
+  const todayMeetings = sortedMeetings.filter((meeting) => meetingRunsToday(meeting, today))
 
   return (
     <main>
