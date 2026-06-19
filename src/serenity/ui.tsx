@@ -1,6 +1,7 @@
 import type {
   ClubSettings,
   EventItem,
+  GalleryItem,
   Meeting,
   Policy,
   Product,
@@ -13,6 +14,7 @@ import {
   CalendarDays,
   Clock,
   HeartHandshake,
+  ImageIcon,
   Mail,
   MapPin,
   Phone,
@@ -35,7 +37,7 @@ export const secondaryNavItems = [
   { href: '/ways-to-give', label: 'Ways to Give' },
   { href: '/policies', label: 'Policies' },
   { href: '/groups', label: 'Groups' },
-  { href: '/portfolio', label: 'Portfolio' },
+  { href: '/gallery', label: 'Gallery' },
 ]
 
 const isExternalHref = (href: string) => href.startsWith('http')
@@ -321,6 +323,41 @@ export function EventGrid({ events }: { events: EventItem[] }) {
   )
 }
 
+export function GalleryGrid({ items }: { items: GalleryItem[] }) {
+  return (
+    <div className="grid gap-5 md:grid-cols-3">
+      {items.map((item) => (
+        <figure
+          className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm"
+          key={`${item.title}-${item.imageUrl || item.id}`}
+        >
+          {item.imageUrl ? (
+            <SerenityImage
+              alt={item.imageAlt || item.title}
+              className="aspect-[4/3] w-full object-cover"
+              sizes="(min-width: 768px) 33vw, 100vw"
+              src={item.imageUrl}
+            />
+          ) : (
+            <div className="flex aspect-[4/3] items-center justify-center bg-slate-100 text-slate-500">
+              <ImageIcon aria-hidden="true" className="size-10" />
+            </div>
+          )}
+          <figcaption className="p-5">
+            <p className="text-sm font-semibold uppercase tracking-[0.12em] text-emerald-900">
+              {item.category}
+            </p>
+            <h2 className="mt-2 text-xl font-semibold text-slate-950">{item.title}</h2>
+            {item.description ? (
+              <p className="mt-3 text-sm leading-6 text-slate-700">{item.description}</p>
+            ) : null}
+          </figcaption>
+        </figure>
+      ))}
+    </div>
+  )
+}
+
 export function ProductGrid({ products }: { products: Product[] }) {
   return (
     <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -363,26 +400,43 @@ export function ProductGrid({ products }: { products: Product[] }) {
   )
 }
 
+const getInitials = (name: string) =>
+  name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase())
+    .join('') || 'SC'
+
 export function TeamGrid({ teamMembers }: { teamMembers: TeamMember[] }) {
   return (
     <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
       {teamMembers.map((member) => (
         <article
-          className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm"
+          className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm"
           key={`${member.name}-${member.role}`}
         >
-          {member.imageUrl ? (
-            <SerenityImage
-              alt={member.imageAlt || member.name}
-              className="mb-4 aspect-[4/3] w-full rounded-md object-cover"
-              src={member.imageUrl}
-            />
-          ) : null}
-          <h3 className="text-xl font-semibold text-slate-950">{member.name}</h3>
-          <p className="mt-1 text-sm font-semibold uppercase tracking-[0.12em] text-emerald-900">
-            {member.role}
-          </p>
-          <p className="mt-3 text-sm leading-6 text-slate-700">{member.bio}</p>
+          <div className="aspect-[4/5] bg-slate-100">
+            {member.imageUrl ? (
+              <SerenityImage
+                alt={member.imageAlt || member.name}
+                className="h-full w-full object-cover object-top"
+                sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                src={member.imageUrl}
+              />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center bg-emerald-950 text-3xl font-semibold text-white">
+                {getInitials(member.name)}
+              </div>
+            )}
+          </div>
+          <div className="p-5">
+            <h3 className="text-xl font-semibold text-slate-950">{member.name}</h3>
+            <p className="mt-1 text-sm font-semibold uppercase tracking-[0.12em] text-emerald-900">
+              {member.role}
+            </p>
+            <p className="mt-3 text-sm leading-6 text-slate-700">{member.bio}</p>
+          </div>
         </article>
       ))}
     </div>

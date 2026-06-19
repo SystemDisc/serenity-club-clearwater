@@ -4,6 +4,7 @@ import { getPayload, type Payload } from 'payload'
 import {
   fallbackClubSettings,
   fallbackEvents,
+  fallbackGalleryItems,
   fallbackMeetings,
   fallbackPolicies,
   fallbackProducts,
@@ -30,6 +31,7 @@ const ensureDatabaseUrl = () => {
 
 type SerenityCollection =
   | 'events'
+  | 'galleryItems'
   | 'meetings'
   | 'policies'
   | 'products'
@@ -39,6 +41,9 @@ type SerenityCollection =
 const legacyLookupValues: Partial<Record<SerenityCollection, Record<string, string[]>>> = {
   events: {
     'May 2026 Events': ['Monthly Events Flyer'],
+  },
+  galleryItems: {
+    'May 2026 events flyer': ['May 2026 Events'],
   },
   policies: {
     'Guest and Membership Use': ['Respect the Meetings'],
@@ -50,6 +55,7 @@ const legacyLookupValues: Partial<Record<SerenityCollection, Record<string, stri
 
 const collectionsWithExternalImages = new Set<SerenityCollection>([
   'events',
+  'galleryItems',
   'products',
   'sponsors',
   'teamMembers',
@@ -157,6 +163,16 @@ async function seedSerenity() {
       field: 'title',
       payload,
       value: event.title,
+    })
+  }
+
+  for (const galleryItem of fallbackGalleryItems) {
+    await upsertCollectionDoc({
+      collection: 'galleryItems',
+      data: galleryItem,
+      field: 'title',
+      payload,
+      value: galleryItem.title,
     })
   }
 

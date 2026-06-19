@@ -16,12 +16,22 @@ test.describe('Frontend', () => {
       ['/meeting-schedule', 'Find a meeting at Serenity Club'],
       ['/ways-to-give', 'Support Serenity Club'],
       ['/reach-out', 'Contact Serenity Club'],
+      ['/gallery', 'Photos and flyers from Serenity Club'],
     ] as const
 
     for (const [url, heading] of pages) {
       await page.goto(url)
       await expect(page.getByRole('heading', { level: 1, name: heading })).toBeVisible()
     }
+  })
+
+  test('redirects legacy portfolio page to gallery', async ({ page }) => {
+    await page.goto('/portfolio')
+
+    await expect(page).toHaveURL(/\/gallery$/)
+    await expect(
+      page.getByRole('heading', { level: 1, name: 'Photos and flyers from Serenity Club' }),
+    ).toBeVisible()
   })
 
   test('mobile navigation stays compact and opens the full menu', async ({ page }) => {

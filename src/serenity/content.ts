@@ -42,6 +42,16 @@ export type EventItem = {
   url?: string
 }
 
+export type GalleryItem = {
+  category: 'Clubhouse' | 'Event' | 'People' | 'Flyer' | 'Community'
+  description?: string
+  id?: string | number
+  imageAlt?: string
+  imageUrl?: string
+  order: number
+  title: string
+}
+
 export type TeamMember = {
   bio: string
   id?: string | number
@@ -84,6 +94,7 @@ export type Sponsor = {
 
 export type SerenityData = {
   events: EventItem[]
+  galleryItems: GalleryItem[]
   meetings: Meeting[]
   policies: Policy[]
   products: Product[]
@@ -262,53 +273,115 @@ export const fallbackEvents: EventItem[] = [
   },
 ]
 
+export const fallbackGalleryItems: GalleryItem[] = [
+  {
+    title: 'Clubhouse sign',
+    category: 'Clubhouse',
+    description:
+      'The Serenity Club of Clearwater clubhouse on Turner Street, home to daily recovery meetings and fellowship.',
+    imageUrl: fallbackClubSettings.heroImageUrl,
+    imageAlt: 'Serenity Club of Clearwater exterior sign',
+    order: 10,
+  },
+  {
+    title: 'Meeting room',
+    category: 'Clubhouse',
+    description: 'One of the clubhouse meeting spaces used by AA, NA, and club groups.',
+    imageUrl: fallbackClubSettings.roomImageUrl,
+    imageAlt: 'Serenity Club of Clearwater meeting room',
+    order: 20,
+  },
+  {
+    title: 'May 2026 events flyer',
+    category: 'Flyer',
+    description: 'Monthly clubhouse flyer with fellowship, fundraisers, and service events.',
+    imageUrl: fallbackEvents[0]?.imageUrl,
+    imageAlt: fallbackEvents[0]?.imageAlt,
+    order: 30,
+  },
+]
+
+const teamImages = {
+  charlene:
+    'https://static.wixstatic.com/media/ed8244_9c69a37d5146478fba5316d16c6a6ce5~mv2.jpg/v1/crop/x_215,y_0,w_651,h_1082/fill/w_199,h_321,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/425263040001.jpg',
+  comingSoon:
+    'https://static.wixstatic.com/media/ed8244_2f8d07e2cb084665b121ec8573209258~mv2.jpg/v1/crop/x_0,y_21,w_83,h_106/fill/w_116,h_148,al_c,lg_1,q_80,enc_avif,quality_auto/coming%20soon_edited.jpg',
+  cyndi:
+    'https://static.wixstatic.com/media/ed8244_6e013216b40540ccb213a20f18cf7b24~mv2.jpg/v1/fill/w_209,h_310,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Snapchat-843232184_edited.jpg',
+  glenn:
+    'https://static.wixstatic.com/media/ed8244_83a0ce287a5c4e56b344d930f946cc02~mv2.jpg/v1/fill/w_231,h_321,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Snapchat-1862400860_edited.jpg',
+  jack: 'https://static.wixstatic.com/media/ed8244_60c5f659852341cbb5a32938f43e8ff0~mv2.jpg/v1/fill/w_213,h_296,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/IMG_5859.jpg',
+  nancy:
+    'https://static.wixstatic.com/media/ed8244_1a77cb5093e24c77b83296478df86329~mv2.jpg/v1/fill/w_181,h_317,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/ed8244_1a77cb5093e24c77b83296478df86329~mv2.jpg',
+  sherry:
+    'https://static.wixstatic.com/media/ed8244_aebc3b3a65944e0799e270354f29bb7e~mv2.jpg/v1/fill/w_209,h_321,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Me%202025_JPG.jpg',
+  stephanie:
+    'https://static.wixstatic.com/media/ed8244_0de71c0e954f44f4b9f3a01b4d22269c~mv2.jpg/v1/crop/x_27,y_0,w_458,h_730/fill/w_199,h_317,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/image000000009_edited.jpg',
+}
+
 export const fallbackTeamMembers: TeamMember[] = [
   {
     name: 'Glenn',
     role: 'Board President',
     bio: 'Serves the club through board leadership and stewardship.',
+    imageUrl: teamImages.glenn,
+    imageAlt: 'Glenn, Board President',
     order: 10,
   },
   {
     name: 'Sherry',
     role: 'Board Vice President',
     bio: 'Sherry has been a Serenity Club member since 2021 and has lived the recovery life for 16 years. She serves as a local substance abuse counselor, owns and operates S&S Enterprises and the business consulting nonprofit BobMob, and completed her MLS at UC College of Law in 2024. She is a mother of five, lives in Clearwater with her youngest child, partner, and pups, and is a member of Serenity in Addiction Group of NA and CR.',
+    imageUrl: teamImages.sherry,
+    imageAlt: 'Sherry, Board Vice President',
     order: 20,
   },
   {
     name: 'Cyndi V',
     role: 'Board Treasurer',
-    bio: 'Cyndi is a Serenity Club volunteer and serves as Board Treasurer. More information will be added when the club publishes an update.',
+    bio: 'Cyndi volunteers at Serenity Club and serves as Board Treasurer. More information will be added when the club publishes an update.',
+    imageUrl: teamImages.cyndi,
+    imageAlt: 'Cyndi V, Board Treasurer',
     order: 30,
   },
   {
     name: 'Charlene',
     role: 'Board Secretary',
     bio: 'Charlene has been a Serenity Club member since 2020 and volunteers at the coffee bar. She has been active in AA for 20 years, works as a sales manager for a surge manufacturer, and is married with seven children and 11 grandchildren.',
+    imageUrl: teamImages.charlene,
+    imageAlt: 'Charlene, Board Secretary',
     order: 40,
   },
   {
     name: 'Coming soon',
     role: 'Alternate Treasurer',
     bio: 'Alternate treasurer information will be added when the club publishes an update.',
+    imageUrl: teamImages.comingSoon,
+    imageAlt: 'Coming soon placeholder for Alternate Treasurer',
     order: 45,
   },
   {
     name: 'Jack',
     role: 'Board Member',
     bio: 'Jack has been a member of the Serenity Club of Clearwater and rejoined the Board at the April 2024 semi-annual membership meeting.',
+    imageUrl: teamImages.jack,
+    imageAlt: 'Jack, Board Member',
     order: 50,
   },
   {
     name: 'Stephanie',
     role: 'Board Member',
     bio: 'Stephanie has been a Serenity Club member since 2023. Her home group is GOYA, where she has chaired meetings and served as Pinellas County Intergroup Representative. She volunteers at club events, has worked in customer service for 25 years, graduated from Everest University for Medical Administration in 2014, lives in Clearwater, and has served on the Board since 2024.',
+    imageUrl: teamImages.stephanie,
+    imageAlt: 'Stephanie, Board Member',
     order: 60,
   },
   {
     name: 'Nancy',
     role: 'Club Manager',
     bio: 'Nancy has been involved with Serenity Club since 1989, where she began her recovery journey. She is retired from a 23-year restaurant management career, supports daily clubhouse operations, and lives in Dunedin with her husband, two dogs, and parrot.',
+    imageUrl: teamImages.nancy,
+    imageAlt: 'Nancy, Club Manager',
     order: 70,
   },
 ]
@@ -348,12 +421,12 @@ export const fallbackProducts: Product[] = [
     order: 30,
   },
   {
-    title: 'Coffee Mug (image is sample)',
+    title: 'Coffee Mug',
     slug: 'coffee-mug',
     price: '$10',
-    badge: 'Best Seller',
-    description: 'Souvenir coffee mug featuring the Serenity Club logo.',
-    fulfillmentNote: 'Available for purchase at the clubhouse.',
+    badge: 'Sample image',
+    description: 'Souvenir coffee mug for everyday coffee-bar use and Serenity Club support.',
+    fulfillmentNote: 'Available for purchase at the clubhouse. Product photo is a sample.',
     imageUrl:
       'https://static.wixstatic.com/media/ed8244_42156afcb5f640c495e074d99934cd41~mv2.jpg/v1/fit/w_500,h_500,q_90/file.jpg',
     imageAlt: 'Coffee mug sample',
@@ -388,6 +461,7 @@ export const fallbackSponsors: Sponsor[] = []
 
 export const fallbackSerenityData: SerenityData = {
   events: fallbackEvents,
+  galleryItems: fallbackGalleryItems,
   meetings: fallbackMeetings,
   policies: fallbackPolicies,
   products: fallbackProducts,

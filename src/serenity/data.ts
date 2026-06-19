@@ -4,6 +4,7 @@ import { getPayload } from 'payload'
 import {
   type ClubSettings,
   type EventItem,
+  type GalleryItem,
   type Meeting,
   type Policy,
   type Product,
@@ -12,6 +13,7 @@ import {
   type TeamMember,
   fallbackClubSettings,
   fallbackEvents,
+  fallbackGalleryItems,
   fallbackMeetings,
   fallbackPolicies,
   fallbackProducts,
@@ -20,12 +22,21 @@ import {
   fallbackTeamMembers,
 } from './content'
 
-type SerenityCollection = 'events' | 'meetings' | 'policies' | 'products' | 'sponsors' | 'teamMembers'
+type SerenityCollection =
+  | 'events'
+  | 'galleryItems'
+  | 'meetings'
+  | 'policies'
+  | 'products'
+  | 'sponsors'
+  | 'teamMembers'
 
 export const hasUsableDatabaseUrl = () => {
   const databaseUrl = process.env.DATABASE_URL
 
-  return Boolean(databaseUrl && !databaseUrl.includes('<password>') && !databaseUrl.includes('YOUR_'))
+  return Boolean(
+    databaseUrl && !databaseUrl.includes('<password>') && !databaseUrl.includes('YOUR_'),
+  )
 }
 
 const getText = (value: unknown, fallback = '') => {
@@ -125,7 +136,7 @@ export async function getSerenitySettings(): Promise<ClubSettings> {
 }
 
 export async function getSerenityData(): Promise<SerenityData> {
-  const [settings, meetings, events, teamMembers, products, policies, sponsors] =
+  const [settings, meetings, events, galleryItems, teamMembers, products, policies, sponsors] =
     await Promise.all([
       getSerenitySettings(),
       findCollection<Meeting>('meetings', fallbackMeetings, (doc) => ({
@@ -151,6 +162,15 @@ export async function getSerenityData(): Promise<SerenityData> {
         timeLabel: getText(doc.timeLabel) || undefined,
         title: getText(doc.title),
         url: getText(doc.url) || undefined,
+      })),
+      findCollection<GalleryItem>('galleryItems', fallbackGalleryItems, (doc) => ({
+        category: (getText(doc.category, 'Clubhouse') as GalleryItem['category']) || 'Clubhouse',
+        description: getText(doc.description) || undefined,
+        id: getText(doc.id),
+        imageAlt: getText(doc.imageAlt) || undefined,
+        imageUrl: getImageUrl(doc, 'image', 'externalImageUrl'),
+        order: getNumber(doc.order),
+        title: getText(doc.title),
       })),
       findCollection<TeamMember>('teamMembers', fallbackTeamMembers, (doc) => ({
         bio: getText(doc.bio),
@@ -193,6 +213,7 @@ export async function getSerenityData(): Promise<SerenityData> {
   return {
     ...fallbackSerenityData,
     events: sortByOrder(events),
+    galleryItems: sortByOrder(galleryItems),
     meetings: sortByOrder(meetings),
     policies: sortByOrder(policies),
     products: sortByOrder(products),

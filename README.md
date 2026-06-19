@@ -17,6 +17,7 @@ Payload has club-specific collections grouped under `Serenity Club`:
 - Club Settings
 - Meetings
 - Events
+- Gallery Items
 - Team Members
 - Shop Items
 - Policies

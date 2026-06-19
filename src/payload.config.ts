@@ -7,6 +7,7 @@ import { fileURLToPath } from 'url'
 
 import { Categories } from './collections/Categories'
 import { Events } from './collections/Events'
+import { GalleryItems } from './collections/GalleryItems'
 import { Media } from './collections/Media'
 import { Meetings } from './collections/Meetings'
 import { Pages } from './collections/Pages'
@@ -93,6 +94,7 @@ export default buildConfig({
     Pages,
     Meetings,
     Events,
+    GalleryItems,
     TeamMembers,
     Products,
     Policies,

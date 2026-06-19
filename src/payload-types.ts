@@ -70,6 +70,7 @@ export interface Config {
     pages: Page;
     meetings: Meeting;
     events: Event;
+    galleryItems: GalleryItem;
     teamMembers: TeamMember;
     products: Product;
     policies: Policy;
@@ -98,6 +99,7 @@ export interface Config {
     pages: PagesSelect<false> | PagesSelect<true>;
     meetings: MeetingsSelect<false> | MeetingsSelect<true>;
     events: EventsSelect<false> | EventsSelect<true>;
+    galleryItems: GalleryItemsSelect<false> | GalleryItemsSelect<true>;
     teamMembers: TeamMembersSelect<false> | TeamMembersSelect<true>;
     products: ProductsSelect<false> | ProductsSelect<true>;
     policies: PoliciesSelect<false> | PoliciesSelect<true>;
@@ -836,6 +838,23 @@ export interface Event {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "galleryItems".
+ */
+export interface GalleryItem {
+  id: number;
+  title: string;
+  category?: ('Clubhouse' | 'Event' | 'People' | 'Flyer' | 'Community') | null;
+  description?: string | null;
+  image?: (number | null) | Media;
+  externalImageUrl?: string | null;
+  imageAlt?: string | null;
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "teamMembers".
  */
 export interface TeamMember {
@@ -1104,6 +1123,10 @@ export interface PayloadLockedDocument {
         value: number | Event;
       } | null)
     | ({
+        relationTo: 'galleryItems';
+        value: number | GalleryItem;
+      } | null)
+    | ({
         relationTo: 'teamMembers';
         value: number | TeamMember;
       } | null)
@@ -1364,6 +1387,22 @@ export interface EventsSelect<T extends boolean = true> {
   externalImageUrl?: T;
   imageAlt?: T;
   url?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "galleryItems_select".
+ */
+export interface GalleryItemsSelect<T extends boolean = true> {
+  title?: T;
+  category?: T;
+  description?: T;
+  image?: T;
+  externalImageUrl?: T;
+  imageAlt?: T;
   order?: T;
   updatedAt?: T;
   createdAt?: T;
