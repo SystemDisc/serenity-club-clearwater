@@ -1947,7 +1947,33 @@ export interface ClubSetting {
  */
 export interface Header {
   id: number;
+  /**
+   * Shown directly in the desktop header and first in the mobile menu.
+   */
   navItems?:
+    | {
+        link: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: number | Page;
+              } | null)
+            | ({
+                relationTo: 'posts';
+                value: number | Post;
+              } | null);
+          url?: string | null;
+          label: string;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Shown under the desktop More menu and after primary links on mobile.
+   */
+  secondaryNavItems?:
     | {
         link: {
           type?: ('reference' | 'custom') | null;
@@ -1976,6 +2002,9 @@ export interface Header {
  */
 export interface Footer {
   id: number;
+  /**
+   * Shown in the footer. If empty, the footer uses the header navigation items.
+   */
   navItems?:
     | {
         link: {
@@ -2032,6 +2061,20 @@ export interface ClubSettingsSelect<T extends boolean = true> {
  */
 export interface HeaderSelect<T extends boolean = true> {
   navItems?:
+    | T
+    | {
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+            };
+        id?: T;
+      };
+  secondaryNavItems?:
     | T
     | {
         link?:

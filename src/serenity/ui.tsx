@@ -25,20 +25,10 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 
-export const primaryNavItems = [
-  { href: '/meeting-schedule', label: 'Meetings' },
-  { href: '/events', label: 'Events' },
-  { href: '/shop', label: 'Shop' },
-  { href: '/about', label: 'About' },
-  { href: '/reach-out', label: 'Reach Out' },
-]
-
-export const secondaryNavItems = [
-  { href: '/ways-to-give', label: 'Ways to Give' },
-  { href: '/policies', label: 'Policies' },
-  { href: '/groups', label: 'Groups' },
-  { href: '/gallery', label: 'Gallery' },
-]
+export {
+  fallbackPrimaryNavItems as primaryNavItems,
+  fallbackSecondaryNavItems as secondaryNavItems,
+} from './content'
 
 const isExternalHref = (href: string) => href.startsWith('http')
 

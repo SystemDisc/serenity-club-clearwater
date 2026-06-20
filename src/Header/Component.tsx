@@ -1,11 +1,11 @@
-import { getSerenitySettings } from '@/serenity/data'
+import { getSerenitySettings, getSiteNavigation } from '@/serenity/data'
 import Link from 'next/link'
 import React from 'react'
 
 import { SiteNav } from './SiteNav.client'
 
 export async function Header() {
-  const settings = await getSerenitySettings()
+  const [settings, navigation] = await Promise.all([getSerenitySettings(), getSiteNavigation()])
 
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 text-slate-950 backdrop-blur">
@@ -24,7 +24,11 @@ export async function Header() {
           </span>
         </Link>
 
-        <SiteNav donationUrl={settings.donationUrl} />
+        <SiteNav
+          donationUrl={settings.donationUrl}
+          primaryNavItems={navigation.primaryNavItems}
+          secondaryNavItems={navigation.secondaryNavItems}
+        />
       </div>
     </header>
   )

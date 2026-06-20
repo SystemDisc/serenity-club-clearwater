@@ -1,4 +1,5 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
+import { resendAdapter } from '@payloadcms/email-resend'
 import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 import sharp from 'sharp'
 import path from 'path'
@@ -46,6 +47,19 @@ const getDatabaseURL = () => {
   }
 }
 
+const getEmailAdapter = () => {
+  const apiKey = process.env.RESEND_API_KEY
+  const defaultFromAddress = process.env.EMAIL_FROM_ADDRESS
+
+  if (!apiKey || !defaultFromAddress) return undefined
+
+  return resendAdapter({
+    apiKey,
+    defaultFromAddress,
+    defaultFromName: process.env.EMAIL_FROM_NAME || 'Serenity Club of Clearwater',
+  })
+}
+
 export default buildConfig({
   admin: {
     components: {
@@ -85,6 +99,7 @@ export default buildConfig({
   },
   // This config helps us configure global or default features that the other editors can inherit
   editor: defaultLexical,
+  email: getEmailAdapter(),
   db: postgresAdapter({
     pool: {
       connectionString: getDatabaseURL(),

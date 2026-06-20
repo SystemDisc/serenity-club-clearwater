@@ -6,9 +6,11 @@ import {
   type EventItem,
   type GalleryItem,
   type Meeting,
+  type NavItem,
   type Policy,
   type Product,
   type SerenityData,
+  type SiteNavigation,
   type Sponsor,
   type TeamMember,
   fallbackClubSettings,
@@ -16,7 +18,9 @@ import {
   fallbackGalleryItems,
   fallbackMeetings,
   fallbackPolicies,
+  fallbackPrimaryNavItems,
   fallbackProducts,
+  fallbackSecondaryNavItems,
   fallbackSerenityData,
   fallbackSponsors,
   fallbackTeamMembers,
@@ -58,6 +62,12 @@ const getImageUrl = (doc: Record<string, unknown>, uploadField: string, external
   return getUploadedUrl(doc[uploadField]) || getText(doc[externalField]) || undefined
 }
 
+const fallbackSiteNavigation = (): SiteNavigation => ({
+  footerNavItems: [...fallbackPrimaryNavItems, ...fallbackSecondaryNavItems],
+  primaryNavItems: fallbackPrimaryNavItems,
+  secondaryNavItems: fallbackSecondaryNavItems,
+})
+
 const sortByOrder = <T extends { order: number }>(docs: T[]) =>
   [...docs].sort((a, b) => a.order - b.order)
 
@@ -96,6 +106,96 @@ async function findCollection<T>(
     return result.docs.map((doc) => normalize(doc as unknown as Record<string, unknown>))
   } catch (_error) {
     return fallback
+  }
+}
+
+const getReferenceHref = (reference: unknown) => {
+  if (!reference || typeof reference !== 'object') return ''
+
+  const record = reference as { relationTo?: unknown; value?: unknown }
+  const relationTo = getText(record.relationTo)
+  const value = record.value
+
+  if (!value || typeof value !== 'object') return ''
+
+  const slug = getText((value as { slug?: unknown }).slug)
+  if (!slug) return ''
+
+  if (relationTo === 'posts') return `/posts/${slug}`
+  if (relationTo === 'pages') return slug === 'home' ? '/' : `/${slug}`
+
+  return ''
+}
+
+const normalizeNavItem = (doc: unknown): NavItem | null => {
+  if (!doc || typeof doc !== 'object') return null
+
+  const link = (doc as { link?: unknown }).link
+  if (!link || typeof link !== 'object') return null
+
+  const record = link as {
+    label?: unknown
+    newTab?: unknown
+    reference?: unknown
+    type?: unknown
+    url?: unknown
+  }
+  const label = getText(record.label)
+  const href =
+    getText(record.type) === 'reference' ? getReferenceHref(record.reference) : getText(record.url)
+
+  if (!label || !href) return null
+
+  return {
+    href,
+    label,
+    newTab: record.newTab === true,
+  }
+}
+
+const getNavItems = (global: unknown, fieldName: string) => {
+  if (!global || typeof global !== 'object') return []
+
+  const field = (global as Record<string, unknown>)[fieldName]
+  if (!Array.isArray(field)) return []
+
+  return field.map(normalizeNavItem).filter((item): item is NavItem => Boolean(item))
+}
+
+export async function getSiteNavigation(): Promise<SiteNavigation> {
+  const payload = await getPayloadClient()
+
+  if (!payload) return fallbackSiteNavigation()
+
+  try {
+    const [header, footer] = await Promise.all([
+      payload.findGlobal({
+        depth: 1,
+        slug: 'header',
+      }),
+      payload.findGlobal({
+        depth: 1,
+        slug: 'footer',
+      }),
+    ])
+
+    const primaryNavItems = getNavItems(header, 'navItems')
+    const secondaryNavItems = getNavItems(header, 'secondaryNavItems')
+    const resolvedPrimary = primaryNavItems.length ? primaryNavItems : fallbackPrimaryNavItems
+    const resolvedSecondary = secondaryNavItems.length
+      ? secondaryNavItems
+      : fallbackSecondaryNavItems
+    const footerNavItems = getNavItems(footer, 'navItems')
+
+    return {
+      footerNavItems: footerNavItems.length
+        ? footerNavItems
+        : [...resolvedPrimary, ...resolvedSecondary],
+      primaryNavItems: resolvedPrimary,
+      secondaryNavItems: resolvedSecondary,
+    }
+  } catch (_error) {
+    return fallbackSiteNavigation()
   }
 }
 

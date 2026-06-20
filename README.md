@@ -10,11 +10,16 @@ Next.js + Payload CMS replacement for the former Wix Serenity Club site.
 - Vercel Blob for uploaded media
 - npm for package management
 
+Use Node 22 for local development and Vercel builds. The project includes `.node-version`
+and `.nvmrc` for runtime managers.
+
 ## Editable Content
 
 Payload has club-specific collections grouped under `Serenity Club`:
 
 - Club Settings
+- Header Navigation
+- Footer Navigation
 - Meetings
 - Events
 - Gallery Items
@@ -24,6 +29,8 @@ Payload has club-specific collections grouped under `Serenity Club`:
 - Sponsors
 
 The generated Payload `Pages` collection remains available for one-off editor-created pages.
+Admins can add a page in Payload, then add a custom URL or page reference under
+`Globals > Header Navigation` or `Globals > Footer Navigation`.
 
 ## Local Commands
 
@@ -35,7 +42,14 @@ npm run lint
 npm run build
 ```
 
-Seed the Serenity launch content into the configured database:
+Run migrations against a configured database:
+
+```bash
+npm run migrate
+npm run migrate:status
+```
+
+Seed or refresh the Serenity launch content in the configured database:
 
 ```bash
 npm run seed:serenity
@@ -51,8 +65,13 @@ Copy `.env.example` to `.env.local` for local work. For Vercel, configure:
 - `PREVIEW_SECRET`
 - `NEXT_PUBLIC_SERVER_URL`
 - `BLOB_READ_WRITE_TOKEN`
+- `RESEND_API_KEY`
+- `EMAIL_FROM_ADDRESS`
+- `EMAIL_FROM_NAME`
 
 Use the Vercel Marketplace Neon integration for Postgres and Vercel Blob for uploads.
+Email is wired for the official Payload Resend adapter. It stays inactive until
+`RESEND_API_KEY` and `EMAIL_FROM_ADDRESS` are configured.
 
 ## First Vercel Setup
 
@@ -65,13 +84,19 @@ Use the Vercel Marketplace Neon integration for Postgres and Vercel Blob for upl
    vercel env pull .env.local --yes
    ```
 
-5. Seed launch content. On a new database, this also lets Payload initialize the schema from the local development process before the production deployment runs:
+5. Run committed Payload migrations:
+
+   ```bash
+   npm run migrate
+   ```
+
+6. Seed launch content:
 
    ```bash
    npm run seed:serenity
    ```
 
-6. Deploy:
+7. Deploy:
 
    ```bash
    vercel --prod
@@ -79,4 +104,5 @@ Use the Vercel Marketplace Neon integration for Postgres and Vercel Blob for upl
 
 After deployment, visit `/admin` to create the first admin user and edit content.
 
-For future schema changes, generate and commit Payload migrations before deploying the code that depends on them.
+For future schema changes, run `npm run migrate:create -- descriptive_name`, commit the
+generated files in `src/migrations`, and deploy the code that depends on them.

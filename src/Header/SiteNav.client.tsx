@@ -1,6 +1,7 @@
 'use client'
 
-import { ButtonLink, primaryNavItems, secondaryNavItems } from '@/serenity/ui'
+import type { NavItem } from '@/serenity/content'
+import { ButtonLink } from '@/serenity/ui'
 import { ChevronDown, HeartHandshake, Menu, X } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -10,21 +11,43 @@ const activeLink = 'bg-emerald-50 text-emerald-950 ring-1 ring-inset ring-emeral
 const idleLink = 'text-slate-700 hover:bg-slate-100 hover:text-emerald-950'
 
 function isActive(pathname: string | null, href: string) {
-  if (!pathname) return false
+  if (!pathname || href.startsWith('http')) return false
 
   return pathname === href || pathname.startsWith(`${href}/`)
 }
 
-function NavLink({ href, label, onClick }: { href: string; label: string; onClick?: () => void }) {
+function NavLink({
+  href,
+  label,
+  newTab,
+  onClick,
+}: NavItem & {
+  onClick?: () => void
+}) {
   const pathname = usePathname()
   const current = isActive(pathname, href)
+  const classes = `flex min-h-11 items-center rounded-md px-3 text-sm font-semibold transition ${
+    current ? activeLink : idleLink
+  }`
+
+  if (href.startsWith('http')) {
+    return (
+      <a
+        className={classes}
+        href={href}
+        onClick={onClick}
+        rel={newTab ? 'noreferrer' : undefined}
+        target={newTab ? '_blank' : undefined}
+      >
+        {label}
+      </a>
+    )
+  }
 
   return (
     <Link
       aria-current={current ? 'page' : undefined}
-      className={`flex min-h-11 items-center rounded-md px-3 text-sm font-semibold transition ${
-        current ? activeLink : idleLink
-      }`}
+      className={classes}
       href={href}
       onClick={onClick}
     >
@@ -33,7 +56,15 @@ function NavLink({ href, label, onClick }: { href: string; label: string; onClic
   )
 }
 
-export function SiteNav({ donationUrl }: { donationUrl: string }) {
+export function SiteNav({
+  donationUrl,
+  primaryNavItems,
+  secondaryNavItems,
+}: {
+  donationUrl: string
+  primaryNavItems: NavItem[]
+  secondaryNavItems: NavItem[]
+}) {
   const pathname = usePathname()
   const [isOpen, setIsOpen] = useState(false)
   const hasSecondaryActive = secondaryNavItems.some((item) => isActive(pathname, item.href))
@@ -54,7 +85,7 @@ export function SiteNav({ donationUrl }: { donationUrl: string }) {
     <>
       <nav aria-label="Primary navigation" className="hidden items-center gap-1 lg:flex">
         {primaryNavItems.map((item) => (
-          <NavLink href={item.href} key={item.href} label={item.label} />
+          <NavLink key={`${item.href}-${item.label}`} {...item} />
         ))}
 
         <details className="group relative">
@@ -68,7 +99,7 @@ export function SiteNav({ donationUrl }: { donationUrl: string }) {
           </summary>
           <div className="absolute right-0 top-full mt-2 grid min-w-44 gap-1 rounded-lg border border-slate-200 bg-white p-2 shadow-lg">
             {secondaryNavItems.map((item) => (
-              <NavLink href={item.href} key={item.href} label={item.label} />
+              <NavLink key={`${item.href}-${item.label}`} {...item} />
             ))}
           </div>
         </details>
@@ -108,9 +139,8 @@ export function SiteNav({ donationUrl }: { donationUrl: string }) {
           <nav aria-label="Mobile navigation" className="container grid gap-1">
             {[...primaryNavItems, ...secondaryNavItems].map((item) => (
               <NavLink
-                href={item.href}
-                key={item.href}
-                label={item.label}
+                key={`${item.href}-${item.label}`}
+                {...item}
                 onClick={() => setIsOpen(false)}
               />
             ))}

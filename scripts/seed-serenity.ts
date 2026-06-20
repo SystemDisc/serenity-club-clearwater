@@ -7,9 +7,12 @@ import {
   fallbackGalleryItems,
   fallbackMeetings,
   fallbackPolicies,
+  fallbackPrimaryNavItems,
   fallbackProducts,
+  fallbackSecondaryNavItems,
   fallbackSponsors,
   fallbackTeamMembers,
+  type NavItem,
 } from '../src/serenity/content'
 
 dotenv.config({ path: '.env.local' })
@@ -73,6 +76,16 @@ const normalizeSeedData = (collection: SerenityCollection, data: Record<string, 
 
   return data
 }
+
+const toPayloadNavItems = (items: NavItem[]) =>
+  items.map((item) => ({
+    link: {
+      label: item.label,
+      newTab: item.newTab || false,
+      type: 'custom' as const,
+      url: item.href,
+    },
+  }))
 
 async function upsertCollectionDoc<TCollection extends SerenityCollection>({
   collection,
@@ -144,6 +157,27 @@ async function seedSerenity() {
   await payload.updateGlobal({
     slug: 'clubSettings',
     data: fallbackClubSettings,
+  })
+
+  await payload.updateGlobal({
+    slug: 'header',
+    context: {
+      disableRevalidate: true,
+    },
+    data: {
+      navItems: toPayloadNavItems(fallbackPrimaryNavItems),
+      secondaryNavItems: toPayloadNavItems(fallbackSecondaryNavItems),
+    },
+  })
+
+  await payload.updateGlobal({
+    slug: 'footer',
+    context: {
+      disableRevalidate: true,
+    },
+    data: {
+      navItems: toPayloadNavItems([...fallbackPrimaryNavItems, ...fallbackSecondaryNavItems]),
+    },
   })
 
   for (const meeting of fallbackMeetings) {

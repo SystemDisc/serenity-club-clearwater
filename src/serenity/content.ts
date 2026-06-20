@@ -16,6 +16,18 @@ export type ClubSettings = {
   tagline: string
 }
 
+export type NavItem = {
+  href: string
+  label: string
+  newTab?: boolean
+}
+
+export type SiteNavigation = {
+  footerNavItems: NavItem[]
+  primaryNavItems: NavItem[]
+  secondaryNavItems: NavItem[]
+}
+
 export type Meeting = {
   days: string
   description?: string
@@ -123,6 +135,21 @@ export const fallbackClubSettings: ClubSettings = {
   logoImageUrl:
     'https://static.wixstatic.com/media/ed8244_b088b79451be435eb0e28c41e2ff09a9~mv2.png/v1/fill/w_738,h_522,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/image%20(1).png',
 }
+
+export const fallbackPrimaryNavItems: NavItem[] = [
+  { href: '/meeting-schedule', label: 'Meetings' },
+  { href: '/events', label: 'Events' },
+  { href: '/shop', label: 'Shop' },
+  { href: '/about', label: 'About' },
+  { href: '/reach-out', label: 'Reach Out' },
+]
+
+export const fallbackSecondaryNavItems: NavItem[] = [
+  { href: '/ways-to-give', label: 'Ways to Give' },
+  { href: '/policies', label: 'Policies' },
+  { href: '/groups', label: 'Groups' },
+  { href: '/gallery', label: 'Gallery' },
+]
 
 export const fallbackMeetings: Meeting[] = [
   {
