@@ -57,7 +57,7 @@ export default async function ProductPage({ params }: Args) {
               </p>
             </div>
           )}
-          <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+          <div className="rounded-lg border border-slate-200 bg-white p-6">
             {product.badge ? (
               <p className="mb-3 w-fit rounded-md bg-amber-100 px-2 py-1 text-xs font-semibold uppercase tracking-[0.1em] text-amber-950">
                 {product.badge}

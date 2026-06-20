@@ -114,7 +114,7 @@ export default async function HomePage() {
           {data.settings.roomImageUrl ? (
             <SerenityImage
               alt="Meeting room inside Serenity Club of Clearwater"
-              className="aspect-[4/3] w-full rounded-lg object-cover shadow-sm"
+              className="aspect-[4/3] w-full rounded-lg object-cover"
               sizes="(min-width: 1024px) 45vw, 100vw"
               src={data.settings.roomImageUrl}
             />

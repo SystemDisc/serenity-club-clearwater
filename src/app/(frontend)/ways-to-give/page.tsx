@@ -49,7 +49,7 @@ export default async function WaysToGivePage() {
             </p>
           </SectionHeader>
           <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
-            <article className="flex flex-col rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+            <article className="flex flex-col rounded-lg border border-slate-200 bg-white p-5">
               <HeartHandshake aria-hidden="true" className="size-7 text-emerald-900" />
               <h2 className="mt-4 text-xl font-semibold text-slate-950">Online</h2>
               <p className="mt-3 text-sm leading-6 text-slate-700">
@@ -63,7 +63,7 @@ export default async function WaysToGivePage() {
             </article>
             {donationMethods.map(({ icon: Icon, text, title }) => (
               <article
-                className="flex flex-col rounded-lg border border-slate-200 bg-white p-5 shadow-sm"
+                className="flex flex-col rounded-lg border border-slate-200 bg-white p-5"
                 key={title}
               >
                 <Icon aria-hidden="true" className="size-7 text-emerald-900" />
@@ -90,14 +90,14 @@ export default async function WaysToGivePage() {
             </ButtonLink>
           </div>
           <div className="grid gap-4 md:grid-cols-2">
-            <article className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+            <article className="rounded-lg border border-slate-200 bg-white p-5">
               <Gift aria-hidden="true" className="size-7 text-emerald-900" />
               <h2 className="mt-4 text-lg font-semibold text-slate-950">Volunteer in the office</h2>
               <p className="mt-2 text-sm leading-6 text-slate-700">
                 Contact the coffee bar manager about office volunteer needs.
               </p>
             </article>
-            <article className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+            <article className="rounded-lg border border-slate-200 bg-white p-5">
               <Coffee aria-hidden="true" className="size-7 text-emerald-900" />
               <h2 className="mt-4 text-lg font-semibold text-slate-950">
                 Volunteer at the coffee bar

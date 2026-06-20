@@ -148,7 +148,7 @@ export default async function MeetingSchedulePage() {
           <div className="grid gap-5 lg:grid-cols-2">
             {groupNotes.map((group) => (
               <article
-                className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm"
+                className="rounded-lg border border-slate-200 bg-white p-5"
                 key={group.title}
               >
                 <h2 className="text-xl font-semibold text-slate-950">{group.title}</h2>

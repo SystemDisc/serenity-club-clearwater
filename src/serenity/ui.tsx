@@ -49,8 +49,9 @@ export function SerenityImage({
     <Image
       alt={alt}
       className={className}
+      fetchPriority={priority ? 'high' : undefined}
       height={900}
-      priority={priority}
+      loading={priority ? 'eager' : 'lazy'}
       quality={90}
       sizes={sizes}
       src={src}
@@ -155,43 +156,43 @@ export function SectionHeader({
 
 export function HomeHero({ settings }: { settings: ClubSettings }) {
   return (
-    <section className="relative overflow-hidden bg-slate-950 px-4 py-14 text-white md:py-20">
-      {settings.heroImageUrl ? (
-        <Image
-          alt="Serenity Club of Clearwater building sign"
-          className="absolute inset-0 h-full w-full object-cover object-center opacity-55"
-          fill
-          priority
-          sizes="100vw"
-          src={settings.heroImageUrl}
-        />
-      ) : null}
-      <div className="absolute inset-0 bg-slate-950/45" />
-      <div className="container relative flex min-h-[430px] items-end md:min-h-[520px]">
-        <div className="max-w-4xl pb-2">
-          <p className="mb-4 text-sm font-semibold uppercase tracking-[0.16em] text-amber-200">
-            {settings.legalName}
+    <section className="bg-[#f7f2e8] px-4 py-8 text-slate-950 md:py-14">
+      <div className="container grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(20rem,0.78fr)] lg:items-center">
+        <div className="order-last max-w-3xl lg:order-first lg:py-10">
+          <p className="mb-4 text-sm font-semibold uppercase tracking-[0.16em] text-emerald-900">
+            Clearwater recovery clubhouse
           </p>
-          <h1 className="max-w-4xl text-4xl font-semibold leading-[1.05] md:text-7xl">
-            {settings.name}
+          <h1 className="max-w-4xl text-4xl font-semibold leading-[1.05] md:text-6xl">
+            Daily recovery meetings in downtown Clearwater
           </h1>
-          <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-100 md:text-xl">
+          <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-700 md:text-xl">
             {settings.tagline}
           </p>
-          <p className="mt-4 max-w-2xl text-sm font-medium text-amber-100 md:text-base">
+          <p className="mt-4 max-w-2xl text-sm font-medium text-slate-600 md:text-base">
             {settings.hours} Located at {settings.address}, {settings.cityStateZip}.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <ButtonLink href="/meeting-schedule" variant="light">
+            <ButtonLink href="/meeting-schedule" variant="primary">
               <CalendarDays aria-hidden="true" />
               Find a meeting
             </ButtonLink>
-            <ButtonLink href={settings.donationUrl} variant="primary">
+            <ButtonLink href={settings.donationUrl} variant="secondary">
               <HeartHandshake aria-hidden="true" />
               Donate
             </ButtonLink>
           </div>
         </div>
+        {settings.heroImageUrl ? (
+          <div className="order-first lg:order-last">
+            <SerenityImage
+              alt="Serenity Club building sign at 631 Turner Street"
+              className="aspect-[4/3] w-full rounded-lg border border-slate-200 bg-white object-contain p-3"
+              priority
+              sizes="(min-width: 1024px) 38vw, 100vw"
+              src={settings.heroImageUrl}
+            />
+          </div>
+        ) : null}
       </div>
     </section>
   )
@@ -242,7 +243,7 @@ export function MeetingList({
     <div className="grid gap-3">
       {meetings.map((meeting) => (
         <article
-          className="grid gap-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm md:grid-cols-[9rem_1fr_8rem]"
+          className="grid gap-4 rounded-lg border border-slate-200 bg-white p-4 md:grid-cols-[9rem_1fr_8rem]"
           key={`${meeting.name}-${meeting.time}-${meeting.days}`}
         >
           <div>
@@ -280,7 +281,7 @@ export function EventGrid({ events }: { events: EventItem[] }) {
     <div className="grid gap-5 md:grid-cols-3">
       {events.map((event) => (
         <article
-          className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm"
+          className="overflow-hidden rounded-lg border border-slate-200 bg-white"
           key={event.title}
         >
           {event.imageUrl ? (
@@ -318,7 +319,7 @@ export function GalleryGrid({ items }: { items: GalleryItem[] }) {
     <div className="grid gap-5 md:grid-cols-3">
       {items.map((item) => (
         <figure
-          className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm"
+          className="overflow-hidden rounded-lg border border-slate-200 bg-white"
           key={`${item.title}-${item.imageUrl || item.id}`}
         >
           {item.imageUrl ? (
@@ -353,7 +354,8 @@ export function ProductGrid({ products }: { products: Product[] }) {
     <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
       {products.map((product) => (
         <Link
-          className="group flex min-h-full flex-col rounded-lg border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-emerald-700 hover:shadow-md"
+          aria-label={`View ${product.title}`}
+          className="group flex min-h-full flex-col rounded-lg border-2 border-white bg-white p-5 shadow-md transition hover:-translate-y-0.5 hover:border-emerald-300 hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-amber-200"
           href={`/shop/${product.slug}`}
           key={product.slug}
         >
@@ -381,9 +383,12 @@ export function ProductGrid({ products }: { products: Product[] }) {
           <p className="mt-3 line-clamp-3 text-sm leading-6 text-slate-700">
             {product.description}
           </p>
-          <p className="mt-auto pt-5 text-sm font-semibold text-emerald-900 group-hover:text-emerald-700">
-            View item
-          </p>
+          <div className="mt-auto pt-5">
+            <span className="inline-flex items-center gap-2 rounded-md bg-emerald-900 px-3 py-2 text-sm font-semibold text-white transition group-hover:bg-emerald-800">
+              View item
+              <ArrowRight aria-hidden="true" className="size-4" />
+            </span>
+          </div>
         </Link>
       ))}
     </div>
@@ -403,7 +408,7 @@ export function TeamGrid({ teamMembers }: { teamMembers: TeamMember[] }) {
     <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
       {teamMembers.map((member) => (
         <article
-          className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm"
+          className="overflow-hidden rounded-lg border border-slate-200 bg-white"
           key={`${member.name}-${member.role}`}
         >
           <div className="aspect-[4/5] bg-slate-100">
@@ -437,10 +442,7 @@ export function PolicyList({ policies }: { policies: Policy[] }) {
   return (
     <div className="grid gap-4">
       {policies.map((policy) => (
-        <article
-          className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm"
-          key={policy.title}
-        >
+        <article className="rounded-lg border border-slate-200 bg-white p-5" key={policy.title}>
           <h2 className="text-xl font-semibold text-slate-950">{policy.title}</h2>
           <p className="mt-3 leading-7 text-slate-700">{policy.body}</p>
         </article>
@@ -509,7 +511,7 @@ export function FeatureTiles() {
   return (
     <div className="grid gap-5 md:grid-cols-3">
       {features.map(({ icon: Icon, title, text }) => (
-        <article className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm" key={title}>
+        <article className="rounded-lg border border-slate-200 bg-white p-5" key={title}>
           <Icon aria-hidden="true" className="size-7 text-emerald-900" />
           <h3 className="mt-4 text-xl font-semibold text-slate-950">{title}</h3>
           <p className="mt-3 text-sm leading-6 text-slate-700">{text}</p>

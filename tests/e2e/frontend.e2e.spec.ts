@@ -6,7 +6,10 @@ test.describe('Frontend', () => {
 
     await expect(page).toHaveTitle(/Serenity Club of Clearwater/)
     await expect(
-      page.getByRole('heading', { level: 1, name: 'Serenity Club of Clearwater' }),
+      page.getByRole('heading', {
+        level: 1,
+        name: 'Daily recovery meetings in downtown Clearwater',
+      }),
     ).toBeVisible()
     await expect(page.getByRole('link', { name: /Find a meeting/i })).toBeVisible()
   })

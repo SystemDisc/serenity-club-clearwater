@@ -61,7 +61,7 @@ export default async function ReachOutPage() {
 
       <section className="bg-[#fbfaf7] px-4 py-10 md:py-12">
         <div className="container grid gap-5 md:grid-cols-2">
-          <article className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+          <article className="rounded-lg border border-slate-200 bg-white p-5">
             <h2 className="text-xl font-semibold text-slate-950">Looking for a meeting place?</h2>
             <p className="mt-3 text-sm leading-6 text-slate-700">
               Whether you are looking for a recovery meeting or a meeting place, the club can help
@@ -74,7 +74,7 @@ export default async function ReachOutPage() {
               Email a question
             </a>
           </article>
-          <article className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+          <article className="rounded-lg border border-slate-200 bg-white p-5">
             <h2 className="text-xl font-semibold text-slate-950">Reserve a small room</h2>
             <p className="mt-3 text-sm leading-6 text-slate-700">
               Members may request one of the small rooms for sponsor and sponsee meetings. Include
