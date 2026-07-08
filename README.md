@@ -72,6 +72,8 @@ Copy `.env.example` to `.env.local` for local work. For Vercel, configure:
 Use the Vercel Marketplace Neon integration for Postgres and Vercel Blob for uploads.
 Email is wired for the official Payload Resend adapter. It stays inactive until
 `RESEND_API_KEY` and `EMAIL_FROM_ADDRESS` are configured.
+Use a sender on the verified Resend sending domain, for example
+`noreply@serenityclubofclearwater.org`.
 
 ## First Vercel Setup
 
