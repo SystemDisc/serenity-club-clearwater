@@ -5,7 +5,7 @@ import { ButtonLink } from '@/serenity/ui'
 import { ChevronDown, HeartHandshake, Menu, X } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 const activeLink = 'bg-emerald-50 text-emerald-950 ring-1 ring-inset ring-emerald-100'
 const idleLink = 'text-slate-700 hover:bg-slate-100 hover:text-emerald-950'
@@ -67,19 +67,47 @@ export function SiteNav({
 }) {
   const pathname = usePathname()
   const [isOpen, setIsOpen] = useState(false)
+  const [isMoreOpen, setIsMoreOpen] = useState(false)
+  const moreMenuRef = useRef<HTMLDivElement>(null)
   const hasSecondaryActive = secondaryNavItems.some((item) => isActive(pathname, item.href))
 
   useEffect(() => {
-    if (!isOpen) return
+    if (!isOpen && !isMoreOpen) return
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setIsOpen(false)
+      if (event.key === 'Escape') {
+        setIsOpen(false)
+        setIsMoreOpen(false)
+      }
     }
 
     window.addEventListener('keydown', handleKeyDown)
 
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [isOpen])
+  }, [isOpen, isMoreOpen])
+
+  useEffect(() => {
+    if (!isMoreOpen) return
+
+    const handlePointerDown = (event: PointerEvent) => {
+      if (!moreMenuRef.current?.contains(event.target as Node)) {
+        setIsMoreOpen(false)
+      }
+    }
+
+    document.addEventListener('pointerdown', handlePointerDown)
+
+    return () => document.removeEventListener('pointerdown', handlePointerDown)
+  }, [isMoreOpen])
+
+  const handleMoreBlur = (event: React.FocusEvent<HTMLDivElement>) => {
+    if (
+      !(event.relatedTarget instanceof Node) ||
+      !event.currentTarget.contains(event.relatedTarget)
+    ) {
+      setIsMoreOpen(false)
+    }
+  }
 
   return (
     <>
@@ -88,21 +116,38 @@ export function SiteNav({
           <NavLink key={`${item.href}-${item.label}`} {...item} />
         ))}
 
-        <details className="group relative">
-          <summary
+        <div className="relative" onBlur={handleMoreBlur} ref={moreMenuRef}>
+          <button
+            aria-controls="more-site-menu"
+            aria-expanded={isMoreOpen}
+            aria-haspopup="menu"
             className={`flex min-h-11 cursor-pointer list-none items-center gap-1 rounded-md px-3 text-sm font-semibold transition marker:hidden [&::-webkit-details-marker]:hidden ${
               hasSecondaryActive ? activeLink : idleLink
             }`}
+            onClick={() => setIsMoreOpen((value) => !value)}
+            type="button"
           >
             More
-            <ChevronDown aria-hidden="true" className="size-4 transition group-open:rotate-180" />
-          </summary>
-          <div className="absolute right-0 top-full mt-2 grid min-w-44 gap-1 rounded-lg border border-slate-200 bg-white p-2 shadow-lg">
-            {secondaryNavItems.map((item) => (
-              <NavLink key={`${item.href}-${item.label}`} {...item} />
-            ))}
-          </div>
-        </details>
+            <ChevronDown
+              aria-hidden="true"
+              className={`size-4 transition ${isMoreOpen ? 'rotate-180' : ''}`}
+            />
+          </button>
+          {isMoreOpen ? (
+            <div
+              className="absolute right-0 top-full mt-2 grid min-w-44 gap-1 rounded-lg border border-slate-200 bg-white p-2 shadow-lg"
+              id="more-site-menu"
+            >
+              {secondaryNavItems.map((item) => (
+                <NavLink
+                  key={`${item.href}-${item.label}`}
+                  {...item}
+                  onClick={() => setIsMoreOpen(false)}
+                />
+              ))}
+            </div>
+          ) : null}
+        </div>
 
         <ButtonLink className="ml-2 px-4" href={donationUrl} variant="primary">
           <HeartHandshake aria-hidden="true" className="size-4" />
