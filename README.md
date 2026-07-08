@@ -10,7 +10,7 @@ Next.js + Payload CMS replacement for the former Wix Serenity Club site.
 - Vercel Blob for uploaded media
 - npm for package management
 
-Use Node 22 for local development and Vercel builds. The project includes `.node-version`
+Use Node 24 for local development and Vercel builds. The project includes `.node-version`
 and `.nvmrc` for runtime managers.
 
 ## Editable Content
