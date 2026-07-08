@@ -60,7 +60,7 @@ const getInboundRecipients = (event: ReceivedEmailEvent) => [
 ]
 
 export async function POST(request: NextRequest) {
-  const apiKey = process.env.RESEND_INBOUND_API_KEY || process.env.RESEND_API_KEY
+  const apiKey = process.env.RESEND_API_KEY
   const webhookSecret = process.env.RESEND_WEBHOOK_SECRET
 
   if (!apiKey || !webhookSecret) {

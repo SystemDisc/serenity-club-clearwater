@@ -8,7 +8,6 @@ declare global {
       EMAIL_FROM_ADDRESS?: string
       EMAIL_FROM_NAME?: string
       RESEND_API_KEY?: string
-      RESEND_INBOUND_API_KEY?: string
       RESEND_WEBHOOK_SECRET?: string
       RESEND_INBOUND_FORWARD_TO?: string
       RESEND_INBOUND_PRIVATE_COPY_TO?: string

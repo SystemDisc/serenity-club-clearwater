@@ -65,7 +65,6 @@ Copy `.env.example` to `.env.local` for local work. For Vercel, configure:
 - `PREVIEW_SECRET`
 - `BLOB_READ_WRITE_TOKEN`
 - `RESEND_API_KEY`
-- `RESEND_INBOUND_API_KEY`
 - `RESEND_WEBHOOK_SECRET`
 - `RESEND_INBOUND_FORWARD_TO`
 - `RESEND_INBOUND_PRIVATE_COPY_TO`
@@ -79,8 +78,6 @@ Use a sender on the verified Resend sending domain, for example
 `noreply@serenityclubofclearwater.org`.
 Inbound email forwarding is handled at `/resend/inbound`. Configure a Resend
 webhook for the `email.received` event, then set `RESEND_WEBHOOK_SECRET`.
-Use `RESEND_INBOUND_API_KEY` for the inbound route when the normal
-`RESEND_API_KEY` is scoped only for sending.
 Resend webhooks are event-scoped, so the route only forwards messages addressed
 to `@serenityclubofclearwater.org`.
 By default, inbound messages forward to `serenityclubclearwater@hotmail.com`
