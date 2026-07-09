@@ -19,7 +19,7 @@ export const homeStatic: RequiredDataFromCollectionSlug<'pages'> = {
                 format: 0,
                 mode: 'normal',
                 style: '',
-                text: 'Payload Website Template',
+                text: 'Serenity Club of Clearwater',
                 version: 1,
               },
             ],
@@ -80,8 +80,9 @@ export const homeStatic: RequiredDataFromCollectionSlug<'pages'> = {
     },
   },
   meta: {
-    description: 'An open-source website built with Payload and Next.js.',
-    title: 'Payload Website Template',
+    description:
+      'Serenity Club of Clearwater hosts daily recovery meetings, fellowship, memberships, events, and support in downtown Clearwater, Florida.',
+    title: 'Serenity Club of Clearwater',
   },
   title: 'Home',
   layout: [],

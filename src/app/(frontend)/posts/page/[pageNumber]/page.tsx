@@ -58,6 +58,10 @@ export default async function Page({ params: paramsPromise }: Args) {
 export async function generateMetadata({ params: paramsPromise }: Args): Promise<Metadata> {
   const { pageNumber } = await paramsPromise
   return {
+    robots: {
+      follow: false,
+      index: false,
+    },
     title: `Posts Page ${pageNumber || ''} | Serenity Club of Clearwater`,
   }
 }

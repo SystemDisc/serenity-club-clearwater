@@ -45,6 +45,10 @@ export default async function Page() {
 
 export function generateMetadata(): Metadata {
   return {
+    robots: {
+      follow: false,
+      index: false,
+    },
     title: `Posts | Serenity Club of Clearwater`,
   }
 }

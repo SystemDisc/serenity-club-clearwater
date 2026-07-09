@@ -1,19 +1,28 @@
 import type { Metadata } from 'next'
-import { getServerSideURL } from './getURL'
+import { getAbsoluteSiteURL, siteMetadata } from './siteURL'
 
-const defaultOpenGraph: Metadata['openGraph'] = {
-  type: 'website',
-  description: 'An open-source website built with Payload and Next.js.',
-  images: [
-    {
-      url: `${getServerSideURL()}/website-template-OG.webp`,
-    },
-  ],
-  siteName: 'Payload Website Template',
-  title: 'Payload Website Template',
+const getDefaultOpenGraph = (): NonNullable<Metadata['openGraph']> => {
+  return {
+    type: 'website',
+    description: siteMetadata.description,
+    images: [
+      {
+        url: getAbsoluteSiteURL(siteMetadata.ogImagePath),
+        width: 1200,
+        height: 630,
+        alt: siteMetadata.ogImageAlt,
+      },
+    ],
+    locale: 'en_US',
+    siteName: siteMetadata.name,
+    title: siteMetadata.title,
+    url: getAbsoluteSiteURL('/'),
+  }
 }
 
 export const mergeOpenGraph = (og?: Metadata['openGraph']): Metadata['openGraph'] => {
+  const defaultOpenGraph = getDefaultOpenGraph()
+
   return {
     ...defaultOpenGraph,
     ...og,

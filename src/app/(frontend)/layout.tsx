@@ -14,7 +14,7 @@ import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
 import { draftMode } from 'next/headers'
 
 import './globals.css'
-import { getServerSideURL } from '@/utilities/getURL'
+import { getAbsoluteSiteURL, getCanonicalSiteURL, siteMetadata } from '@/utilities/siteURL'
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const { isEnabled } = await draftMode()
@@ -47,10 +47,18 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 }
 
 export const metadata: Metadata = {
-  metadataBase: new URL(getServerSideURL()),
+  applicationName: siteMetadata.name,
+  alternates: {
+    canonical: '/',
+  },
+  description: siteMetadata.description,
+  metadataBase: new URL(getCanonicalSiteURL()),
   openGraph: mergeOpenGraph(),
+  title: siteMetadata.title,
   twitter: {
     card: 'summary_large_image',
-    creator: '@payloadcms',
+    description: siteMetadata.description,
+    images: [getAbsoluteSiteURL(siteMetadata.ogImagePath)],
+    title: siteMetadata.title,
   },
 }

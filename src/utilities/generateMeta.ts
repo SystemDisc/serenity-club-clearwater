@@ -3,20 +3,30 @@ import type { Metadata } from 'next'
 import type { Media, Page, Post, Config } from '../payload-types'
 
 import { mergeOpenGraph } from './mergeOpenGraph'
-import { getServerSideURL } from './getURL'
+import { getAbsoluteSiteURL, siteMetadata } from './siteURL'
 
 const getImageURL = (image?: Media | Config['db']['defaultIDType'] | null) => {
-  const serverUrl = getServerSideURL()
-
-  let url = serverUrl + '/website-template-OG.webp'
+  let url = getAbsoluteSiteURL(siteMetadata.ogImagePath)
 
   if (image && typeof image === 'object' && 'url' in image) {
     const ogUrl = image.sizes?.og?.url
 
-    url = ogUrl ? serverUrl + ogUrl : serverUrl + image.url
+    url = getAbsoluteSiteURL(ogUrl || image.url || siteMetadata.ogImagePath)
   }
 
   return url
+}
+
+const getDocTitle = (doc: Partial<Page> | Partial<Post> | null) => {
+  return doc?.meta?.title || doc?.title || siteMetadata.title
+}
+
+const getDocPath = (doc: Partial<Page> | Partial<Post> | null) => {
+  const slug = Array.isArray(doc?.slug) ? doc?.slug.join('/') : doc?.slug
+
+  if (!slug || slug === 'home') return '/'
+
+  return `/${slug}`
 }
 
 export const generateMeta = async (args: {
@@ -25,25 +35,28 @@ export const generateMeta = async (args: {
   const { doc } = args
 
   const ogImage = getImageURL(doc?.meta?.image)
+  const title = getDocTitle(doc)
+  const description = doc?.meta?.description || siteMetadata.description
 
-  const title = doc?.meta?.title
-    ? doc?.meta?.title + ' | Payload Website Template'
-    : 'Payload Website Template'
+  const titleWithSiteName = title === siteMetadata.title ? title : `${title} | ${siteMetadata.name}`
 
   return {
-    description: doc?.meta?.description,
+    description,
     openGraph: mergeOpenGraph({
-      description: doc?.meta?.description || '',
+      description,
       images: ogImage
         ? [
             {
               url: ogImage,
+              width: 1200,
+              height: 630,
+              alt: siteMetadata.ogImageAlt,
             },
           ]
         : undefined,
-      title,
-      url: Array.isArray(doc?.slug) ? doc?.slug.join('/') : '/',
+      title: titleWithSiteName,
+      url: getAbsoluteSiteURL(getDocPath(doc)),
     }),
-    title,
+    title: titleWithSiteName,
   }
 }

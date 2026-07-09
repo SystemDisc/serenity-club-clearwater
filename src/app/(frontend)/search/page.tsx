@@ -45,6 +45,10 @@ export default async function Page({ searchParams: searchParamsPromise }: Args) 
 
 export function generateMetadata(): Metadata {
   return {
+    robots: {
+      follow: false,
+      index: false,
+    },
     title: `Search | Serenity Club of Clearwater`,
   }
 }

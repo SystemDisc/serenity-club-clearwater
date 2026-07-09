@@ -13,6 +13,7 @@ import { ArrowRight, CalendarDays, HeartHandshake, ShoppingBag } from 'lucide-re
 
 import { getSerenityData } from '@/serenity/data'
 import { sortedMeetingsByTime } from '@/serenity/meetings'
+import { siteMetadata } from '@/utilities/siteURL'
 
 export const dynamic = 'force-dynamic'
 
@@ -173,7 +174,6 @@ export default async function HomePage() {
 }
 
 export const metadata = {
-  description:
-    'Serenity Club of Clearwater hosts recovery meetings, fellowship, memberships, events, and support in downtown Clearwater, Florida.',
-  title: 'Serenity Club of Clearwater',
+  description: siteMetadata.description,
+  title: siteMetadata.title,
 }
