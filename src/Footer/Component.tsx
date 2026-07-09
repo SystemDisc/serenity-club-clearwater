@@ -1,4 +1,5 @@
 import type { NavItem } from '@/serenity/content'
+import { SerenityMark } from '@/components/SerenityMark'
 import { getSerenitySettings, getSiteNavigation } from '@/serenity/data'
 import { Mail, MapPin, Phone } from 'lucide-react'
 import Link from 'next/link'
@@ -35,9 +36,7 @@ export async function Footer() {
       <div className="container grid gap-6 py-7 md:grid-cols-2 md:py-8 lg:grid-cols-[1.1fr_1fr_1.1fr] lg:gap-8 lg:py-10">
         <div>
           <Link className="inline-flex items-center gap-3" href="/">
-            <span className="flex size-11 items-center justify-center rounded-md bg-amber-300 text-lg font-semibold text-slate-950">
-              SC
-            </span>
+            <SerenityMark className="size-11 ring-1 ring-white/20" />
             <span className="text-lg font-semibold">{settings.name}</span>
           </Link>
           <p className="mt-4 hidden max-w-md text-sm leading-6 text-slate-300 sm:block">

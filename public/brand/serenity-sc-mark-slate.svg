@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="title desc">
-  <title id="title">Serenity Club SC mark, classic ivory</title>
-  <desc id="desc">A square SC monogram inspired by the Serenity Club sign lettering.</desc>
-  <rect width="1024" height="1024" rx="132" fill="#f8f6ef"/>
-  <rect x="54" y="54" width="916" height="916" rx="112" fill="none" stroke="#3f4a51" stroke-width="18"/>
-  <rect x="94" y="94" width="836" height="836" rx="82" fill="none" stroke="#a8a59a" stroke-width="4"/>
+  <title id="title">Serenity Club SC mark, slate frame</title>
+  <desc id="desc">A restrained square SC monogram with burgundy Palatino letters and a slate frame.</desc>
+  <rect width="1024" height="1024" rx="96" fill="#34424c"/>
+  <rect x="62" y="62" width="900" height="900" rx="58" fill="#fbfaf5"/>
+
 
   <g transform="translate(23.3 28.0)">
     <path d="M143.1 589.2L145.5 586.9L159.8 586.9L162.2 589.2Q163.7 626.7 166.1 635.1Q168.6 643.4 182 652.6Q195.3 661.9 217.4 667.7Q239.5 673.6 262.1 673.6Q293.1 673.6 317.9 662.2Q342.7 650.7 356.4 628.6Q370.2 606.5 370.2 579Q370.2 559.6 363.6 545.3Q357 530.9 345.1 522.3Q333.3 513.6 318 509.4Q302.8 505.1 272.6 500.2Q243.3 495.5 226.8 491.7Q210.2 487.9 193.8 479.9Q177.4 472 166.4 459.9Q155.4 447.7 148.9 430Q142.3 412.3 142.3 392.1Q142.3 337.3 180.4 302.3Q218.4 267.2 282.6 267.2Q308.1 267.2 338.1 273.5Q368.1 279.8 392.8 292.1L394.8 295.7Q388.4 322.6 386.9 372.4L384.3 374.8L369 374.8L366.7 372.7Q366.1 337.6 364.9 328.5Q363.8 319.4 338.3 305.9Q312.8 292.4 282.9 292.4Q258 292.4 236.3 302.4Q214.6 312.4 203.5 333.8Q192.4 355.1 192.4 377.4Q192.4 394.7 199.1 408Q205.8 421.3 216.5 429.1Q227.2 436.9 241.4 440.7Q255.6 444.5 293.4 450.1Q345.3 457.4 368.9 467.8Q392.5 478.2 406.7 500.7Q420.9 523.3 420.9 555.2Q420.9 617.6 370 659.2Q319.2 700.8 246.9 700.8Q186.2 700.8 140.5 679.2L138.8 675.4Q141.7 656.9 143.1 589.2" fill="#48262b"/>
