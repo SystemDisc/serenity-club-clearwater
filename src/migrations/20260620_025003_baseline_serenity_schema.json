@@ -11987,7 +11987,7 @@
           "type": "varchar",
           "primaryKey": false,
           "notNull": false,
-          "default": "'Open daily from 9am to 9pm.'"
+          "default": "'Open daily from 7am to 9pm.'"
         },
         "donation_url": {
           "name": "donation_url",

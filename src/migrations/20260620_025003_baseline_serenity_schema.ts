@@ -1017,7 +1017,7 @@ export async function up({ db, payload: _payload, req: _req }: MigrateUpArgs): P
   	"city_state_zip" varchar DEFAULT 'Clearwater, FL 33756',
   	"phone" varchar DEFAULT '(727) 461-5420',
   	"email" varchar DEFAULT 'serenityclubclearwater@hotmail.com',
-  	"hours" varchar DEFAULT 'Open daily from 9am to 9pm.',
+  	"hours" varchar DEFAULT 'Open daily from 7am to 9pm.',
   	"donation_url" varchar DEFAULT 'https://square.link/u/ksu7yC0P',
   	"facebook_url" varchar DEFAULT 'https://www.facebook.com/SerenityClubofClearwater',
   	"instagram_url" varchar,

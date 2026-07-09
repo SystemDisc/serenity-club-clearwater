@@ -131,7 +131,7 @@ export const fallbackClubSettings: ClubSettings = {
   cityStateZip: 'Clearwater, FL 33756',
   phone: '(727) 461-5420',
   email: 'serenityclubclearwater@hotmail.com',
-  hours: 'Open daily from 9am to 9pm. Meetings run from 7am to 9pm.',
+  hours: 'Open daily from 7am to 9pm. Meetings run from 7am to 9pm.',
   donationUrl: 'https://square.link/u/ksu7yC0P',
   facebookUrl: 'https://www.facebook.com/SerenityClubofClearwater',
   heroImageUrl:

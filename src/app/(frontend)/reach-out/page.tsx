@@ -17,7 +17,7 @@ export default async function ReachOutPage() {
       <PageHeader eyebrow="Reach Out" title="Contact Serenity Club">
         <p>
           Call, email, or visit the clubhouse for membership, meeting, event, and group questions.
-          The club is open from 9am to 9pm each day, with meetings from 7am to 9pm.
+          The club is open from 7am to 9pm each day, with meetings from 7am to 9pm.
         </p>
       </PageHeader>
 

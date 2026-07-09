@@ -22,7 +22,7 @@ export const ClubSettings: GlobalConfig = {
     { name: 'cityStateZip', type: 'text', defaultValue: 'Clearwater, FL 33756' },
     { name: 'phone', type: 'text', defaultValue: '(727) 461-5420' },
     { name: 'email', type: 'email', defaultValue: 'serenityclubclearwater@hotmail.com' },
-    { name: 'hours', type: 'text', defaultValue: 'Open daily from 9am to 9pm.' },
+    { name: 'hours', type: 'text', defaultValue: 'Open daily from 7am to 9pm.' },
     { name: 'donationUrl', type: 'text', defaultValue: 'https://square.link/u/ksu7yC0P' },
     { name: 'facebookUrl', type: 'text', defaultValue: 'https://www.facebook.com/SerenityClubofClearwater' },
     { name: 'instagramUrl', type: 'text' },
