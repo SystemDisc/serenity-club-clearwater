@@ -1,14 +1,3 @@
-import type {
-  ClubSettings,
-  EventItem,
-  GalleryItem,
-  Meeting,
-  Policy,
-  Product,
-  Sponsor,
-  TeamMember,
-} from './content'
-
 import {
   ArrowRight,
   CalendarDays,
@@ -24,6 +13,18 @@ import {
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
+
+import {
+  SERENITY_GOOGLE_MAPS_PLACE_URL,
+  type ClubSettings,
+  type EventItem,
+  type GalleryItem,
+  type Meeting,
+  type Policy,
+  type Product,
+  type Sponsor,
+  type TeamMember,
+} from './content'
 
 export {
   fallbackPrimaryNavItems as primaryNavItems,
@@ -156,7 +157,7 @@ export function SectionHeader({
 
 export function HomeHero({ settings }: { settings: ClubSettings }) {
   return (
-    <section className="bg-[#f7f2e8] px-4 py-8 text-slate-950 md:py-14">
+    <section className="overflow-x-clip bg-[#f7f2e8] px-4 pb-8 pt-4 text-slate-950 md:pb-14">
       <div className="container grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(20rem,0.78fr)] lg:items-center">
         <div className="order-last max-w-3xl lg:order-first lg:py-10">
           <p className="mb-4 text-sm font-semibold uppercase tracking-[0.16em] text-emerald-900">
@@ -183,14 +184,16 @@ export function HomeHero({ settings }: { settings: ClubSettings }) {
           </div>
         </div>
         {settings.heroImageUrl ? (
-          <div className="order-first lg:order-last">
-            <SerenityImage
-              alt="Serenity Club building sign at 631 Turner Street"
-              className="aspect-[4/3] w-full rounded-lg border border-slate-200 bg-white object-contain p-3"
-              priority
-              sizes="(min-width: 1024px) 38vw, 100vw"
-              src={settings.heroImageUrl}
-            />
+          <div className="relative z-10 order-first aspect-[4/3] w-full min-w-0 max-w-full overflow-visible lg:order-last">
+            <div className="absolute inset-x-0 bottom-0 top-[11.2%] overflow-visible rounded-lg border border-slate-200 bg-white">
+              <img
+                alt="Serenity Club building sign at 631 Turner Street"
+                className="absolute inset-x-0 top-[-12.62%] z-10 h-[112.62%] w-full max-w-full object-contain object-top"
+                fetchPriority="high"
+                loading="eager"
+                src={settings.heroImageUrl}
+              />
+            </div>
           </div>
         ) : null}
       </div>
@@ -218,7 +221,7 @@ export function ContactBand({ settings }: { settings: ClubSettings }) {
         </a>
         <a
           className="flex min-h-11 min-w-0 items-center gap-3 rounded-md hover:text-emerald-900 sm:col-span-2 lg:col-span-1"
-          href="https://maps.google.com/?q=631%20Turner%20Street%20Clearwater%20FL%2033756"
+          href={SERENITY_GOOGLE_MAPS_PLACE_URL}
           rel="noreferrer"
           target="_blank"
         >

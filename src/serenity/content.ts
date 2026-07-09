@@ -115,6 +115,12 @@ export type SerenityData = {
   teamMembers: TeamMember[]
 }
 
+export const SERENITY_GOOGLE_MAPS_PLACE_URL =
+  'https://www.google.com/maps/place/The+Serenity+Club+of+Clearwater/@27.9592669,-82.7974882,17z/data=!3m1!4b1!4m6!3m5!1s0x88c2f107127189f1:0x2922ec98bc649f94!8m2!3d27.9592669!4d-82.7974882!16s%2Fg%2F11stk1fhrt?hl=en-US'
+
+export const SERENITY_GOOGLE_MAPS_EMBED_URL =
+  'https://maps.google.com/maps?cid=2964191645503102868&output=embed'
+
 export const fallbackClubSettings: ClubSettings = {
   name: 'Serenity Club of Clearwater',
   legalName: 'Serenity Club of Clearwater, Inc.',

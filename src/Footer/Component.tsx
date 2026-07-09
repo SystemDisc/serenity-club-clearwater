@@ -1,5 +1,5 @@
-import type { NavItem } from '@/serenity/content'
 import { SerenityMark } from '@/components/SerenityMark'
+import { SERENITY_GOOGLE_MAPS_PLACE_URL, type NavItem } from '@/serenity/content'
 import { getSerenitySettings, getSiteNavigation } from '@/serenity/data'
 import { Mail, MapPin, Phone } from 'lucide-react'
 import Link from 'next/link'
@@ -71,7 +71,7 @@ export async function Footer() {
           </a>
           <a
             className="flex min-h-11 items-center gap-3 hover:text-white"
-            href="https://maps.google.com/?q=631%20Turner%20Street%20Clearwater%20FL%2033756"
+            href={SERENITY_GOOGLE_MAPS_PLACE_URL}
             rel="noreferrer"
             target="_blank"
           >
