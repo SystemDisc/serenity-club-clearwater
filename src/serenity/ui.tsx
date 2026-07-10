@@ -288,11 +288,20 @@ export function EventGrid({ events }: { events: EventItem[] }) {
           key={event.title}
         >
           {event.imageUrl ? (
-            <SerenityImage
-              alt={event.imageAlt || event.title}
-              className="aspect-[4/3] w-full object-cover"
-              src={event.imageUrl}
-            />
+            <a
+              aria-label={`Open original image for ${event.title}`}
+              className="block bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-emerald-900"
+              href={event.imageUrl}
+              rel="noreferrer"
+              target="_blank"
+            >
+              <SerenityImage
+                alt={event.imageAlt || event.title}
+                className="aspect-[4/3] w-full object-contain"
+                sizes="(min-width: 768px) 33vw, 100vw"
+                src={event.imageUrl}
+              />
+            </a>
           ) : null}
           <div className="p-5">
             <p className="text-sm font-semibold uppercase tracking-[0.12em] text-emerald-900">
