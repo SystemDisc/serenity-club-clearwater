@@ -326,12 +326,20 @@ export function GalleryGrid({ items }: { items: GalleryItem[] }) {
           key={`${item.title}-${item.imageUrl || item.id}`}
         >
           {item.imageUrl ? (
-            <SerenityImage
-              alt={item.imageAlt || item.title}
-              className="aspect-[4/3] w-full object-cover"
-              sizes="(min-width: 768px) 33vw, 100vw"
-              src={item.imageUrl}
-            />
+            <a
+              aria-label={`Open original image for ${item.title}`}
+              className="block bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-emerald-900"
+              href={item.imageUrl}
+              rel="noreferrer"
+              target="_blank"
+            >
+              <SerenityImage
+                alt={item.imageAlt || item.title}
+                className="aspect-[4/3] w-full object-contain"
+                sizes="(min-width: 768px) 33vw, 100vw"
+                src={item.imageUrl}
+              />
+            </a>
           ) : (
             <div className="flex aspect-[4/3] items-center justify-center bg-slate-100 text-slate-500">
               <ImageIcon aria-hidden="true" className="size-10" />
