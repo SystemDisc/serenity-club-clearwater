@@ -22,6 +22,7 @@ import { ClubSettings } from './ClubSettings/config'
 import { Footer } from './Footer/config'
 import { Header } from './Header/config'
 import { plugins } from './plugins'
+import { docxToImagePlugin } from './plugins/docxToImage'
 import { defaultLexical } from '@/fields/defaultLexical'
 import { getServerSideURL } from './utilities/getURL'
 
@@ -131,6 +132,7 @@ export default buildConfig({
       enabled: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
       token: process.env.BLOB_READ_WRITE_TOKEN,
     }),
+    docxToImagePlugin(),
   ],
   secret: process.env.PAYLOAD_SECRET,
   sharp,
