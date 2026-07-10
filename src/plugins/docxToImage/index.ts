@@ -1,6 +1,7 @@
 import type { CollectionAfterChangeHook, Config, Plugin } from 'payload'
 
 import type { Media } from '@/payload-types'
+import { getServerSideURL } from '@/utilities/getURL'
 import { convertDocxUrlToImage, isDocxMimeType } from '@/utilities/docxToImage/convertDocxToImage'
 
 const skipDocxToImageContextKey = 'skipDocxToImageConversion'
@@ -9,9 +10,40 @@ type RequestContextWithDocxFlag = Record<string, unknown> & {
   [skipDocxToImageContextKey]?: boolean
 }
 
-const getMediaUrl = (doc: Media) => {
+const getRequestOrigin = (req: Parameters<CollectionAfterChangeHook<Media>>[0]['req']) => {
+  const forwardedProto = req.headers.get('x-forwarded-proto')?.split(',')[0]?.trim()
+  const forwardedHost = req.headers.get('x-forwarded-host')?.split(',')[0]?.trim()
+  const host = forwardedHost || req.headers.get('host')
+
+  if (host) {
+    return `${forwardedProto || 'https'}://${host}`
+  }
+
+  if (typeof req.url === 'string') {
+    try {
+      return new URL(req.url).origin
+    } catch {
+      // Fall through to configured URL when Payload exposes a relative request URL.
+    }
+  }
+
+  return getServerSideURL()
+}
+
+const resolveMediaUrl = (
+  mediaUrl: string,
+  req: Parameters<CollectionAfterChangeHook<Media>>[0]['req'],
+) => {
+  try {
+    return new URL(mediaUrl).toString()
+  } catch {
+    return new URL(mediaUrl, `${getRequestOrigin(req).replace(/\/+$/, '')}/`).toString()
+  }
+}
+
+const getMediaUrl = (doc: Media, req: Parameters<CollectionAfterChangeHook<Media>>[0]['req']) => {
   if (typeof doc.url === 'string' && doc.url) {
-    return doc.url
+    return resolveMediaUrl(doc.url, req)
   }
 
   return null
@@ -36,7 +68,7 @@ const convertDocxMediaUpload: CollectionAfterChangeHook<Media> = async ({ doc, r
     return doc
   }
 
-  const docxUrl = getMediaUrl(doc)
+  const docxUrl = getMediaUrl(doc, req)
 
   if (!docxUrl) {
     req.payload.logger.warn(`Skipping DOCX image conversion for media ${doc.id}: missing file URL.`)
