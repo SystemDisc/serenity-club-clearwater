@@ -7,7 +7,7 @@ import { getPayload } from 'payload'
 import { hasUsableDatabaseUrl } from '@/serenity/data'
 import { getCanonicalSiteURL } from '@/utilities/siteURL'
 
-export const revalidate = 300
+export const revalidate = false
 
 type SitemapEntry = MetadataRoute.Sitemap[number]
 
@@ -131,7 +131,7 @@ const getCmsEntries = unstable_cache(
   },
   ['public-sitemap'],
   {
-    revalidate: 300,
+    revalidate: false,
     tags: ['pages-sitemap', 'products-sitemap'],
   },
 )
