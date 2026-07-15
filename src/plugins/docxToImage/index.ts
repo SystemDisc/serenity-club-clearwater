@@ -2,7 +2,8 @@ import type { CollectionAfterChangeHook, Config, Plugin } from 'payload'
 
 import type { Media } from '@/payload-types'
 import { getServerSideURL } from '@/utilities/getURL'
-import { convertDocxUrlToImage, isDocxMimeType } from '@/utilities/docxToImage/convertDocxToImage'
+import { convertDocxViaService } from '@/utilities/docxToImage/convertDocxViaService'
+import { isDocxMimeType } from '@/utilities/docxToImage/mime'
 
 const skipDocxToImageContextKey = 'skipDocxToImageConversion'
 
@@ -75,7 +76,11 @@ const convertDocxMediaUpload: CollectionAfterChangeHook<Media> = async ({ doc, r
     return doc
   }
 
-  const image = await convertDocxUrlToImage(docxUrl, doc.filename)
+  const image = await convertDocxViaService({
+    docxUrl,
+    filename: doc.filename,
+    requestOrigin: getRequestOrigin(req),
+  })
 
   if (!req.context) {
     req.context = {}

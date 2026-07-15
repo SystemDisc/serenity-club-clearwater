@@ -1,15 +1,15 @@
 {
   "services": {
-    "web": {
-      "root": ".",
+    "docx-converter": {
+      "root": "services/docx-converter",
       "entrypoint": "Dockerfile.vercel"
     }
   },
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/api/docx-to-image",
       "destination": {
-        "service": "web"
+        "service": "docx-converter"
       }
     }
   ]

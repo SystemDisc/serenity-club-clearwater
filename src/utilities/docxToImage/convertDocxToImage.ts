@@ -8,7 +8,7 @@ import sharp from 'sharp'
 
 const execFileAsync = promisify(execFile)
 
-const docxMimeType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+export { isDocxMimeType } from './mime'
 
 type ConvertedDocxImage = {
   buffer: Buffer
@@ -130,8 +130,6 @@ const encodeImage = async (pngPath: string, format: OutputFormat) => {
 
   return image.webp({ effort: 4, quality: 92 }).toBuffer()
 }
-
-export const isDocxMimeType = (mimeType: string | null | undefined) => mimeType === docxMimeType
 
 export const convertDocxBufferToImage = async (
   docxBuffer: Buffer,
