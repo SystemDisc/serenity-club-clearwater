@@ -1,5 +1,7 @@
 import type { GlobalConfig } from 'payload'
 
+import { revalidatePublicSiteAfterGlobalChange } from '@/hooks/revalidatePublicSite'
+
 export const ClubSettings: GlobalConfig = {
   slug: 'clubSettings',
   label: 'Club Settings',
@@ -33,4 +35,7 @@ export const ClubSettings: GlobalConfig = {
     { name: 'logoImage', type: 'upload', relationTo: 'media' },
     { name: 'logoImageUrl', type: 'text', label: 'Logo External Image URL' },
   ],
+  hooks: {
+    afterChange: [revalidatePublicSiteAfterGlobalChange],
+  },
 }

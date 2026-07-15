@@ -2,6 +2,10 @@ import type { CollectionConfig } from 'payload'
 
 import { authenticated } from '@/access/authenticated'
 import { authenticatedOrPublished } from '@/access/authenticatedOrPublished'
+import {
+  revalidatePublicSiteAfterChange,
+  revalidatePublicSiteAfterDelete,
+} from '@/hooks/revalidatePublicSite'
 
 export const Meetings: CollectionConfig = {
   slug: 'meetings',
@@ -40,6 +44,10 @@ export const Meetings: CollectionConfig = {
     { name: 'externalUrl', type: 'text', label: 'External URL' },
     { name: 'order', type: 'number', defaultValue: 100, admin: { position: 'sidebar' } },
   ],
+  hooks: {
+    afterChange: [revalidatePublicSiteAfterChange],
+    afterDelete: [revalidatePublicSiteAfterDelete],
+  },
   versions: {
     drafts: true,
     maxPerDoc: 25,

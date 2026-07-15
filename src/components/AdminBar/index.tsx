@@ -36,14 +36,29 @@ export const AdminBar: React.FC<{
 }> = (props) => {
   const { adminBarProps } = props || {}
   const segments = useSelectedLayoutSegments()
+  const [preview, setPreview] = useState(false)
   const [show, setShow] = useState(false)
   const collection = (
     collectionLabels[segments?.[1] as keyof typeof collectionLabels] ? segments[1] : 'pages'
   ) as keyof typeof collectionLabels
   const router = useRouter()
 
-  const onAuthChange = React.useCallback((user: PayloadMeUser) => {
-    setShow(Boolean(user?.id))
+  const onAuthChange = React.useCallback(async (user: PayloadMeUser) => {
+    const isAuthenticated = Boolean(user?.id)
+    setShow(isAuthenticated)
+
+    if (!isAuthenticated) {
+      setPreview(false)
+      return
+    }
+
+    try {
+      const response = await fetch('/next/preview-status')
+      const status = (await response.json()) as { preview?: boolean }
+      setPreview(status.preview === true)
+    } catch {
+      setPreview(false)
+    }
   }, [])
 
   return (
@@ -72,10 +87,12 @@ export const AdminBar: React.FC<{
           onAuthChange={onAuthChange}
           onPreviewExit={() => {
             fetch('/next/exit-preview').then(() => {
+              setPreview(false)
               router.push('/')
               router.refresh()
             })
           }}
+          preview={preview}
           style={{
             backgroundColor: 'transparent',
             padding: 0,

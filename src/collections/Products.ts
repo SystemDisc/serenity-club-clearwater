@@ -6,6 +6,10 @@ import type {
 
 import { authenticated } from '@/access/authenticated'
 import { authenticatedOrPublished } from '@/access/authenticatedOrPublished'
+import {
+  revalidatePublicSiteAfterChange,
+  revalidatePublicSiteAfterDelete,
+} from '@/hooks/revalidatePublicSite'
 import type { Product } from '@/payload-types'
 import { revalidatePath, revalidateTag } from 'next/cache'
 
@@ -77,8 +81,8 @@ export const Products: CollectionConfig = {
     { name: 'order', type: 'number', defaultValue: 100, admin: { position: 'sidebar' } },
   ],
   hooks: {
-    afterChange: [revalidateProduct],
-    afterDelete: [revalidateDelete],
+    afterChange: [revalidateProduct, revalidatePublicSiteAfterChange],
+    afterDelete: [revalidateDelete, revalidatePublicSiteAfterDelete],
   },
   versions: {
     drafts: true,

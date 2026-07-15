@@ -3,8 +3,6 @@ import { HeartHandshake } from 'lucide-react'
 
 import { getSerenityData } from '@/serenity/data'
 
-export const dynamic = 'force-dynamic'
-
 export default async function EventsPage() {
   const data = await getSerenityData()
 

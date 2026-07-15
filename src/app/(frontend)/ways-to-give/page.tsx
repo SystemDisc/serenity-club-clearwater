@@ -3,8 +3,6 @@ import { Coffee, Gift, HeartHandshake, Mail, Phone, Shirt, Users } from 'lucide-
 
 import { getSerenityData } from '@/serenity/data'
 
-export const dynamic = 'force-dynamic'
-
 const donationMethods = [
   {
     title: 'In person',

@@ -13,14 +13,11 @@ import { Header } from '@/Header/Component'
 import { Providers } from '@/providers'
 import { InitTheme } from '@/providers/Theme/InitTheme'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
-import { draftMode } from 'next/headers'
 
 import './globals.css'
 import { getAbsoluteSiteURL, getCanonicalSiteURL, siteMetadata } from '@/utilities/siteURL'
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const { isEnabled } = await draftMode()
-
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html className={cn(GeistSans.variable, GeistMono.variable)} lang="en" suppressHydrationWarning>
       <head>
@@ -33,11 +30,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </head>
       <body>
         <Providers>
-          <AdminBar
-            adminBarProps={{
-              preview: isEnabled,
-            }}
-          />
+          <AdminBar />
 
           <Header />
           {children}
@@ -49,6 +42,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     </html>
   )
 }
+
+export const revalidate = 300
 
 export const metadata: Metadata = {
   applicationName: siteMetadata.name,

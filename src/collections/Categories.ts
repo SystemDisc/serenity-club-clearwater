@@ -3,6 +3,10 @@ import type { CollectionConfig } from 'payload'
 import { anyone } from '../access/anyone'
 import { authenticated } from '../access/authenticated'
 import { slugField } from 'payload'
+import {
+  revalidatePublicSiteAfterChange,
+  revalidatePublicSiteAfterDelete,
+} from '@/hooks/revalidatePublicSite'
 
 export const Categories: CollectionConfig = {
   slug: 'categories',
@@ -25,4 +29,8 @@ export const Categories: CollectionConfig = {
       position: undefined,
     }),
   ],
+  hooks: {
+    afterChange: [revalidatePublicSiteAfterChange],
+    afterDelete: [revalidatePublicSiteAfterDelete],
+  },
 }

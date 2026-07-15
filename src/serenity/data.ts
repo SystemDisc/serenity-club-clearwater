@@ -1,5 +1,6 @@
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
+import { cache } from 'react'
 
 import {
   type ClubSettings,
@@ -71,7 +72,7 @@ const fallbackSiteNavigation = (): SiteNavigation => ({
 const sortByOrder = <T extends { order: number }>(docs: T[]) =>
   [...docs].sort((a, b) => a.order - b.order)
 
-async function getPayloadClient() {
+const getPayloadClient = cache(async () => {
   if (!hasUsableDatabaseUrl()) return null
 
   try {
@@ -79,7 +80,7 @@ async function getPayloadClient() {
   } catch (_error) {
     return null
   }
-}
+})
 
 async function findCollection<T>(
   collection: SerenityCollection,
@@ -162,7 +163,7 @@ const getNavItems = (global: unknown, fieldName: string) => {
   return field.map(normalizeNavItem).filter((item): item is NavItem => Boolean(item))
 }
 
-export async function getSiteNavigation(): Promise<SiteNavigation> {
+export const getSiteNavigation = cache(async (): Promise<SiteNavigation> => {
   const payload = await getPayloadClient()
 
   if (!payload) return fallbackSiteNavigation()
@@ -197,9 +198,9 @@ export async function getSiteNavigation(): Promise<SiteNavigation> {
   } catch (_error) {
     return fallbackSiteNavigation()
   }
-}
+})
 
-export async function getSerenitySettings(): Promise<ClubSettings> {
+export const getSerenitySettings = cache(async (): Promise<ClubSettings> => {
   const payload = await getPayloadClient()
 
   if (!payload) return fallbackClubSettings
@@ -233,9 +234,9 @@ export async function getSerenitySettings(): Promise<ClubSettings> {
   } catch (_error) {
     return fallbackClubSettings
   }
-}
+})
 
-export async function getSerenityData(): Promise<SerenityData> {
+export const getSerenityData = cache(async (): Promise<SerenityData> => {
   const [settings, meetings, events, galleryItems, teamMembers, products, policies, sponsors] =
     await Promise.all([
       getSerenitySettings(),
@@ -321,10 +322,10 @@ export async function getSerenityData(): Promise<SerenityData> {
     sponsors: sortByOrder(sponsors),
     teamMembers: sortByOrder(teamMembers),
   }
-}
+})
 
-export async function getProductBySlug(slug: string) {
+export const getProductBySlug = cache(async (slug: string) => {
   const data = await getSerenityData()
 
   return data.products.find((product) => product.slug === slug) || null
-}
+})

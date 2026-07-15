@@ -7,8 +7,6 @@ import { Mail, MapPin, Phone } from 'lucide-react'
 
 import { getSerenityData } from '@/serenity/data'
 
-export const dynamic = 'force-dynamic'
-
 export default async function ReachOutPage() {
   const data = await getSerenityData()
 

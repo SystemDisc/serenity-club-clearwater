@@ -15,8 +15,6 @@ import { getSerenityData } from '@/serenity/data'
 import { sortedMeetingsByTime } from '@/serenity/meetings'
 import { siteMetadata } from '@/utilities/siteURL'
 
-export const dynamic = 'force-dynamic'
-
 export default async function HomePage() {
   const data = await getSerenityData()
   const sortedMeetings = sortedMeetingsByTime(data.meetings)

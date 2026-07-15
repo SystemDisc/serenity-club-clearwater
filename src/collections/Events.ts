@@ -2,6 +2,10 @@ import type { CollectionConfig } from 'payload'
 
 import { authenticated } from '@/access/authenticated'
 import { authenticatedOrPublished } from '@/access/authenticatedOrPublished'
+import {
+  revalidatePublicSiteAfterChange,
+  revalidatePublicSiteAfterDelete,
+} from '@/hooks/revalidatePublicSite'
 
 export const Events: CollectionConfig = {
   slug: 'events',
@@ -37,6 +41,10 @@ export const Events: CollectionConfig = {
     { name: 'url', type: 'text', label: 'Optional URL' },
     { name: 'order', type: 'number', defaultValue: 100, admin: { position: 'sidebar' } },
   ],
+  hooks: {
+    afterChange: [revalidatePublicSiteAfterChange],
+    afterDelete: [revalidatePublicSiteAfterDelete],
+  },
   versions: {
     drafts: true,
     maxPerDoc: 25,

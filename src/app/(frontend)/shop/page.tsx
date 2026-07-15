@@ -2,8 +2,6 @@ import { PageHeader, ProductGrid, SectionHeader } from '@/serenity/ui'
 
 import { getSerenityData } from '@/serenity/data'
 
-export const dynamic = 'force-dynamic'
-
 export default async function ShopPage() {
   const data = await getSerenityData()
 

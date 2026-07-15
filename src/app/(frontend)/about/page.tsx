@@ -2,8 +2,6 @@ import { PageHeader, SectionHeader, SerenityImage, TeamGrid } from '@/serenity/u
 
 import { getSerenityData } from '@/serenity/data'
 
-export const dynamic = 'force-dynamic'
-
 export default async function AboutPage() {
   const data = await getSerenityData()
 

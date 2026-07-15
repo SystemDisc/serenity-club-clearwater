@@ -4,8 +4,6 @@ import { getSerenityData } from '@/serenity/data'
 import type { Meeting } from '@/serenity/content'
 import { sortedMeetingsByTime } from '@/serenity/meetings'
 
-export const dynamic = 'force-dynamic'
-
 const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
 
 const groupNotes = [

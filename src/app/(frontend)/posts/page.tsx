@@ -9,8 +9,6 @@ import React from 'react'
 import PageClient from './page.client'
 import { hasUsableDatabaseUrl } from '@/serenity/data'
 
-export const dynamic = 'force-dynamic'
-
 export default async function Page() {
   const posts = await queryPosts()
 

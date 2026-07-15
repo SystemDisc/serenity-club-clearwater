@@ -3,8 +3,6 @@ import { CalendarDays, Mail, Users } from 'lucide-react'
 
 import { getSerenityData } from '@/serenity/data'
 
-export const dynamic = 'force-dynamic'
-
 export default async function GroupsPage() {
   const data = await getSerenityData()
 

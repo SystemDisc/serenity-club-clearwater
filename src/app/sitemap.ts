@@ -7,7 +7,7 @@ import { getPayload } from 'payload'
 import { hasUsableDatabaseUrl } from '@/serenity/data'
 import { getCanonicalSiteURL } from '@/utilities/siteURL'
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 300
 
 type SitemapEntry = MetadataRoute.Sitemap[number]
 

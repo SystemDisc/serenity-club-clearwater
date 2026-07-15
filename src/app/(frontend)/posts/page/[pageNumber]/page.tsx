@@ -10,8 +10,6 @@ import PageClient from './page.client'
 import { notFound } from 'next/navigation'
 import { hasUsableDatabaseUrl } from '@/serenity/data'
 
-export const dynamic = 'force-dynamic'
-
 type Args = {
   params: Promise<{
     pageNumber: string

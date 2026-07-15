@@ -2,8 +2,6 @@ import { GalleryGrid, PageHeader, SectionHeader } from '@/serenity/ui'
 
 import { getSerenityData } from '@/serenity/data'
 
-export const dynamic = 'force-dynamic'
-
 export default async function GalleryPage() {
   const data = await getSerenityData()
 

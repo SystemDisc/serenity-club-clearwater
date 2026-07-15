@@ -4,12 +4,16 @@ import { notFound } from 'next/navigation'
 
 import { getProductBySlug, getSerenityData } from '@/serenity/data'
 
-export const dynamic = 'force-dynamic'
-
 type Args = {
   params: Promise<{
     slug: string
   }>
+}
+
+export async function generateStaticParams() {
+  const data = await getSerenityData()
+
+  return data.products.filter((product) => product.slug).map((product) => ({ slug: product.slug }))
 }
 
 export async function generateMetadata({ params }: Args) {
