@@ -1,6 +1,19 @@
 import AxeBuilder from '@axe-core/playwright'
 import { expect, test } from '@playwright/test'
 
+const publicPages = [
+  '/',
+  '/about',
+  '/events',
+  '/gallery',
+  '/groups',
+  '/meeting-schedule',
+  '/policies',
+  '/reach-out',
+  '/shop',
+  '/ways-to-give',
+]
+
 test.describe('Frontend', () => {
   test('can load homepage', async ({ page }) => {
     await page.goto('/')
@@ -23,6 +36,16 @@ test.describe('Frontend', () => {
       .analyze()
 
     expect(results.violations).toEqual([])
+  })
+
+  test('published pages use valid heading order', async ({ page }) => {
+    for (const url of publicPages) {
+      await page.goto(url)
+
+      const results = await new AxeBuilder({ page }).withRules(['heading-order']).analyze()
+
+      expect(results.violations, `Heading order violations on ${url}`).toEqual([])
+    }
   })
 
   test('can navigate core public pages', async ({ page }) => {

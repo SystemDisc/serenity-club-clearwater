@@ -14,7 +14,7 @@ export default async function EventsPage() {
 
       <section className="bg-white px-4 py-10 md:py-12">
         <div className="container">
-          <EventGrid events={data.events} />
+          <EventGrid events={data.events} headingLevel="h2" />
         </div>
       </section>
 

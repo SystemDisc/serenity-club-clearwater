@@ -279,7 +279,15 @@ export function MeetingList({
   )
 }
 
-export function EventGrid({ events }: { events: EventItem[] }) {
+export function EventGrid({
+  events,
+  headingLevel = 'h3',
+}: {
+  events: EventItem[]
+  headingLevel?: 'h2' | 'h3'
+}) {
+  const EventHeading = headingLevel
+
   return (
     <div className="grid gap-5 md:grid-cols-3">
       {events.map((event) => (
@@ -307,7 +315,9 @@ export function EventGrid({ events }: { events: EventItem[] }) {
             <p className="text-sm font-semibold uppercase tracking-[0.12em] text-emerald-900">
               {event.category}
             </p>
-            <h3 className="mt-2 text-xl font-semibold text-slate-950">{event.title}</h3>
+            <EventHeading className="mt-2 text-xl font-semibold text-slate-950">
+              {event.title}
+            </EventHeading>
             <p className="mt-2 text-sm font-medium text-slate-700">
               {event.dateLabel}
               {event.timeLabel ? ` | ${event.timeLabel}` : ''}
