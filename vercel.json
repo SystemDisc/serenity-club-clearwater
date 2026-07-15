@@ -1,7 +1,12 @@
 {
   "services": {
+    "web": {
+      "root": ".",
+      "framework": "nextjs"
+    },
     "docx-converter": {
       "root": "services/docx-converter",
+      "runtime": "container",
       "entrypoint": "Dockerfile.vercel"
     }
   },
@@ -10,6 +15,12 @@
       "source": "/api/docx-to-image",
       "destination": {
         "service": "docx-converter"
+      }
+    },
+    {
+      "source": "/(.*)",
+      "destination": {
+        "service": "web"
       }
     }
   ]
