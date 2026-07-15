@@ -15,13 +15,13 @@ const getAuthSecret = () =>
   process.env.DOCX_CONVERSION_SECRET || process.env.CRON_SECRET || process.env.PAYLOAD_SECRET
 
 const getConfiguredDpi = () => {
-  const rawValue = Number.parseInt(process.env.DOCX_IMAGE_DPI || '600', 10)
+  const rawValue = Number.parseInt(process.env.DOCX_IMAGE_DPI || '200', 10)
 
   if (Number.isFinite(rawValue) && rawValue > 0) {
     return rawValue
   }
 
-  return 600
+  return 200
 }
 
 const getConfiguredFormat = () => {
@@ -168,6 +168,14 @@ const writeJson = (response, statusCode, payload) => {
   response.end(JSON.stringify(payload))
 }
 
+const getRequestPath = (request) => {
+  try {
+    return new URL(request.url || '/', `http://${request.headers.host || 'localhost'}`).pathname
+  } catch {
+    return '/'
+  }
+}
+
 const convertDocxUrl = async ({ filename, url }) => {
   const sourceUrl = new URL(url)
 
@@ -200,6 +208,13 @@ const isAuthorized = (request) => {
 
 const server = createServer(async (request, response) => {
   try {
+    const requestPath = getRequestPath(request)
+
+    if (requestPath !== '/' && requestPath !== '/api/docx-to-image') {
+      writeJson(response, 404, { error: 'Not found.' })
+      return
+    }
+
     if (request.method !== 'POST') {
       writeJson(response, 405, { error: 'Method not allowed.' })
       return

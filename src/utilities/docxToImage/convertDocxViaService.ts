@@ -14,10 +14,16 @@ const getConversionSecret = () =>
   process.env.DOCX_CONVERSION_SECRET || process.env.CRON_SECRET || process.env.PAYLOAD_SECRET
 
 const getConversionEndpoint = (requestOrigin: string) => {
-  const configuredURL = process.env.DOCX_CONVERTER_URL
+  const configuredEndpoint = process.env.DOCX_CONVERTER_ENDPOINT
 
-  if (configuredURL) {
-    return configuredURL
+  if (configuredEndpoint) {
+    return configuredEndpoint
+  }
+
+  const serviceURL = process.env.DOCX_CONVERTER_URL
+
+  if (serviceURL) {
+    return new URL('api/docx-to-image', `${serviceURL.replace(/\/+$/, '')}/`).toString()
   }
 
   return new URL('/api/docx-to-image', `${requestOrigin.replace(/\/+$/, '')}/`).toString()

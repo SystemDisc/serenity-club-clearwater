@@ -19,13 +19,13 @@ type ConvertedDocxImage = {
 type OutputFormat = 'jpg' | 'webp'
 
 const getConfiguredDpi = () => {
-  const rawValue = Number.parseInt(process.env.DOCX_IMAGE_DPI || '600', 10)
+  const rawValue = Number.parseInt(process.env.DOCX_IMAGE_DPI || '200', 10)
 
   if (Number.isFinite(rawValue) && rawValue > 0) {
     return rawValue
   }
 
-  return 600
+  return 200
 }
 
 const getConfiguredFormat = (): OutputFormat => {

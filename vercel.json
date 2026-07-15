@@ -2,7 +2,15 @@
   "services": {
     "web": {
       "root": ".",
-      "framework": "nextjs"
+      "framework": "nextjs",
+      "bindings": [
+        {
+          "type": "service",
+          "service": "docx-converter",
+          "format": "url",
+          "env": "DOCX_CONVERTER_URL"
+        }
+      ]
     },
     "docx-converter": {
       "root": "services/docx-converter",
@@ -11,12 +19,6 @@
     }
   },
   "rewrites": [
-    {
-      "source": "/api/docx-to-image",
-      "destination": {
-        "service": "docx-converter"
-      }
-    },
     {
       "source": "/(.*)",
       "destination": {
