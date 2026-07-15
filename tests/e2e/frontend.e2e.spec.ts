@@ -1,3 +1,4 @@
+import AxeBuilder from '@axe-core/playwright'
 import { expect, test } from '@playwright/test'
 
 test.describe('Frontend', () => {
@@ -12,6 +13,16 @@ test.describe('Frontend', () => {
       }),
     ).toBeVisible()
     await expect(page.getByRole('link', { name: /Find a meeting/i })).toBeVisible()
+  })
+
+  test('homepage passes its accessibility regression checks', async ({ page }) => {
+    await page.goto('/')
+
+    const results = await new AxeBuilder({ page })
+      .withRules(['label-content-name-mismatch', 'color-contrast', 'heading-order'])
+      .analyze()
+
+    expect(results.violations).toEqual([])
   })
 
   test('can navigate core public pages', async ({ page }) => {

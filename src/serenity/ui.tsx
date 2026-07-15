@@ -374,7 +374,6 @@ export function ProductGrid({ products }: { products: Product[] }) {
     <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
       {products.map((product) => (
         <Link
-          aria-label={`View ${product.title}`}
           className="group flex min-h-full flex-col rounded-lg border-2 border-white bg-white p-5 shadow-md transition hover:-translate-y-0.5 hover:border-emerald-300 hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-amber-200"
           href={`/shop/${product.slug}`}
           key={product.slug}
@@ -533,7 +532,7 @@ export function FeatureTiles() {
       {features.map(({ icon: Icon, title, text }) => (
         <article className="rounded-lg border border-slate-200 bg-white p-5" key={title}>
           <Icon aria-hidden="true" className="size-7 text-emerald-900" />
-          <h3 className="mt-4 text-xl font-semibold text-slate-950">{title}</h3>
+          <h2 className="mt-4 text-xl font-semibold text-slate-950">{title}</h2>
           <p className="mt-3 text-sm leading-6 text-slate-700">{text}</p>
         </article>
       ))}

@@ -17,7 +17,7 @@ export async function Header() {
             <span className="truncate text-[0.8125rem] font-semibold leading-5 sm:text-base">
               {settings.name}
             </span>
-            <span className="truncate text-[0.62rem] uppercase tracking-[0.12em] text-slate-500 sm:text-xs">
+            <span className="truncate text-[0.62rem] uppercase tracking-[0.12em] text-slate-600 sm:text-xs">
               Clearwater, Florida
             </span>
           </span>
