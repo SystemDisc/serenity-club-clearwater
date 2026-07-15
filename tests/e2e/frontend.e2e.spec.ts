@@ -28,6 +28,27 @@ test.describe('Frontend', () => {
     await expect(page.getByRole('link', { name: /Find a meeting/i })).toBeVisible()
   })
 
+  test('anonymous pages do not check for a Payload admin session', async ({ page }) => {
+    const adminSessionRequests: string[] = []
+
+    page.on('request', (request) => {
+      if (new URL(request.url()).pathname === '/api/users/me') {
+        adminSessionRequests.push(request.url())
+      }
+    })
+
+    await page.goto('/')
+    await page.waitForLoadState('networkidle')
+
+    expect(adminSessionRequests).toEqual([])
+  })
+
+  test('unpublished search route returns a static not found response', async ({ page }) => {
+    const response = await page.goto('/search')
+
+    expect(response?.status()).toBe(404)
+  })
+
   test('homepage passes its accessibility regression checks', async ({ page }) => {
     await page.goto('/')
 

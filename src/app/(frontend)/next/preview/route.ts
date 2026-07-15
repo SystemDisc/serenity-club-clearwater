@@ -1,11 +1,12 @@
 import type { PayloadRequest } from 'payload'
 import { getPayload } from 'payload'
 
-import { draftMode } from 'next/headers'
+import { cookies, draftMode } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { NextRequest } from 'next/server'
 
 import configPromise from '@payload-config'
+import { previewSessionCookieName } from '@/utilities/previewSession'
 
 export type PreviewSearchParams = {
   path: string
@@ -54,6 +55,13 @@ export async function GET(req: NextRequest): Promise<Response> {
   // You can add additional checks here to see if the user is allowed to preview this page
 
   draft.enable()
+
+  const cookieStore = await cookies()
+  cookieStore.set(previewSessionCookieName, '1', {
+    path: '/',
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+  })
 
   redirect(path)
 }

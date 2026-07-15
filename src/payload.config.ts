@@ -24,6 +24,7 @@ import { Header } from './Header/config'
 import { plugins } from './plugins'
 import { docxToImagePlugin } from './plugins/docxToImage'
 import { defaultLexical } from '@/fields/defaultLexical'
+import { generatePublicMediaURL } from './utilities/generatePublicMediaURL'
 import { getServerSideURL } from './utilities/getURL'
 
 const filename = fileURLToPath(import.meta.url)
@@ -127,7 +128,9 @@ export default buildConfig({
     vercelBlobStorage({
       addRandomSuffix: true,
       collections: {
-        media: true,
+        media: {
+          generateFileURL: generatePublicMediaURL,
+        },
       },
       clientUploads: true,
       enabled: Boolean(process.env.BLOB_READ_WRITE_TOKEN),

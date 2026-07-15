@@ -3,9 +3,10 @@
 import type { PayloadAdminBarProps, PayloadMeUser } from '@payloadcms/admin-bar'
 
 import { cn } from '@/utilities/ui'
+import { previewSessionCookieName } from '@/utilities/previewSession'
 import { useSelectedLayoutSegments } from 'next/navigation'
 import { PayloadAdminBar } from '@payloadcms/admin-bar'
-import React, { useState } from 'react'
+import React, { useState, useSyncExternalStore } from 'react'
 import { useRouter } from 'next/navigation'
 
 import './index.scss'
@@ -31,10 +32,20 @@ const collectionLabels = {
 
 const Title: React.FC = () => <span>Dashboard</span>
 
+const subscribeToPreviewSession = () => () => undefined
+const getPreviewSessionServerSnapshot = () => false
+const getPreviewSessionSnapshot = () =>
+  document.cookie.split('; ').some((cookie) => cookie.startsWith(`${previewSessionCookieName}=`))
+
 export const AdminBar: React.FC<{
   adminBarProps?: PayloadAdminBarProps
 }> = (props) => {
   const { adminBarProps } = props || {}
+  const isPreviewSession = useSyncExternalStore(
+    subscribeToPreviewSession,
+    getPreviewSessionSnapshot,
+    getPreviewSessionServerSnapshot,
+  )
   const segments = useSelectedLayoutSegments()
   const [preview, setPreview] = useState(false)
   const [show, setShow] = useState(false)
@@ -60,6 +71,8 @@ export const AdminBar: React.FC<{
       setPreview(false)
     }
   }, [])
+
+  if (!isPreviewSession) return null
 
   return (
     <div
