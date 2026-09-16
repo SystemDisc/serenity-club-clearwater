@@ -1,10 +1,7 @@
 import { ContactBand, MeetingList, PageHeader, SectionHeader } from '@/serenity/ui'
 
 import { getSerenityData } from '@/serenity/data'
-import type { Meeting } from '@/serenity/content'
-import { sortedMeetingsByTime } from '@/serenity/meetings'
-
-const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+import { meetingRunsOnDate, sortedMeetingsByTime } from '@/serenity/meetings'
 
 const groupNotes = [
   {
@@ -46,31 +43,18 @@ const amenities = [
   },
 ]
 
-function meetingRunsToday(meeting: Meeting, today: string) {
-  const days = meeting.days.toLowerCase()
-  const todayName = today.toLowerCase()
-
-  if (days.includes('daily')) return true
-  if (days.includes(todayName)) return true
-
-  if (days.includes('monday through friday')) {
-    return weekdays.includes(today)
-  }
-
-  return false
-}
-
 export default async function MeetingSchedulePage() {
   const data = await getSerenityData(['meetings'])
   const sortedMeetings = sortedMeetingsByTime(data.meetings)
   const aaMeetings = sortedMeetings.filter((meeting) => meeting.fellowship === 'AA')
   const naMeetings = sortedMeetings.filter((meeting) => meeting.fellowship === 'NA')
   const clubMeetings = sortedMeetings.filter((meeting) => meeting.fellowship === 'Club')
+  const now = new Date()
   const today = new Intl.DateTimeFormat('en-US', {
     timeZone: 'America/New_York',
     weekday: 'long',
-  }).format(new Date())
-  const todayMeetings = sortedMeetings.filter((meeting) => meetingRunsToday(meeting, today))
+  }).format(now)
+  const todayMeetings = sortedMeetings.filter((meeting) => meetingRunsOnDate(meeting, now))
 
   return (
     <main>
