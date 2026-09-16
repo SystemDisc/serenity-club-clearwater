@@ -28,5 +28,5 @@ async function getDocument(collection: Collection, id: number | string, depth = 
 export const getCachedDocument = (collection: Collection, id: number | string) =>
   unstable_cache(async () => getDocument(collection, id), [collection, String(id)], {
     revalidate: 300,
-    tags: [`public-${collection}`],
+    tags: [`public-${collection}`, 'public-media'],
   })

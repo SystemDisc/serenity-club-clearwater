@@ -19,6 +19,9 @@ export const publicCollections = [
 ] as const
 type Change = {
   collection: string
+  operation?: string
+  status?: string
+  previousStatus?: string
   id?: number | string
   slug?: string | null
   previousSlug?: string | null

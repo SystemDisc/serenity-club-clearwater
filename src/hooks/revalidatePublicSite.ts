@@ -22,12 +22,16 @@ const affectsPublishedContent = (doc: unknown, previousDoc: unknown) => {
 export const revalidatePublicSiteAfterChange: CollectionAfterChangeHook = ({
   doc,
   previousDoc,
+  operation,
   collection,
   req: { context },
 }) => {
   if (!context.disableRevalidate && affectsPublishedContent(doc, previousDoc)) {
     queuePublicChange({
       collection: collection.slug,
+      operation,
+      status: typeof doc._status === 'string' ? doc._status : undefined,
+      previousStatus: previousDoc?._status,
       id: doc.id,
       slug: doc.slug,
       previousSlug: previousDoc?.slug,
@@ -43,7 +47,12 @@ export const revalidatePublicSiteAfterDelete: CollectionAfterDeleteHook = ({
   req: { context },
 }) => {
   if (!context.disableRevalidate) {
-    queuePublicChange({ collection: collection.slug, id: doc.id, slug: doc.slug })
+    queuePublicChange({
+      collection: collection.slug,
+      operation: 'delete',
+      id: doc.id,
+      slug: doc.slug,
+    })
   }
 
   return doc
