@@ -1,6 +1,6 @@
 # Admin improvements — plan for review
 
-Prepared September 15, 2026. **Proposed, not implemented.** This plan follows the [full admin UX audit](../audits/2026-09-15-admin-ux.md). Finding IDs A01–A23 refer to that report.
+Prepared September 15, 2026; expanded after the final public-site/source pass and the user's dues, meeting-format, and DOCX clarifications. **Proposed, not implemented.** This plan follows the [full admin UX audit](../audits/2026-09-15-admin-ux.md). Finding IDs A01–A27 refer to that report.
 
 ## Recommended direction
 
@@ -8,7 +8,7 @@ Keep Payload, its database, authentication, draft/version support, and the site'
 
 The editor should be able to answer three questions throughout a task: **What am I changing? What will visitors see? Has it been published?**
 
-Prioritize accurate meetings, this month's events, and adding many photos. Introduce albums as real public content, preserve ungrouped gallery photos, and prepare the existing post editor for a later News & updates launch.
+Prioritize accurate meetings, this month's events and dues reminder, and adding many photos. Introduce albums as real public content, preserve ungrouped gallery photos, and prepare the existing post editor for a later News & updates launch. Retain original Word documents and the rendered flyer now so optional, reviewed DOCX-to-event extraction can be added later.
 
 The plan does not include replacing the CMS, a general drag-and-drop website builder, payment processing, membership records, or an approval chain for every ordinary edit.
 
@@ -16,16 +16,17 @@ The plan does not include replacing the CMS, a general drag-and-drop website bui
 
 ### Home
 
-A simple dashboard headed “Manage the Serenity Club website,” with four large, clearly labeled actions:
+A simple dashboard headed “Manage the Serenity Club website,” with five large, clearly labeled actions:
 
 | Task | Information shown with the action |
 | --- | --- |
 | **Update this month's flyer** | Month, current flyer preview, whether this month is missing, and “View Events page” |
-| **Change a meeting** | Today's/this week's schedule and a searchable meeting list |
+| **Update dues reminder** | Current month/message and About-page preview; flag artwork for another month |
+| **Change a meeting** | Today's/this week's schedule, day-specific formats, and details needing confirmation |
 | **Add photos** | Recently added photos, unfinished upload batches, and “View Gallery” |
 | **Create an album** | Recent albums, their covers, and publication status |
 
-Below these: “Continue editing” for meaningful drafts, “Recently published,” and short illustrated help. Do not show empty technical collections, system jobs, raw errors, or unnecessary analytics.
+Below these: “Continue editing” for meaningful drafts, “Recently published,” and short illustrated help. A compact monthly checklist can show flyer and dues readiness plus meeting changes to review, with **Checked and still correct** where appropriate. Do not show empty technical collections, system jobs, raw errors, or unnecessary analytics.
 
 ### Navigation
 
@@ -39,6 +40,9 @@ News & updates                 [when ready to launch]
 Website details
   Contact & hours
   Homepage wording & pictures
+  About & membership dues
+  Giving & sponsorship information
+  Group & facility information
   Board & team
   Memberships & shop
   Club rules
@@ -54,9 +58,11 @@ View website   ·   Help   ·   My account
 
 The Photo & file library is available inside photo/flyer selection and as a secondary management view. Files, internal folders, upload batches, public photos, and albums remain distinct concepts in the data, but editors should not have to visit all of them to complete one task.
 
+Offer a secondary **Edit a section of the website** directory: choose a public page, recognize a section from its title/preview, and follow its edit link. Start from the audit's ownership map. This is an authenticated admin aid; anonymous public pages must retain their cacheable rendering without a new session lookup.
+
 This uses Payload's documented dashboard/view extension points and preserves its standard admin components where they work well. It should not require Payload's separate enterprise visual-editor product. [Payload custom views](https://payloadcms.com/docs/custom-components/custom-views).
 
-## The three core workflows
+## The four core workflows
 
 ### 1. Update this month's events
 
@@ -70,7 +76,9 @@ This uses Payload's documented dashboard/view extension points and preserves its
 
 Use a separate monthly-flyer record with month/year and an archive. Next month's draft must not overwrite this month's public flyer. Flag a missing current month; do not silently describe the previous month as current. Decide whether older flyers remain publicly archived. Updating the existing month should replace its current version rather than create duplicate competing entries.
 
-For Word documents, the first release should explicitly support **one-page flyers**, with a helpful error for multi-page files. If multi-page flyers are genuinely needed, add a deliberate all-pages/page-selection design. Preserve the editable original separately from the rendered image when source retention is required. Never silently publish page one of a larger document.
+For Word documents, the first release should explicitly support **one-page flyers**, with a helpful error for multi-page files. If representative club documents need more pages, add a deliberate all-pages/page-selection design before accepting them. Preserve the original DOCX separately from the rendered image, with a source version linked to that month's flyer. Source retention is required for the requested future extraction and reuse, not an optional afterthought. Retain older source versions on replacement, and make source downloading an intentional access choice. Never silently publish page one of a larger document.
+
+Later, **Find events in this document** can propose individual events for review while **Publish flyer only** remains available. Publishing the flyer never depends on completing or paying for AI extraction. The dedicated future workflow below defines those boundaries.
 
 **Individual events**
 
@@ -80,17 +88,25 @@ Recurring speaker/board events should reference their authoritative meeting sche
 
 ### 2. Change a meeting
 
-1. Find the meeting by name, fellowship, day, or time. Display a readable weekly agenda; provide a list alternative.
-2. Edit plain fields: **Meeting name**, **AA / NA / Club service**, **Days**, **Time**, **Room**, and **What visitors should know**.
-3. For ordinary recurrence, offer **Every day**, **Certain days each week**, or **A particular week of the month**. Monthly choices use words such as “Second Wednesday,” with a preview of the next actual dates.
-4. Show the resulting schedule in a sentence and in the public card. Ask “From what date?” when changing future recurrence. Provide a separate **Cancel or change one date** action.
-5. Publish and show every affected public location. Preserve the previous version for recovery.
+1. Find the meeting/group by name, fellowship, day, or time. Display a readable weekly agenda; provide a list alternative.
+2. Edit **Meeting name**, **AA / NA / Club service**, and shared details. Under **Weekly schedule**, show Monday–Sunday rows on a computer and stacked day cards on a phone. Each day shows whether it meets, time, format, optional book/topic, room, and whether these details have been confirmed.
+3. Offer **Same on selected days** for common values, followed by clear per-day changes. Editing a book study on one day must not change the other days. Allow another session on a day without making the editor understand a new database collection.
+4. Keep **Who may attend** distinct from **Meeting format**; offer **Not yet confirmed** instead of forcing an unsupported choice. Do not infer open/closed attendance from “open discussion.” Confirm field wording with the club; use fellowship-appropriate choices rather than imposing AA labels on every group.
+5. For recurrence, offer **Every day**, **Certain days each week**, or **A particular week of the month**. Monthly choices use words such as “Second Wednesday,” with a preview of the next actual dates. Put group business meetings here as explicit sessions instead of burying them in prose.
+6. Preview **What visitors see on [chosen date]**, including that occurrence's format. Ask “From what date?” when changing future recurrence. Provide a separate **Cancel or change one date** action.
+7. Publish and show every affected public location. Preserve the previous version for recovery.
 
 Store local time and recurrence structure with America/New_York as the club timezone. Do not expose cron expressions, RRULE text, weekday numbers, or UTC conversions to editors.
 
-Bring group notes into the CMS alongside the relevant group/meeting. Remove misleading Order and External URL controls until they have a defined public effect. Warn about apparent overlapping meetings in the same room without assuming every overlap is prohibited.
+The “Open discussion and book study” issue requires day-specific values, not merely replacing free-text Days with checkboxes. TGIF's existing description and hardcoded notes claim particular Tuesday/Thursday studies, but the user has not confirmed those assignments. Carry those strings into a migration review report as legacy evidence, not into verified schedule fields. Ask the group's designated person to confirm the schedule; record **Last checked** and who checked it without exposing private contact details publicly.
 
-The first correctness patch can fix the current range/ordinal bug before the structured editor is ready. The migration must then verify each of the 11 existing schedules with a human-readable before/after report. Ambiguous text requires review, not a guess.
+Unknown format details should remain **Needs confirmation** in admin and should not produce an inaccurate public format badge. Independently confirmed times and days can remain available. Do not replace an unknown day with an invented “discussion” default or claim both formats every day.
+
+Model a group/series with explicit recurring sessions and dated exceptions behind this simple interface. Resolve a specific-date change before a monthly variation, and a monthly variation before a weekly default; block ambiguous overlapping rules rather than silently choosing one. Additional monthly sessions must be distinguished from changes to an existing session. Use one resolver for Today, the full schedule, homepage summaries, and future print/calendar output. Test last/fifth-week patterns, month boundaries, multiple sessions, and canceled or moved occurrences.
+
+Bring group notes into the CMS alongside the relevant group/meeting. Remove misleading Order and External URL controls until they have a defined public effect. Warn about apparent overlapping meetings in the same room without assuming every overlap is prohibited. Define whether public counts mean groups, recurring sessions, or occurrences per week so splitting a schedule into day-specific rules cannot inflate a misleading “meetings” count.
+
+The first correctness patch can fix the current range/ordinal bug before the structured editor is ready. The migration must then verify each of the 11 existing schedules with a human-readable before/after report, including time, recurrence, format, and duplicated notes. Ambiguous text requires review, not a guess. The public-site correction still needs that factual verification even though the interface can be designed now.
 
 ### 3. Add photos, with or without an album
 
@@ -151,6 +167,21 @@ The existing 17 bowling photos are a good candidate for an initial album after t
 
 Public Blob URLs are currently readable independently of gallery publication. These publication rules control website inclusion; they do not create private file storage. Add private review storage only if the club requires it.
 
+### 4. Update the membership dues reminder
+
+1. Choose **Update dues reminder** from Home. Show its actual placement on About, including a readable preview of the current graphic/message.
+2. Choose **Use the current month automatically** or **Choose a month**. The automatic option is a recommended default for review, not an assumption about the club's policy. Display the resolved month/year and allow a deliberate override.
+3. Edit the short reminder text and optional membership-information link. Offer optional artwork, with its associated month when applicable. Ordinary month changes should not require making a new picture.
+4. Preview the result on About, with **This month / Next month** and phone/computer views. Publish with a clear result and previous-version recovery.
+
+Use accessible real text styled as a branded reminder, retaining decorative artwork if wanted. Keep a legacy uploaded-poster option during migration with an accurate description and equivalent reminder text. Do not render a logo description for a dues notice. W3C recommends text where the same presentation can be achieved without an image of text. [Images of text](https://www.w3.org/WAI/WCAG22/Understanding/images-of-text.html).
+
+Store month-specific artwork separately from reusable decoration. Flag a mismatch and require an explicit correction or removal before publishing; automatic rollover must not combine a new month with last month's lettering. Let editors turn the notice off. Preserve the existing image during migration and keep real header branding separate. A payment link, if offered, must point to a confirmed existing destination; this feature does not track who has paid or alter checkout prices.
+
+**Calendar behavior is part of correctness.** Derive the current month in America/New_York and verify September/October and December/January transitions without an admin save or redeployment. The current ISR interval is request-driven: an idle site does not regenerate itself at midnight, and the first later request can receive stale content while regeneration starts. Set and measure a freshness target for automatic mode under regular traffic, initially the existing five-minute interval plus regeneration time, and test the first visit after an idle period separately. If the club requires exact midnight changes, select and verify a suitable timed or client-side boundary mechanism before promising it. Do not imply that disabled scheduled publishing already provides this behavior.
+
+A later **Temporary notice** action can share the preview pattern for closures or unusual hours, with a start/end, affected pages, and a clear removal action. A closure notice must explicitly identify any affected meeting occurrences; it must not silently cancel a whole schedule. Time-limited notices require tested expiry/cache behavior and should take visual priority over a routine dues reminder.
+
 ## Common editing standards
 
 | Current label/behavior | Proposed editor-facing behavior |
@@ -160,6 +191,8 @@ Public Blob URLs are currently readable independently of gallery publication. Th
 | Media | Photo & file library |
 | Date Label / Time Label | Structured date/time or a dedicated Month control |
 | Hero Image | Homepage picture or Cover photo, depending on actual use |
+| Logo Image on About | Membership dues reminder artwork; show its actual location |
+| Format applied to all meeting days | Meeting format for this day/session; separate attendance and confirmation fields |
 | Alt / Image Alt Text | Description for people who cannot see the photo, with an example |
 | Caption vs Description | Caption shown below this photo; one authoritative visible value |
 | Optional URL | Link for more event details |
@@ -179,6 +212,10 @@ Use approximately 44px main controls and 16–18px ordinary form text as initial
 
 Give errors next to the field and in a linked summary, retain entered content, and explain a next step. Upload progress and publication results should be available to assistive technology as well as visible on screen. [GOV.UK error summary](https://design-system.service.gov.uk/components/error-summary/), [W3C status messages](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html).
 
+Use the audit's public-section ownership map as an implementation checklist. Contact hours must update repeated introductions as well as contact cards; address and map changes need a combined preview. Give maintainable sponsorship terms, group/facility details, and shared access rules a named home. An empty Sponsors list must not hide active sponsorship information. Remove or explain settings with no public consumer, such as the current Instagram URL, and make the scope of metadata/share-image controls explicit. Keep stable page layout in code rather than exposing an unrestricted builder.
+
+For occasional maintenance, show **Last checked**, a named responsible role where useful, and a short **Needs attention** list. Prioritize stale monthly information, unresolved meeting details, and interrupted batches; avoid a noisy score or mandatory review for every ordinary edit. Email reminders or external notifications would be a separate opt-in decision, not part of this audit.
+
 ## Later News & updates
 
 Build on the existing Posts/Lexical implementation. The standard writing surface should contain title, optional cover, article body, preview, saved status, and publication controls.
@@ -189,22 +226,76 @@ Automatically supply a stable URL and useful default metadata, with optional adv
 
 The launch must also address public navigation, route/canonical choices, post-list outage behavior, indexing/sitemap, accessible rendering, images, pagination, new-post ISR visibility, and any redirects. Offer scheduling only after the runner is operational and verified; a publication-date field alone does not schedule anything.
 
+## Future DOCX assistant: keep the flyer and create real events
+
+This is an optional later feature. Its purpose is to reduce transcription while leaving a volunteer in control of what the website says. The existing converter does not implement it.
+
+~~~mermaid
+flowchart LR
+  A[Upload Word document] --> B[Keep original and render flyer]
+  B --> C[Review and publish flyer]
+  B --> D[Optional: find possible events]
+  D --> E[Compare suggestions with source]
+  E --> F[Create selected event drafts]
+  F --> G[Preview and publish reviewed events]
+~~~
+
+**What an editor sees**
+
+- After uploading, the ordinary flyer preview remains available. **Find events in this document** starts optional background work and explains what will be suggested. **Publish flyer only** remains available even when extraction fails.
+- Show a result such as “8 possible events; 2 need details,” with the source page/excerpt beside editable event cards. At phone width, provide a simple **Source / Event details** switch without losing the current card.
+- Each proposal has title, date, start/end time or all-day, location, description, and a visible source reference. Missing year, conflicting weekday/date, absent time, unclear recurrence, and possible duplicates get specific explanations. Do not invent values or present an uncalibrated model confidence percentage as assurance.
+- Editors may correct, exclude, or add events the assistant missed, then **Create selected drafts** and preview the results. A separate explicit publication step can publish the reviewed set with a count and public destination. Suggestions alone never publish or modify recurring meetings.
+- Replacing the document shows **New / Changed / Unchanged / No longer found** suggestions. Preserve manual edits and let the editor choose which changes to apply. An event absent from a newer flyer is not automatically canceled or deleted.
+
+Make mistakes easy to inspect, correct, and dismiss rather than asking an editor to trust an opaque result. The source comparison is a proposed club-specific design applying Microsoft Research's human–AI interaction guidance. [Guidelines and research](https://www.microsoft.com/en-us/research/publication/guidelines-for-human-ai-interaction/).
+
+**Processing and data requirements**
+
+Preserve the original file, its version/hash, conversion output, extracted text, and a link from each created event to its source/version. Keep document paragraphs and tables when extracting; use rendered-page OCR/vision where text exists only in images or visual layout supplies essential date relationships. Headers, text boxes, calendar grids, and multi-page layouts need representative fixtures before being advertised as supported. Native Word structure is available, but parsing plain text alone does not guarantee a correct calendar interpretation. [WordprocessingML structure](https://learn.microsoft.com/en-us/office/open-xml/word/how-to-open-and-add-text-to-a-word-processing-document).
+
+Validate suggestions against the Events schema, local timezone, and date rules. Store ambiguous fields as incomplete and require resolution before publication. Treat uploaded document instructions as document content, not authority for the model to follow links, run tools, or change permissions. Select the model/provider and retention policy explicitly, send only necessary document content, and establish document-size and cost limits before enabling the service.
+
+Use resumable background work with bounded concurrency, timeouts, cancellation, limited retries, and stable import identifiers so retries cannot duplicate events. Payload's Jobs Queue offers task/retry infrastructure, but a functioning execution runner is still required; the current disabled scheduling arrangement is not that runner. Choose deployment-compatible processing explicitly and keep expensive parsing outside ordinary admin requests. [Payload Jobs Queue](https://payloadcms.com/docs/jobs-queue/overview).
+
+Keep flyer publication independent from event extraction and make partial outcomes visible. A job failure must leave the original, rendered flyer, and accepted drafts usable. Re-import needs an event/source mapping and a comparison against subsequent human changes, not simply another set of inserts. Undo should identify which records this import created and protect unrelated or later edits.
+
+**Pilot gate**
+
+First collect representative club DOCX files and a manually verified expected event list. Include tables, ambiguous/missing dates, multiple pages, image-only content, a corrected re-upload, and no-event documents. Measure field accuracy and missed/extra events separately; every published proposal must have a source or an explicit human correction. Verify retries, dismissal, manual-edit preservation, and flyer-only use during extraction failure. Pilot with actual volunteers before choosing any automation beyond reviewed draft creation. No automatic publishing is proposed.
+
+## Further opportunities and boundaries
+
+| Opportunity | When it becomes useful | Proposed scope |
+| --- | --- | --- |
+| Monthly readiness checklist and section directory | With the first task dashboard | Show the relevant monthly work and lead directly from a familiar public section to its editor |
+| Temporary closure/change notice | After shared settings and reliable time boundaries | A small reusable notice with dates, scope, preview, and explicit meeting-exception links |
+| Printable schedule / calendar subscription | After verified structured meetings | Generate from the same resolved schedule; stable calendar IDs, exceptions, and timezone handling; no second manually maintained schedule |
+| Reusable event/monthly templates | After drafts and source retention | Copy useful structure into a new draft; highlight copied dates, amounts, and month-specific pictures for review |
+| Narrow writing/photo assistance | After the DOCX pilot proves useful | Optional description or wording proposals; never infer people's identities or recovery status; retain direct editing |
+| Room/volunteer inquiry forms | Only if the club wants to replace email requests | Named recipient, tested delivery, spam handling, and retention; no implied automatic booking or membership CRM |
+
+These ideas do not all belong in the next release. Prioritize by observed volunteer difficulty and maintenance burden after the four core workflows are tested. A generic chatbot, public member database, and fully autonomous content publication are not proposed shortcuts.
+
 ## Delivery sequence and focused commits
 
 Sizes are relative planning estimates, not calendar commitments: **Small** = localized configuration/UI change; **Medium** = coordinated components and validation; **Large** = new workflow plus schema/migration and end-to-end tests.
 
 | Phase | Deliverable and suggested commit boundaries | Size | Audit findings |
 | --- | --- | --- | --- |
-| **0. Correctness and immediate clarity** | Meeting-day/ordinal correction with meaningful date tests; separate correction of ineffective/misleading field/help text; explicit multi-page DOCX handling; gallery publish-time image validation | Medium | A03, A04, A12, A14, A15 |
-| **1. A useful everyday workspace** | Task dashboard/navigation and empty states; separate readable forms/named controls/responsive fixes; separate visual photo picker and selected-image preview; status columns/public links | Medium | A01, A07–A10, A18, A22 |
-| **2. Events and meetings** | Additive structured schedule/monthly-flyer schema and reviewed backfill; separate meeting editor/public schedule integration; separate flyer/event flow and accessible text; preview/autosave/version recovery | Large | A02–A04, A09, A13, A14 |
+| **0. Correctness and immediate clarity** | Meeting-day/ordinal correction with meaningful date tests; inventory and obtain human confirmation of misleading format claims; separate correction of ineffective labels/help, including the dues graphic; explicit multi-page DOCX handling; gallery publish-time image validation | Medium | A03, A04, A12, A14, A15, A24, A25 |
+| **1. A useful everyday workspace** | Five task shortcuts, monthly readiness and section directory; separate readable forms/named controls/responsive fixes; separate visual photo picker and selected-image preview; status columns/public links | Medium | A01, A07–A10, A18, A22, A24, A26 |
+| **2. Meetings and monthly updates** | Additive per-day format/recurrence and monthly-flyer schema with reviewed backfill; separate weekly editor/shared public resolver; separate source-preserving flyer/event flow; separate dues template/month controls; preview/autosave/version recovery | Large | A02–A04, A09, A13, A14, A24, A25, A27 prerequisite |
 | **3. Bulk photos and albums** | Additive album/batch schema; separate upload/retry/deduplication service; review/publish UI; minimal public album landing/detail integration; existing-photo migration and acceptance tests | Large | A05–A07, A10–A13, A23 |
-| **4. Recovery and less frequent work** | Trash/file-usage safeguards; separate settings/menu improvements; shop/rules/team simplification; permission and onboarding improvements | Medium–Large | A11, A15, A18–A22 |
+| **4. Recovery and less frequent work** | Trash/file-usage safeguards; separate settings/menu and shared public-copy improvements; shop/rules/team simplification; permission and onboarding improvements; optional temporary notices with tested expiry | Medium–Large | A11, A15, A18–A22, A26 |
 | **5. Public gallery polish and News launch** | Separate public photo viewer/mobile browsing change; separate curated news editor; separate public news routes/indexing/cache behavior; enable optional scheduling only with a verified runner | Large | A16, A17, A23 |
+| **6. Optional DOCX-to-events pilot** | Source extraction/provenance and bounded background jobs; separate editable source-comparison review; separate draft creation/re-import protection; fixture evaluation and volunteer pilot | Large | A14, A27 |
 
 The core gallery flow in phase 3 needs a usable public album destination; the richer lightbox/swipe/public-gallery redesign remains phase 5. That prevents introducing an admin “Publish album” button whose result visitors cannot access.
 
 Phases 2 and 3 can be reordered after phase 1 if bulk gallery publishing is the more urgent operational need. File-use safeguards required by a new workflow must ship with that workflow, even if the broader recovery improvements are grouped in phase 4.
+
+Phase 6 depends on phase 2's structured events, preserved source documents, and reliable publishing; it need not wait for News or a public gallery redesign if the club later prioritizes it. It must not delay manual monthly updates. Factual meeting verification is a separate club input, not something AI or a migration may supply by inference.
 
 Each code change should be a focused, reviewable commit. Keep schema migrations separate from major UI changes when practical, regenerate Payload types/import maps as required, and update the help material alongside each released workflow. The audit and this plan are documentation commits, not a release of these proposals.
 
@@ -214,15 +305,15 @@ Preserve the current reliability foundation:
 
 - New custom views must call authenticated Payload operations with appropriate access checks. Server-side Local API calls acting for an editor must respect that user's access; a hidden menu or client validation is insufficient.
 - Keep the same request/transaction context through related operations. Do not bypass collection hooks using direct SQL for live editorial writes.
-- Retain the existing public-mutation wrappers, post-transaction invalidation, and finite ISR fallback. Add cache tags/routes for albums and monthly flyers. Avoid one whole-site invalidation per uploaded file where a batch can be grouped safely.
+- Retain the existing public-mutation wrappers, post-transaction invalidation, and finite ISR fallback. Add cache tags/routes for albums, monthly flyers, dues, notices, and changed meeting dependencies. Test time-driven changes without a save as well as publish-driven changes. Avoid one whole-site invalidation per uploaded file where a batch can be grouped safely.
 - Do not make public pages depend on an authenticated admin session or download all full-resolution photos to display a picker. Fetch bounded pages of thumbnails and keep the public gallery paginated.
 - Preserve the repaired storage metadata and pinned Blob-adapter regression safeguards. Display names must not overwrite storage filenames. Test duplicate names, replacement, focal points, and delete/restore behavior.
-- Use additive migrations and production backups. Keep current IDs/URLs, alt overrides, publication states, and order until a reviewed migration deliberately changes them.
+- Use additive migrations and production backups. Keep current IDs/URLs, alt overrides, publication states, and order until a reviewed migration deliberately changes them. Do not treat seeded meeting prose as verified or discard the current dues image when separating it from branding. Existing converted images may require the club to supply their original DOCX; do not promise to reconstruct an original document from a picture.
 - Keep local development/tests isolated from production DB, Blob writes, and email. Use copied content only in that isolated environment.
 - Never interpret a content-read failure as a successful empty collection. Draft previews remain authenticated and must bypass the published cache safely.
 - A new photo workflow needs server-side file/size/type validation and bounded image/conversion work. Establish supported formats with real fixtures before advertising them.
 
-No additional subscription is assumed for phases 0–4. A scheduling runner, private photo storage, or a different conversion/processing service could introduce operational cost and should be selected explicitly if required.
+No additional subscription is assumed for phases 0–4. A scheduling runner, private photo storage, a different conversion/processing service, or AI extraction could introduce operational cost and should be selected explicitly if required. Provider choice and spending limits belong to the optional AI pilot; ordinary editing must remain usable without it.
 
 ## Acceptance scenarios
 
@@ -231,19 +322,28 @@ Use realistic copied content locally/staging first. Use a small, explicitly scop
 | Scenario | Release acceptance |
 | --- | --- |
 | Replace this month's flyer | Editor finds it from Home, sees old/new previews, publishes the right month, and sees the result on both affected public pages without redeployment; previous version can be restored |
-| Upload a two-page Word document | UI explicitly rejects it with instructions or presents the approved multi-page workflow; no silent first-page-only success |
+| Preserve and replace a Word flyer | Original DOCX and rendered preview remain separate and linked to the correct version; replacing the flyer preserves the old source; extraction is not required |
+| Upload a two-page Word document | UI explicitly rejects it with instructions or presents the approved multi-page workflow; no silent first-page-only success, including future extraction |
+| Update dues reminder | Editor finds it by its actual name, edits month/text/artwork, sees the About preview, publishes without redeployment, and can restore the previous version; real header branding is unaffected |
+| Dues month rollover | Automatic/manual/off modes behave as labeled across local month/year boundaries without a save; no stale month-specific artwork under new text; verify and document measured cache freshness |
 | Add a dated event | Upcoming/past placement, date/time, optional link, and homepage inclusion are predictable; draft is not publicly visible |
 | Correct Feelings | Monday–Saturday recurrence appears on all six days and never Sunday, including the “Today” view |
 | Monthly board meeting | Second Wednesday appears on the correct date, not every Wednesday; next-date preview and public display agree |
 | Change one meeting date | One exception changes without changing the rest of the recurring schedule; old hardcoded notes cannot contradict it |
+| Different formats on different days | A synthetic fixture has discussion on one selected day and study on another; changing one leaves the other intact; Today, full schedule, and date preview agree; fixture assignments are not claims about the club |
+| Unknown meeting information | Unconfirmed formats remain visibly unresolved in admin and are not invented publicly; confirmed time/day remains usable; the club can record verification without changing other sessions |
+| Complex recurrence | Multiple sessions, monthly variations versus additional sessions, last/fifth-week rules, effective dates, DST, and cancellations resolve consistently; ambiguous overlap is surfaced |
 | Add 30 ungrouped photos | One multi-select flow creates/publishes all intended photos, no album required, no repeated title entry, correct orientation, and a clear public result |
 | Create a 50-photo album | Shared title/date entered once; cover/order reviewed; draft isolation and album publication are correct; all expected photos are reachable |
 | Upload failure and retry | Mix valid, unsupported, duplicate, large, and failed files; successes remain; failed items have actionable messages; repeated retry/publish creates no duplicate records |
 | Refresh/session expiry | Meaningful draft/batch state survives; ready files are recovered; source reselection is clearly explained if necessary; login recovery returns to the task |
 | Remove and recover | Removing gallery placement does not delete a reused homepage file; trash/restore works for records and stored images; public caches reflect both operations |
-| Edit menus/settings | Built-in pages are selectable by name; payment destination and contact changes show their scope; blank/footer behavior matches help text |
+| Edit menus/settings | Built-in pages are selectable by name; payment destination and contact changes show their scope; hours agree across repeated text; address/map are checked together; blank/footer behavior matches help text |
+| Temporary notice, if included | Correct affected pages and dates; expiration works without redeploy; unrelated meetings are not canceled; normal hours remain intact |
 | Concurrent edits | Two editors cannot silently overwrite one another; verify Payload locking/conflict behavior in the custom flows and show a recoverable conflict when needed |
 | Future rich post | A volunteer pastes content, formats a list, adds an image/caption, previews on phone/computer, publishes, edits, and restores a version without using technical fields |
+| Future DOCX extraction | Real fixtures produce reviewable source-linked drafts; missing/ambiguous fields need correction; editor can add missed events or dismiss suggestions; no self-publication or silent meeting edits |
+| Future re-import/failure | Repeated requests create no duplicate events; document changes show a reviewable diff, preserve manual edits, and never cancel absent events automatically; extraction failure leaves flyer-only publishing available |
 | Access boundaries | Routine editor cannot manage accounts/permanently delete protected shared files; direct API attempts enforce the same rules; published/draft reads remain correct |
 | Accessibility | Main tasks work with keyboard, visible focus, named controls, 200% zoom, 320px reflow, light/dark contrast checks, and a screen-reader pass; sorting does not require dragging |
 | Public speed/freshness | Anonymous pages remain cacheable; independent visitors see new/changed/deleted content without redeploy; a database outage retains previously successful public content |
@@ -254,7 +354,7 @@ Measure admin route readiness, thumbnail payload size, processing time, error/re
 
 ## Volunteer validation
 
-Recruit three to five actual editors with their usual devices and preferred text size. Give them outcome-based tasks, without pointing at controls: replace a flyer; change a meeting; add photos without an album; create an album; correct a mistake. Later add a rich news post.
+Recruit three to five actual editors with their usual devices and preferred text size. Give them outcome-based tasks, without pointing at controls: replace a flyer; update the dues month; correct the format on one meeting day; add photos without an album; create an album; correct a mistake. Later add a rich news post and review a deliberately imperfect set of extracted events.
 
 Record completion, time, wrong turns, requests for help, accidental publication/deletion, and whether each person can accurately say what is public. Start with prototype walkthroughs, then repeat against working staging flows. Include at least one phone session if phones will be used.
 
@@ -268,7 +368,10 @@ These decisions guide implementation; recommended defaults below are not claims 
 
 | Decision | Recommended starting point | Alternative / effect |
 | --- | --- | --- |
-| Monthly source material | Support a monthly flyer plus optional individual events | If work is almost entirely Word/flyer-based, invest more in conversion/accessible-text assistance; if event-based, prioritize structured event entry |
+| Monthly source material | Retain the requested DOCX-to-image flyer pathway and original sources, plus optional individual events | Representative actual documents determine conversion/extraction support; the future assistant supplements both manual paths |
+| Dues month behavior | Accessible current-month text automatically, with a visible manual override and artwork checks | Manual month selection if the club prefers deliberate monthly updates; confirm the required rollover freshness |
+| Authoritative meeting details | Group/club-designated person verifies each day, format, and existing monthly rule | Existing prose and guessed AI output are not substitutes; keep unknown details explicitly unconfirmed |
+| What public meeting counts mean | Agree on groups or recurring sessions and label the count accordingly | Weekly occurrence counts require the same recurrence resolver, not a raw record count |
 | Editor devices | Support computer and phone; validate with actual users | Device mix determines which upload/preview interactions receive first testing |
 | Main gallery behavior | Ungrouped photos plus album covers | An “All photos” view can also include album photos, but should be a deliberate browsing option |
 | One photo in multiple albums | One optional album per gallery photo initially | Multi-album membership adds ordering/visibility complexity and should be chosen before schema work |
@@ -278,6 +381,8 @@ These decisions guide implementation; recommended defaults below are not claims 
 | Photo permission/privacy | Follow an agreed club practice with clear public visibility | Private pre-publication review requires storage/access changes beyond draft gallery records |
 | Future section name | News & updates | “Club news” or another club-preferred term; choose before public URLs launch |
 | Scheduling | Immediate publish first | Add scheduled publishing only after a supported, monitored runner is in place |
+| AI assistance | Optional reviewed draft creation after structured events/source retention are working | Keep fully manual event entry and flyer-only publishing; choose provider, data handling, and cost cap for the pilot |
+| Additional opportunities | Monthly checklist and section directory first; evaluate notices and printable schedules next | Forms, calendar feeds, and further AI assistance need demonstrated demand and an owner |
 | Next large workflow | Events/meetings before bulk albums | Swap phases 2 and 3 if the photo backlog is the more urgent need |
 
-The recommended first implementation package is phases 0 and 1: correct the meeting logic, make the important tasks easy to find, make pictures large enough to recognize, and clarify what is saved versus public. Then deliver the two larger content workflows in the agreed order.
+The recommended first implementation package is phases 0 and 1: correct the meeting logic, identify unverified format claims, expose the dues reminder under its real purpose, make the important tasks easy to find, make pictures large enough to recognize, and clarify what is saved versus public. Then deliver structured meetings/monthly updates and bulk photos/albums in the agreed order. This document remains a plan for review; it does not authorize guessed schedule corrections or claim the proposed interface is already live.
