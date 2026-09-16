@@ -15,22 +15,29 @@ and `.nvmrc` for runtime managers.
 
 ## Editable Content
 
-Payload has club-specific collections grouped under `Serenity Club`:
+The `/admin` dashboard starts with the club's everyday tasks: update the monthly
+flyer, edit the dues reminder, correct a meeting, add photos, or create an album.
+It shows unfinished drafts/batches, publication status, and short task guides.
 
-- Club Settings
-- Header Navigation
-- Footer Navigation
-- Meetings
-- Events
-- Gallery Items
-- Team Members
-- Shop Items
-- Policies
-- Sponsors
+- Meetings use day-specific sessions and date exceptions; unknown formats remain
+  flagged for confirmation by the club.
+- Monthly flyers retain the original one-page Word document and its rendered
+  image. Dated events and recurring meeting announcements are separate records.
+- Add photos supports batches, existing-library selection, captions, ordering,
+  and albums. Organize gallery photos moves existing placements without deleting
+  shared files. Public galleries have pagination and an enlarged photo viewer.
+- News & updates provides rich writing and captioned article photos at `/posts`.
+- Website details groups shared wording, pictures, contact information, and hours
+  by public page. Managers also control menus, payment links, and user accounts.
 
-The generated Payload `Pages` collection remains available for one-off editor-created pages.
-Admins can add a page in Payload, then add a custom URL or page reference under
-`Globals > Header Navigation` or `Globals > Footer Navigation`.
+Everyday records support drafts, versions, and Trash. Uploaded files are public
+assets; a draft content record does not make its files private. The Photo & file
+library reports usage and protects files still referenced by content or versions.
+Advanced Pages remain available in Manager tools for one-off pages.
+
+See the [admin plan](docs/plans/2026-09-15-admin-ux-improvements.md) and
+[release evidence](docs/operations/2026-09-16-admin-release.md) for implementation
+status and the remaining production and volunteer acceptance checks.
 
 ## Local Commands
 
