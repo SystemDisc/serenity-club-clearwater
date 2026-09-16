@@ -87,6 +87,14 @@ export const Media: CollectionConfig = {
     },
   ],
   hooks: {
+    afterRead: [
+      ({ doc }) => {
+        // Cloud-storage field hooks resolve URLs after Payload's thumbnail field reads originalDoc.
+        // Recompute from the completed document, including old files without generated sizes.
+        doc.thumbnailURL = adminThumbnail({ doc })
+        return doc
+      },
+    ],
     beforeOperation: [inspectBatchUpload],
     beforeChange: [
       saveContentHash,

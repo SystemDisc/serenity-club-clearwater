@@ -114,6 +114,16 @@ try {
   const tinyDoc = await verify(tiny.id, 20, 20)
   if (tinyDoc.thumbnailURL !== tinyDoc.url)
     throw new Error('Small image thumbnail did not fall back to its original')
+  // Legacy uploads persisted local URL values before storage field hooks resolved Blob URLs.
+  await payload.update({
+    collection: 'media',
+    id: tiny.id,
+    data: { url: `/api/media/file/${tinyDoc.filename}` },
+    context: { disableRevalidate: true },
+  })
+  const legacy = await verify(tiny.id, 20, 20)
+  if (legacy.thumbnailURL !== legacy.url || !legacy.thumbnailURL?.startsWith('https://'))
+    throw new Error('Legacy thumbnail was computed before cloud storage resolved its URL')
   console.log(
     JSON.stringify({
       verified: true,
@@ -126,6 +136,7 @@ try {
         'replace',
         'focal point',
         'small-image fallback',
+        'legacy local-URL fallback after storage hooks',
         'JPEG PNG WebP',
       ],
     }),
