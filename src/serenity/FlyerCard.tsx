@@ -44,16 +44,6 @@ export function FlyerCard({
             Read this month’s events
             <ArrowRight aria-hidden="true" />
           </ButtonLink>
-          {image?.url ? (
-            <a
-              className="mt-3 block w-fit py-2 text-sm font-semibold text-emerald-900 underline"
-              href={image.url}
-              target="_blank"
-              rel="noreferrer"
-            >
-              Open full-size flyer ↗
-            </a>
-          ) : null}
         </div>
       </article>
     )
