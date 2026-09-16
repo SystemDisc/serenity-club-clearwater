@@ -178,7 +178,7 @@ export default async function Dashboard({ initPageResult }: AdminViewServerProps
   ]
   tasks.push({
     title: 'Create an album',
-    text: 'Group an event’s photos together, choose a cover, and publish the whole album.',
+    text: 'Group an event’s photos together, use a collage or choose a cover photo, and publish the album.',
     href: '/admin/photos?destination=new',
     publicHref: '/gallery',
     publicLabel: 'View Gallery',

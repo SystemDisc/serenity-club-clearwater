@@ -496,9 +496,26 @@ export default function PhotoWorkspace({
               />
             ))}
           </div>
+          {album ? (
+            <p>
+              New albums use an automatic collage. Choose “Make album cover” on a photo for a
+              single-image cover. Existing albums keep their saved cover choice.
+            </p>
+          ) : null}
           {cover?.url ? (
             <section className="club-panel">
               <h3>Album cover crop</h3>
+              <button
+                type="button"
+                disabled={busy || !!dirty.size || batch.state === 'published'}
+                onClick={() =>
+                  void run(async () => {
+                    await action('resetCover')
+                  })
+                }
+              >
+                Use album’s default cover instead
+              </button>
               <img
                 className="club-cover-preview"
                 src={cover.sizes?.small?.url || cover.url}

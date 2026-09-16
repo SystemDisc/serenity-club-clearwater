@@ -253,6 +253,7 @@ export const batchAction: PayloadHandler = async (req) => {
         'edit',
         'reorder',
         'cover',
+        'resetCover',
         'exclude',
         'publish',
         'acceptAlbumChanges',
@@ -453,6 +454,14 @@ export const batchAction: PayloadHandler = async (req) => {
           overrideAccess: false,
           data: { cover: null },
         })
+    } else if (data.action === 'resetCover') {
+      await req.payload.update({
+        collection: 'photoBatches',
+        id,
+        req,
+        overrideAccess: false,
+        data: { cover: null },
+      })
     } else if (data.action === 'cover') {
       if (!idOf(batch.album) || !['ready', 'published'].includes(item!.status))
         fail('Choose a ready photo for an album cover.')
@@ -618,7 +627,7 @@ export const batchAction: PayloadHandler = async (req) => {
           overrideAccess: false,
           data: {
             _status: 'published',
-            cover: idOf(batch.cover) || idOf(album.cover) || idOf(ready[0]?.media),
+            cover: idOf(batch.cover) || idOf(album.cover) || null,
           },
         })
       }

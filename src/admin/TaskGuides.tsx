@@ -26,7 +26,7 @@ const guides = [
     steps: [
       'Choose Add photos. Pick Main gallery, an existing album, or a new album, then enter the shared title once.',
       'Choose many photos from your device or the library. Wait for each thumbnail. A failed file can be retried without repeating successful uploads.',
-      'Review the pictures, captions and descriptions. Exclude unwanted photos, arrange them with Move up/down or drag, and choose an album cover.',
+      'Review the pictures, captions and descriptions. Exclude unwanted photos, arrange them with Move up/down or drag, and keep the automatic collage or choose a photo as the album cover.',
       'Publish the ready photos and open the gallery or album. To return later, use Finish adding photos on Home. After a refresh, reselect original files only for uploads that had not finished.',
     ],
   },

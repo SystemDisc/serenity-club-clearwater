@@ -905,7 +905,7 @@ export interface Meeting {
          */
         attendance?: ('unknown' | 'everyone' | 'recovery' | 'women' | 'men' | 'members') | null;
         /**
-         * Unconfirmed format and attendance labels are not shown publicly.
+         * Existing format details remain visible with a reminder to confirm with the group until checked.
          */
         confirmed?: boolean | null;
         from?: string | null;
@@ -940,7 +940,7 @@ export interface Meeting {
          */
         attendance?: ('unknown' | 'everyone' | 'recovery' | 'women' | 'men' | 'members') | null;
         /**
-         * Unconfirmed format and attendance labels are not shown publicly.
+         * Existing format details remain visible with a reminder to confirm with the group until checked.
          */
         confirmed?: boolean | null;
         note?: string | null;
@@ -1052,7 +1052,7 @@ export interface GalleryItem {
   _status?: ('draft' | 'published') | null;
 }
 /**
- * Create an album draft, add its photos, and choose a cover. Publishing shows the album and its published photos in Gallery. Unpublishing hides the whole album.
+ * Create an album draft and add its photos. A collage is made automatically, or choose one photo as the cover. Publishing shows the album and its published photos in Gallery. Unpublishing hides the whole album.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "albums".

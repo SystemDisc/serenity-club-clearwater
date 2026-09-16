@@ -1,7 +1,6 @@
 import { APIError, ValidationError, slugField, type CollectionConfig } from 'payload'
 import { authenticated } from '@/access/authenticated'
 import { authenticatedOrPublished } from '@/access/authenticatedOrPublished'
-import { imagePreviewField } from '@/admin/config'
 import { calendarField } from '@/fields/calendarFields'
 import {
   revalidatePublicSiteAfterChange,
@@ -17,7 +16,7 @@ export const Albums: CollectionConfig = {
     defaultColumns: ['title', 'cover', 'date', '_status'],
     hideAPIURL: true,
     description:
-      'Create an album draft, add its photos, and choose a cover. Publishing shows the album and its published photos in Gallery. Unpublishing hides the whole album.',
+      'Create an album draft and add its photos. A collage is made automatically, or choose one photo as the cover. Publishing shows the album and its published photos in Gallery. Unpublishing hides the whole album.',
   },
   access: {
     create: authenticated,
@@ -33,12 +32,12 @@ export const Albums: CollectionConfig = {
       name: 'cover',
       type: 'upload',
       relationTo: 'media',
-      label: 'Album cover',
+      label: 'Selected cover photo',
+      admin: { hidden: true },
       filterOptions: {
         mimeType: { in: ['image/jpeg', 'image/png', 'image/webp', 'image/avif', 'image/gif'] },
       },
     },
-    imagePreviewField('cover'),
     { name: 'albumPhotos', type: 'ui', admin: { components: { Field: '@/admin/AlbumPhotos' } } },
     slugField({ position: 'sidebar' }),
     {
@@ -68,16 +67,26 @@ export const Albums: CollectionConfig = {
           : null
         const selectedCover = data.cover === undefined ? originalDoc?.cover : data.cover
         const coverID = typeof selectedCover === 'object' ? selectedCover?.id : selectedCover
-        const cover = coverID
-          ? await req.payload.findByID({
-              collection: 'media',
-              id: typeof coverID === 'object' ? coverID.id : coverID,
-              req,
-              overrideAccess: false,
-              depth: 0,
-              disableErrors: true,
-            })
-          : null
+        const selectedMember =
+          coverID && id
+            ? await req.payload.find({
+                collection: 'galleryItems',
+                req,
+                overrideAccess: false,
+                draft: false,
+                depth: 1,
+                limit: 1,
+                where: {
+                  and: [
+                    { album: { equals: id } },
+                    { image: { equals: coverID } },
+                    { _status: { equals: 'published' } },
+                  ],
+                },
+              })
+            : null
+        const coverImage = selectedMember?.docs[0]?.image
+        const cover = typeof coverImage === 'object' ? coverImage : null
         const errors = []
         if (!members?.docs.length)
           errors.push({
@@ -85,12 +94,17 @@ export const Albums: CollectionConfig = {
             message: 'Save the album as a draft and add ready photos before publishing it.',
           })
         if (
-          !cover?.url ||
-          !cover.width ||
-          !cover.height ||
-          !/^image\/(jpeg|png|webp|avif|gif)$/.test(cover.mimeType || '')
+          coverID &&
+          (!cover?.url ||
+            !cover.width ||
+            !cover.height ||
+            !/^image\/(jpeg|png|webp|avif|gif)$/.test(cover.mimeType || ''))
         )
-          errors.push({ path: 'cover', message: 'Choose a ready image for the album cover.' })
+          errors.push({
+            path: 'albumPhotos',
+            message:
+              'Choose a published photo from this album as the cover, or use the automatic collage.',
+          })
         if (errors.length) throw new ValidationError({ collection: 'albums', req, errors })
         return data
       },

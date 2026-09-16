@@ -32,6 +32,106 @@ test.describe('Admin Panel', () => {
     await cleanupTestUser()
   })
 
+  test('album covers switch between collage and a photo beyond the first page', async ({
+    request,
+    browser,
+  }) => {
+    const { token } = await (await request.post('/api/users/login', { data: testUser })).json()
+    const headers = { authorization: `JWT ${token}` }
+    const visitor = await browser.newContext()
+    const publicPage = await visitor.newPage()
+    const title = `Cover choice regression ${Date.now()}`
+    const images: number[] = []
+    const photos: number[] = []
+    let albumID: number | undefined
+    try {
+      for (const color of ['#176b50', '#c74530']) {
+        const media = await request.post('/api/media', {
+          headers,
+          multipart: {
+            _payload: JSON.stringify({ alt: 'Synthetic album choice' }),
+            file: {
+              name: 'cover-choice.png',
+              mimeType: 'image/png',
+              buffer: await sharp({
+                create: { width: 600, height: 400, channels: 3, background: color },
+              })
+                .png()
+                .toBuffer(),
+            },
+          },
+        })
+        expect(media.ok(), await media.text()).toBeTruthy()
+        images.push((await media.json()).doc.id)
+      }
+      const album = await request.post('/api/albums', {
+        headers,
+        data: { title, _status: 'draft' },
+      })
+      expect(album.ok(), await album.text()).toBeTruthy()
+      albumID = (await album.json()).doc.id
+      for (let index = 0; index < 13; index++) {
+        const photo = await request.post('/api/galleryItems', {
+          headers,
+          data: {
+            title: `Cover choice photo ${index + 1}`,
+            image: images[index === 12 ? 1 : 0],
+            album: albumID,
+            order: index,
+            _status: 'published',
+          },
+        })
+        expect(photo.ok(), await photo.text()).toBeTruthy()
+        photos.push((await photo.json()).doc.id)
+      }
+      await page.goto(`/admin/collections/albums/${albumID}`)
+      await expect(page.getByRole('button', { name: 'Automatic collage selected' })).toBeVisible()
+      await page.getByRole('button', { name: 'Next photos' }).click()
+      await expect(page.getByText('Page 2 of 2', { exact: true })).toBeVisible()
+      await page.getByRole('button', { name: 'Use as album cover', exact: true }).click()
+      await expect(
+        page.getByRole('button', { name: 'Selected album cover', exact: true }),
+      ).toBeVisible()
+      await page.getByRole('button', { name: 'Publish changes', exact: true }).click()
+      await expect
+        .poll(
+          async () =>
+            (await (await visitor.request.get(`/api/albums/${albumID}?depth=0`)).json()).cover,
+        )
+        .toBe(images[1])
+      await page.reload()
+      await expect(page.getByText('Selected photo cover', { exact: true })).toBeVisible()
+      await publicPage.goto('/gallery')
+      const card = publicPage
+        .locator('article')
+        .filter({ has: publicPage.getByRole('heading', { name: title, exact: true }) })
+      await expect(card).toContainText('13 photos')
+      const selectedSource = await card.locator('img').getAttribute('src')
+      await page.setViewportSize({ width: 320, height: 780 })
+      expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
+        320,
+      )
+      await page.getByRole('button', { name: 'Use automatic collage', exact: true }).click()
+      await page.getByRole('button', { name: 'Publish changes', exact: true }).click()
+      await expect
+        .poll(
+          async () =>
+            (await (await visitor.request.get(`/api/albums/${albumID}?depth=0`)).json()).cover,
+        )
+        .toBeNull()
+      await publicPage.reload()
+      await expect(card.locator('img')).not.toHaveAttribute('src', selectedSource!)
+      await page.reload()
+      await expect(page.getByRole('button', { name: 'Automatic collage selected' })).toBeVisible()
+    } finally {
+      await page.setViewportSize({ width: 1280, height: 720 })
+      for (const id of photos) await request.delete(`/api/galleryItems/${id}`, { headers })
+      if (albumID) await request.delete(`/api/albums/${albumID}`, { headers })
+      for (const id of images) await request.delete(`/api/media/${id}`, { headers })
+      await visitor.close()
+    }
+  })
+
   test('everyday drafts autosave without publishing private edits', async ({
     request,
     browser,

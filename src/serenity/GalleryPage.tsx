@@ -1,7 +1,8 @@
 import Link from 'next/link'
+import { AlbumCover } from './AlbumCover'
 import { notFound } from 'next/navigation'
 import { getGalleryPage } from './gallery'
-import { GalleryGrid, PageHeader, SectionHeader, SerenityImage } from './ui'
+import { GalleryGrid, PageHeader, SectionHeader } from './ui'
 
 export async function GalleryPageContent({ page = 1 }: { page?: number }) {
   if (!Number.isSafeInteger(page) || page < 1) notFound()
@@ -23,21 +24,20 @@ export async function GalleryPageContent({ page = 1 }: { page?: number }) {
               <h2 className="mb-5 text-2xl font-semibold">Albums</h2>
               <div className="mb-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                 {result.albums.map((album) => {
-                  const cover = typeof album.cover === 'object' ? album.cover : null
                   return (
                     <article
                       key={album.id}
                       className="overflow-hidden rounded-lg border border-slate-200"
                     >
                       <Link href={`/gallery/albums/${album.slug}`}>
-                        {cover?.url ? (
-                          <SerenityImage
-                            src={cover.sizes?.medium?.url || cover.url}
-                            alt=""
-                            className="aspect-[4/3] w-full object-cover"
-                          />
-                        ) : null}
-                        <h3 className="p-5 text-xl font-semibold">{album.title}</h3>
+                        <AlbumCover images={album.preview.images} />
+                        <div className="p-5">
+                          <h3 className="text-xl font-semibold">{album.title}</h3>
+                          <p className="mt-2 text-slate-600">
+                            {album.preview.totalPhotos}{' '}
+                            {album.preview.totalPhotos === 1 ? 'photo' : 'photos'} · View album
+                          </p>
+                        </div>
                       </Link>
                     </article>
                   )

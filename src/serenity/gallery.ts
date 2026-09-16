@@ -1,4 +1,5 @@
 import { unstable_cache } from 'next/cache'
+import { getAlbumCover } from './getAlbumCover'
 import { fallbackGalleryItems } from './content'
 import { getPayloadClient, normalizeGalleryItem } from './data'
 
@@ -22,7 +23,7 @@ export const getGalleryPage = unstable_cache(
       draft: false,
       depth: 1,
       sort: ['order', '-date', 'id'],
-      populate: { media: { url: true, sizes: true, alt: true } },
+      populate: { media: { url: true, sizes: true, filename: true, prefix: true, alt: true } },
     })
     const result = await payload.find({
       collection: 'galleryItems',
@@ -37,7 +38,12 @@ export const getGalleryPage = unstable_cache(
       populate: { media: { url: true, filename: true, prefix: true, alt: true } },
     })
     return {
-      albums: albums.docs,
+      albums: await Promise.all(
+        albums.docs.map(async (album) => ({
+          ...album,
+          preview: await getAlbumCover(payload, album),
+        })),
+      ),
       items: result.docs.map((doc) =>
         normalizeGalleryItem(doc as unknown as Record<string, unknown>),
       ),

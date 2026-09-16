@@ -134,9 +134,14 @@ it('resumes partial publication, detects duplicates, rejects stale edits and mak
     item: state.items[1].id,
     message: 'Synthetic interrupted upload',
   })
+  state = await action(state, { action: 'cover', item: state.items[0].id })
+  expect(idOf(state.batch.cover)).toBe(idOf(state.items[0].media))
+  state = await action(state, { action: 'resetCover' })
+  expect(state.batch.cover).toBeNull()
   await expect(action(state, { action: 'publish' })).rejects.toThrow('need attention')
   state = await action(state, { action: 'publish', allowPartial: true })
   expect(state.items.map((item) => item.status)).toEqual(['published', 'error'])
+  expect(typeof state.batch.album === 'object' && state.batch.album?.cover).toBeNull()
   expect(
     (
       await payload.find({
