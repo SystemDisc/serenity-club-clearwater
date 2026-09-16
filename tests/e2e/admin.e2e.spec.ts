@@ -1,6 +1,6 @@
 import { test, expect, Page } from '@playwright/test'
 import { login } from '../helpers/login'
-import { seedTestUser, cleanupTestUser, testUser } from '../helpers/seedUser'
+import { seedTestUser, cleanupTestUser, testUser, queuePublication } from '../helpers/seedUser'
 import { testServerURL } from '../helpers/environment'
 
 test.describe('Admin Panel', () => {
@@ -37,7 +37,7 @@ test.describe('Admin Panel', () => {
     try {
       await publicClient.get('/gallery') // warm the public cache before creating anything
       const created = await request.post('/api/galleryItems', { headers, data: { title, order: -1000, _status: 'published' } })
-      expect(created.ok()).toBeTruthy()
+      expect(created.ok(), await created.text()).toBeTruthy()
       id = (await created.json()).doc.id
       await visible(title, true)
       expect((await request.patch(`/api/galleryItems/${id}`, { headers, data: { title: `${title} edited` } })).ok()).toBeTruthy()
@@ -80,6 +80,30 @@ test.describe('Admin Panel', () => {
       expect((await request.get('/gallery/page/99999')).status()).toBe(404)
     } finally {
       for (const id of ids) expect((await request.delete(`/api/galleryItems/${id}`, { headers })).ok()).toBeTruthy()
+    }
+  })
+
+  test('runs authenticated scheduled publish and unpublish jobs', async ({ request, playwright }) => {
+    const auth = await request.post('/api/users/login', { data: testUser })
+    const { token } = await auth.json()
+    const headers = { authorization: `JWT ${token}` }
+    const slug = `scheduled-regression-${Date.now()}`
+    const created = await request.post('/api/pages', { headers, data: { title: 'Scheduled regression', slug, hero: { type: 'none' }, layout: [{ blockType: 'content', columns: [] }], _status: 'draft' } })
+    expect(created.ok(), await created.text()).toBeTruthy()
+    const id = (await created.json()).doc.id
+    const publicClient = await playwright.request.newContext({ baseURL: testServerURL })
+    try {
+      expect((await publicClient.get('/api/payload-jobs/run')).status()).toBe(401)
+      expect((await publicClient.get(`/${slug}`)).status()).toBe(404)
+      await queuePublication(id, 'publish')
+      expect((await publicClient.get('/api/payload-jobs/run?limit=10', { headers: { authorization: `Bearer ${process.env.CRON_SECRET}` } })).ok()).toBeTruthy()
+      await expect.poll(async () => (await publicClient.get(`/${slug}`)).status()).toBe(200)
+      await queuePublication(id, 'unpublish')
+      expect((await publicClient.get('/api/payload-jobs/run?limit=10', { headers: { authorization: `Bearer ${process.env.CRON_SECRET}` } })).ok()).toBeTruthy()
+      await expect.poll(async () => (await publicClient.get(`/${slug}`)).status()).toBe(404)
+    } finally {
+      await request.delete(`/api/pages/${id}`, { headers })
+      await publicClient.dispose()
     }
   })
 
