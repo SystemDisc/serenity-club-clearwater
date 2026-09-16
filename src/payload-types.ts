@@ -71,6 +71,7 @@ export interface Config {
     meetings: Meeting;
     events: Event;
     galleryItems: GalleryItem;
+    albums: Album;
     teamMembers: TeamMember;
     products: Product;
     policies: Policy;
@@ -102,6 +103,7 @@ export interface Config {
     meetings: MeetingsSelect<false> | MeetingsSelect<true>;
     events: EventsSelect<false> | EventsSelect<true>;
     galleryItems: GalleryItemsSelect<false> | GalleryItemsSelect<true>;
+    albums: AlbumsSelect<false> | AlbumsSelect<true>;
     teamMembers: TeamMembersSelect<false> | TeamMembersSelect<true>;
     products: ProductsSelect<false> | ProductsSelect<true>;
     policies: PoliciesSelect<false> | PoliciesSelect<true>;
@@ -1004,9 +1006,35 @@ export interface GalleryItem {
   title: string;
   category?: ('Clubhouse' | 'Event' | 'People' | 'Flyer' | 'Community') | null;
   description?: string | null;
+  /**
+   * An album photo is visible only while both this photo and its album are published. Clear this field to move the photo to the main gallery.
+   */
+  album?: (number | null) | Album;
   image?: (number | null) | Media;
   externalImageUrl?: string | null;
   imageAlt?: string | null;
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * Create an album draft, add its photos, and choose a cover. Publishing shows the album and its published photos in Gallery. Unpublishing hides the whole album.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "albums".
+ */
+export interface Album {
+  id: number;
+  title: string;
+  date?: string | null;
+  description?: string | null;
+  cover?: (number | null) | Media;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
   order?: number | null;
   updatedAt: string;
   createdAt: string;
@@ -1284,6 +1312,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'galleryItems';
         value: number | GalleryItem;
+      } | null)
+    | ({
+        relationTo: 'albums';
+        value: number | Album;
       } | null)
     | ({
         relationTo: 'teamMembers';
@@ -1616,9 +1648,26 @@ export interface GalleryItemsSelect<T extends boolean = true> {
   title?: T;
   category?: T;
   description?: T;
+  album?: T;
   image?: T;
   externalImageUrl?: T;
   imageAlt?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "albums_select".
+ */
+export interface AlbumsSelect<T extends boolean = true> {
+  title?: T;
+  date?: T;
+  description?: T;
+  cover?: T;
+  generateSlug?: T;
+  slug?: T;
   order?: T;
   updatedAt?: T;
   createdAt?: T;

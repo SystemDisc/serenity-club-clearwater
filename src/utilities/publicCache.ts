@@ -6,6 +6,7 @@ export const publicCollections = [
   'events',
   'monthlyFlyers',
   'galleryItems',
+  'albums',
   'teamMembers',
   'products',
   'policies',
@@ -39,7 +40,19 @@ const routes: Record<string, string[]> = {
   events: ['/', '/events'],
   duesReminder: ['/about'],
   monthlyFlyers: ['/', '/events'],
-  galleryItems: ['/gallery', '/gallery/page/[page]'],
+  galleryItems: [
+    '/gallery',
+    '/gallery/page/[page]',
+    '/gallery/albums/[slug]',
+    '/gallery/albums/[slug]/page/[page]',
+  ],
+  albums: [
+    '/gallery',
+    '/gallery/page/[page]',
+    '/gallery/albums/[slug]',
+    '/gallery/albums/[slug]/page/[page]',
+    '/sitemap.xml',
+  ],
   teamMembers: ['/about'],
   products: ['/', '/shop', '/shop/[slug]', '/sitemap.xml'],
   policies: ['/policies'],
@@ -69,7 +82,7 @@ export function invalidatePublicChanges(changes: Change[]): void {
     tags.add(`public-${change.collection}`)
     if (routes[change.collection]) routes[change.collection].forEach((path) => paths.add(path))
     else layout = true // Shared media, navigation, forms, and authored-page relationships.
-    if (['pages', 'products'].includes(change.collection)) {
+    if (['pages', 'products', 'albums'].includes(change.collection)) {
       tags.add(`${change.collection}-sitemap`)
       paths.add('/sitemap.xml')
     }
@@ -77,6 +90,7 @@ export function invalidatePublicChanges(changes: Change[]): void {
     for (const slug of [change.previousSlug, change.slug]) {
       if (!slug) continue
       if (change.collection === 'pages') paths.add(slug === 'home' ? '/' : `/${slug}`)
+      if (change.collection === 'albums') paths.add(`/gallery/albums/${slug}`)
       if (change.collection === 'posts') paths.add(`/posts/${slug}`)
       if (change.collection === 'products') paths.add(`/shop/${slug}`)
     }

@@ -1,7 +1,6 @@
-import type { CollectionConfig } from 'payload'
+import type { CollectionConfig, AccessResult } from 'payload'
 
 import { authenticated } from '@/access/authenticated'
-import { authenticatedOrPublished } from '@/access/authenticatedOrPublished'
 import { validateGalleryImage } from '@/hooks/validateGalleryImage'
 import {
   revalidatePublicSiteAfterChange,
@@ -22,7 +21,15 @@ export const GalleryItems: CollectionConfig = {
   access: {
     create: authenticated,
     delete: authenticated,
-    read: authenticatedOrPublished,
+    read: ({ req }): AccessResult =>
+      req.user
+        ? true
+        : {
+            and: [
+              { _status: { equals: 'published' } },
+              { or: [{ album: { exists: false } }, { 'album._status': { equals: 'published' } }] },
+            ],
+          },
     update: authenticated,
   },
   fields: [
@@ -33,7 +40,17 @@ export const GalleryItems: CollectionConfig = {
       defaultValue: 'Clubhouse',
       options: ['Clubhouse', 'Event', 'People', 'Flyer', 'Community'],
     },
-    { name: 'description', type: 'textarea' },
+    { name: 'description', type: 'textarea', label: 'Caption shown below the photo' },
+    {
+      name: 'album',
+      type: 'relationship',
+      relationTo: 'albums',
+      label: 'Album (leave empty for the main gallery)',
+      admin: {
+        description:
+          'An album photo is visible only while both this photo and its album are published. Clear this field to move the photo to the main gallery.',
+      },
+    },
     {
       name: 'image',
       type: 'upload',

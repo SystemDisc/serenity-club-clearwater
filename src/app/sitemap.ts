@@ -55,7 +55,7 @@ const getCmsEntries = unstable_cache(
 
     const payload = await getPayload({ config: configPromise })
 
-    const [pages, products] = await Promise.all([
+    const [pages, products, albums] = await Promise.all([
       payload.find({
         collection: 'pages',
         depth: 0,
@@ -90,6 +90,15 @@ const getCmsEntries = unstable_cache(
           },
         },
       }),
+      payload.find({
+        collection: 'albums',
+        depth: 0,
+        draft: false,
+        limit: 0,
+        pagination: false,
+        overrideAccess: false,
+        select: { slug: true, updatedAt: true },
+      }),
     ])
 
     const pageEntries = pages.docs.flatMap((page): SitemapEntry[] => {
@@ -122,12 +131,21 @@ const getCmsEntries = unstable_cache(
       ]
     })
 
-    return [...pageEntries, ...productEntries]
+    return [
+      ...pageEntries,
+      ...productEntries,
+      ...albums.docs.map((album): SitemapEntry => ({
+        url: `${siteUrl}/gallery/albums/${album.slug}`,
+        lastModified: getLastModified(album.updatedAt),
+        changeFrequency: 'weekly',
+        priority: 0.6,
+      })),
+    ]
   },
   ['public-sitemap'],
   {
     revalidate: 300,
-    tags: ['pages-sitemap', 'products-sitemap'],
+    tags: ['pages-sitemap', 'products-sitemap', 'albums-sitemap'],
   },
 )
 

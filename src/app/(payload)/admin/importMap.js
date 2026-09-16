@@ -23,6 +23,7 @@ import { default as default_4869c3da8de899c02232138cd2e5b711 } from '@/admin/Cal
 import { SessionRowLabel as SessionRowLabel_d589b2f6bc8266cfa95fd8b904bac664 } from '@/admin/SchedulePreview'
 import { default as default_d589b2f6bc8266cfa95fd8b904bac664 } from '@/admin/SchedulePreview'
 import { default as default_a3e8db10b870479131452d5cd3f7f3ed } from '@/admin/ImagePreview'
+import { default as default_913c620549801de5cc4401c48bdeb9f7 } from '@/admin/AlbumPhotos'
 import { HorizontalRuleFeatureClient as HorizontalRuleFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { BlocksFeatureClient as BlocksFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { FolderTableCell as FolderTableCell_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
@@ -71,6 +72,7 @@ export const importMap = {
   "@/admin/SchedulePreview#SessionRowLabel": SessionRowLabel_d589b2f6bc8266cfa95fd8b904bac664,
   "@/admin/SchedulePreview#default": default_d589b2f6bc8266cfa95fd8b904bac664,
   "@/admin/ImagePreview#default": default_a3e8db10b870479131452d5cd3f7f3ed,
+  "@/admin/AlbumPhotos#default": default_913c620549801de5cc4401c48bdeb9f7,
   "@payloadcms/richtext-lexical/client#HorizontalRuleFeatureClient": HorizontalRuleFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#BlocksFeatureClient": BlocksFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/next/rsc#FolderTableCell": FolderTableCell_f9c02e79a4aed9a3924487c0cd4cafb1,

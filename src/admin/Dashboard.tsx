@@ -139,6 +139,13 @@ export default async function Dashboard({ initPageResult }: AdminViewServerProps
       publicLabel: 'View Gallery',
     },
   ]
+  tasks.push({
+    title: 'Create an album',
+    text: 'Group an event’s photos together, choose a cover, and publish the whole album.',
+    href: '/admin/collections/albums/create',
+    publicHref: '/gallery',
+    publicLabel: 'View Gallery',
+  })
   const recent = [
     ...events.docs.map((doc) => ({
       id: `event-${doc.id}`,

@@ -31,6 +31,84 @@ test.describe('Admin Panel', () => {
     await cleanupTestUser()
   })
 
+  test('publishes and hides a complete album without leaking its photos into the main gallery', async ({
+    request,
+    browser,
+  }) => {
+    const auth = await request.post('/api/users/login', { data: testUser })
+    const { token } = await auth.json()
+    const headers = { authorization: `JWT ${token}` }
+    const visitor = await browser.newContext()
+    const publicPage = await visitor.newPage()
+    const title = `Album publishing regression ${Date.now()}`
+    let imageID: number | undefined
+    let albumID: number | undefined
+    let photoID: number | undefined
+    try {
+      const media = await request.post('/api/media', {
+        headers,
+        multipart: {
+          _payload: JSON.stringify({ alt: 'Synthetic album cover' }),
+          file: {
+            name: 'album-regression.png',
+            mimeType: 'image/png',
+            buffer: await sharp({
+              create: { width: 600, height: 400, channels: 3, background: '#176b50' },
+            })
+              .png()
+              .toBuffer(),
+          },
+        },
+      })
+      expect(media.ok(), await media.text()).toBeTruthy()
+      imageID = (await media.json()).doc.id
+      const album = await request.post('/api/albums', {
+        headers,
+        data: { title, cover: imageID, _status: 'draft' },
+      })
+      expect(album.ok(), await album.text()).toBeTruthy()
+      const doc = (await album.json()).doc
+      albumID = doc.id
+      const photo = await request.post('/api/galleryItems', {
+        headers,
+        data: { title: `${title} photo`, image: imageID, album: albumID, _status: 'published' },
+      })
+      expect(photo.ok(), await photo.text()).toBeTruthy()
+      photoID = (await photo.json()).doc.id
+      await publicPage.goto('/gallery')
+      await expect(publicPage.getByRole('heading', { name: title, exact: true })).toHaveCount(0)
+      const albumURL = `/gallery/albums/${doc.slug}`
+      expect((await publicPage.goto(albumURL))?.status()).toBe(404)
+      expect(
+        (
+          await request.patch(`/api/albums/${albumID}`, { headers, data: { _status: 'published' } })
+        ).ok(),
+      ).toBeTruthy()
+      await expect.poll(async () => (await publicPage.goto(albumURL))?.status()).toBe(200)
+      await expect(
+        publicPage.getByRole('heading', { name: `${title} photo`, exact: true }),
+      ).toBeVisible()
+      await publicPage.goto('/gallery')
+      await expect(publicPage.getByRole('heading', { name: title, exact: true })).toBeVisible()
+      await expect(
+        publicPage.getByRole('heading', { name: `${title} photo`, exact: true }),
+      ).toHaveCount(0)
+      expect(
+        (
+          await request.patch(`/api/albums/${albumID}`, { headers, data: { _status: 'draft' } })
+        ).ok(),
+      ).toBeTruthy()
+      await expect.poll(async () => (await publicPage.goto(albumURL))?.status()).toBe(404)
+      await publicPage.goto('/gallery')
+      await expect(publicPage.getByRole('heading', { name: title, exact: true })).toHaveCount(0)
+    } finally {
+      if (photoID) await request.delete(`/api/galleryItems/${photoID}`, { headers })
+      if (albumID) await request.delete(`/api/albums/${albumID}`, { headers })
+      if (imageID) await request.delete(`/api/media/${imageID}`, { headers })
+      await visitor.close()
+    }
+  })
+
   test('separates one meeting day without changing the other days', async ({ request }) => {
     const auth = await request.post('/api/users/login', { data: testUser })
     const { token } = await auth.json()

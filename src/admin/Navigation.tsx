@@ -6,6 +6,7 @@ const everyday = new Set([
   'events',
   'monthlyFlyers',
   'galleryItems',
+  'albums',
   'media',
   'teamMembers',
   'products',
