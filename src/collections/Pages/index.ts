@@ -133,7 +133,7 @@ export const Pages: CollectionConfig<'pages'> = {
       autosave: {
         interval: 1500,
       },
-      schedulePublish: true,
+      schedulePublish: process.env.ENABLE_SCHEDULED_PUBLISHING === 'true',
     },
     maxPerDoc: 50,
   },
