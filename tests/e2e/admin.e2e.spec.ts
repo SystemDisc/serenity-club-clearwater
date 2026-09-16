@@ -186,7 +186,12 @@ test.describe('Admin Panel', () => {
       await picker.getByRole('button', { name: 'Search photos' }).click()
       await picker.getByRole('button', { name: 'Use this photo' }).click()
       await body.click()
-      await body.press('ControlOrMeta+End')
+      // Move the caret (not just the viewport on macOS) to the document end,
+      // then leave the list before inserting a standalone article photo.
+      await body.press(process.platform === 'darwin' ? 'Meta+ArrowDown' : 'Control+End')
+      await body.press('Enter')
+      await body.press('Enter')
+      await expect(body.locator('li')).toHaveCount(2)
       await page.getByRole('button', { name: 'blocks dropdown', exact: true }).click()
       await page.getByRole('button', { name: 'Add photo', exact: true }).click()
       await body.getByRole('button', { name: 'Edit photo and caption', exact: true }).last().click()
