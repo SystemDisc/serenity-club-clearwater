@@ -15,6 +15,17 @@ const publicPages = [
 ]
 
 test.describe('Frontend', () => {
+  test('password recovery explains the action and keeps account existence private', async ({ page }) => {
+    await page.goto('/admin/forgot')
+    await expect(page.getByRole('heading', { name: 'Reset your website password' })).toBeVisible()
+    await page.getByLabel('Email address', { exact: true }).fill('nonexistent-password-test@example.com')
+    await page.getByRole('button', { name: 'Send password reset email', exact: true }).click()
+    await expect(page.getByRole('heading', { name: 'Check your email' })).toBeVisible()
+    await expect(page.getByText('If this email has website access,', { exact: false })).toBeVisible()
+    await page.getByRole('link', { name: 'Back to sign in' }).click()
+    await expect(page).toHaveURL(/\/admin\/login$/)
+  })
+
   test('gallery viewer supports keyboard, focus return, phone swipe, and bounded image loading', async ({
     page,
   }) => {

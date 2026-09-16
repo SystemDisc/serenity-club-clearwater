@@ -87,6 +87,7 @@ export default buildConfig({
       beforeNavLinks: ['@/admin/NavLinks'],
       views: {
         dashboard: { Component: '@/admin/Dashboard' },
+        forgot: { Component: '@/admin/PasswordHelp', path: '/forgot' },
         meetings: { Component: '@/admin/MeetingsWeek', path: '/meetings' },
         photos: { Component: '@/admin/Photos', path: '/photos' },
         organizePhotos: { Component: '@/admin/GalleryOrganizer', path: '/organize-photos' },

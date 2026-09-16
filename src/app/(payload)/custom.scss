@@ -477,3 +477,27 @@
     position: static;
   }
 }
+.club-password-help {
+  font-size: 16px;
+  line-height: 1.6;
+  max-width: 36rem;
+  margin: auto;
+}
+.club-password-help label {
+  display: grid;
+  gap: 8px;
+}
+.club-password-help input,
+.club-password-help button {
+  font: inherit;
+  padding: 12px;
+  min-height: 44px;
+  border: 1px solid var(--theme-elevation-400);
+  border-radius: 5px;
+  background: var(--theme-input-bg);
+  color: var(--theme-text);
+}
+.club-password-help button {
+  margin-top: 20px;
+  cursor: pointer;
+}
