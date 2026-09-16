@@ -53,7 +53,11 @@ export default function AlbumPhotos() {
       {id ? (
         <>
           <div style={{ maxWidth: 400 }} aria-label="Album cover preview">
-            <AlbumCover images={preview} />
+            {published.loading || selected.loading ? (
+              <p role="status">Loading cover preview…</p>
+            ) : (
+              <AlbumCover images={preview} />
+            )}
           </div>
           <p>
             {coverID && selectedImages.length

@@ -38,7 +38,7 @@ export function AlbumCover({ images }: { images: AlbumCoverImage[] }) {
                   : '(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw'
               }
               quality={85}
-              style={{ objectFit: 'cover' }}
+              style={{ objectFit: photos.length > 1 ? 'contain' : 'cover' }}
             />
           </div>
         ))
