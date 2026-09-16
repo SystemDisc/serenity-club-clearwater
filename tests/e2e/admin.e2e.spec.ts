@@ -31,6 +31,59 @@ test.describe('Admin Panel', () => {
     await cleanupTestUser()
   })
 
+  test('previews and publishes dues text without exposing a draft', async ({
+    request,
+    browser,
+  }) => {
+    const auth = await request.post('/api/users/login', { data: testUser })
+    const { token } = await auth.json()
+    const headers = { authorization: `JWT ${token}` }
+    const original = await (
+      await request.get('/api/globals/duesReminder?depth=0', { headers })
+    ).json()
+    const visitor = await browser.newContext()
+    const publicPage = await visitor.newPage()
+    const message = `Membership reminder regression ${Date.now()}`
+    try {
+      await publicPage.goto('/about')
+      await page.goto('/admin/globals/duesReminder')
+      await page.getByLabel('How should the reminder work? *').selectOption('automatic')
+      await page.getByRole('textbox', { name: 'Message below the month' }).fill(message)
+      await page.getByRole('button', { name: 'Next month', exact: true }).click()
+      await expect(page.getByRole('heading', { name: /It’s time to pay your/ })).toBeVisible()
+      await page.getByRole('button', { name: 'Show phone width' }).click()
+      expect(
+        await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
+      ).toBeTruthy()
+      await page.getByRole('button', { name: 'This month', exact: true }).click()
+      await page.getByRole('button', { name: 'Save Draft', exact: true }).click()
+      await expect(page.getByRole('button', { name: 'Save Draft', exact: true })).toBeDisabled()
+      await publicPage.reload()
+      await expect(publicPage.getByText(message, { exact: true })).toHaveCount(0)
+      await page.getByRole('button', { name: 'Publish changes', exact: true }).click()
+      await expect(page.getByText('Status: Published', { exact: false })).toBeVisible()
+      await expect
+        .poll(async () => {
+          await publicPage.reload()
+          return publicPage.getByText(message, { exact: true }).count()
+        })
+        .toBe(1)
+      await page.getByLabel('How should the reminder work? *').selectOption('off')
+      await page.getByRole('button', { name: 'Publish changes', exact: true }).click()
+      await expect
+        .poll(async () => {
+          await publicPage.reload()
+          return publicPage.getByText(message, { exact: true }).count()
+        })
+        .toBe(0)
+    } finally {
+      expect(
+        (await request.post('/api/globals/duesReminder', { headers, data: original })).ok(),
+      ).toBeTruthy()
+      await visitor.close()
+    }
+  })
+
   test('refreshes recurring event dates when its authoritative meeting changes', async ({
     request,
     browser,

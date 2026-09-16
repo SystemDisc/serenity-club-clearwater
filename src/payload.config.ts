@@ -21,6 +21,7 @@ import { Products } from './collections/Products'
 import { Sponsors } from './collections/Sponsors'
 import { TeamMembers } from './collections/TeamMembers'
 import { Users } from './collections/Users'
+import { DuesReminder } from './DuesReminder/config'
 import { ClubSettings } from './ClubSettings/config'
 import { Footer } from './Footer/config'
 import { Header } from './Header/config'
@@ -132,7 +133,7 @@ export default buildConfig({
     Users,
   ],
   cors: [getServerSideURL()].filter(Boolean),
-  globals: [ClubSettings, Header, Footer],
+  globals: [ClubSettings, DuesReminder, Header, Footer],
   folders: { browseByFolder: false },
   plugins: [
     ...plugins,

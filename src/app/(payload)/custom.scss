@@ -244,3 +244,23 @@
     grid-template-columns: 1fr;
   }
 }
+
+.club-preview-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.club-preview-controls button {
+  min-height: 44px;
+  font-size: 16px;
+  padding: 8px 14px;
+  background: var(--theme-elevation-100);
+  color: var(--theme-text);
+  border: 1px solid var(--theme-elevation-500);
+  border-radius: 5px;
+  cursor: pointer;
+}
+.club-preview-controls button[aria-pressed='true'] {
+  outline: 2px solid var(--theme-text);
+  outline-offset: 1px;
+}

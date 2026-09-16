@@ -129,11 +129,13 @@ export interface Config {
   fallbackLocale: null;
   globals: {
     clubSettings: ClubSetting;
+    duesReminder: DuesReminder;
     header: Header;
     footer: Footer;
   };
   globalsSelect: {
     clubSettings: ClubSettingsSelect<false> | ClubSettingsSelect<true>;
+    duesReminder: DuesReminderSelect<false> | DuesReminderSelect<true>;
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
   };
@@ -2186,13 +2188,38 @@ export interface ClubSetting {
   roomImage?: (number | null) | Media;
   roomImageUrl?: string | null;
   /**
-   * This is the monthly dues graphic on About, not the header logo. Check the month before saving. Shared settings change the public website immediately.
+   * Use Membership dues reminder for the current message. This earlier poster is kept for reference and only appears when that editor chooses the earlier uploaded poster.
    */
   logoImage?: (number | null) | Media;
   /**
    * Advanced: used only when no reminder image is selected above.
    */
   logoImageUrl?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * The reminder on About. Save a draft, check this month and next month, then publish. The earlier uploaded poster is retained in Website details.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "duesReminder".
+ */
+export interface DuesReminder {
+  id: number;
+  mode: 'automatic' | 'chosen' | 'off' | 'legacy';
+  month?: string | null;
+  message?: string | null;
+  /**
+   * Uses the existing membership information page. This does not change prices or payment links.
+   */
+  showMembershipLink?: boolean | null;
+  artworkKind?: ('none' | 'decoration' | 'monthly') | null;
+  artwork?: (number | null) | Media;
+  /**
+   * Automatic reminders hide month-specific artwork after that month ends.
+   */
+  artworkMonth?: string | null;
+  _status?: ('draft' | 'published') | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -2306,6 +2333,23 @@ export interface ClubSettingsSelect<T extends boolean = true> {
   roomImageUrl?: T;
   logoImage?: T;
   logoImageUrl?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "duesReminder_select".
+ */
+export interface DuesReminderSelect<T extends boolean = true> {
+  mode?: T;
+  month?: T;
+  message?: T;
+  showMembershipLink?: T;
+  artworkKind?: T;
+  artwork?: T;
+  artworkMonth?: T;
+  _status?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

@@ -19,7 +19,9 @@ export default function Navigation(props: ServerProps & { req?: PayloadRequest }
       {...props}
       visibleEntities={{
         collections: props.visibleEntities.collections.filter((slug) => everyday.has(slug)),
-        globals: props.visibleEntities.globals.filter((slug) => slug === 'clubSettings'),
+        globals: props.visibleEntities.globals.filter((slug) =>
+          ['clubSettings', 'duesReminder'].includes(slug),
+        ),
       }}
     />
   )

@@ -3,13 +3,14 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import type { AdminViewServerProps } from 'payload'
 import { localDateKey } from '@/serenity/calendar'
+import { duesView } from '@/serenity/dues'
 import { displayMonth } from '@/serenity/flyers'
 
 export default async function Dashboard({ initPageResult }: AdminViewServerProps) {
   const { req } = initPageResult
   if (!req.user) redirect('/admin/login')
   const month = localDateKey().slice(0, 7)
-  const [events, meetings, photos, flyers] = await Promise.all([
+  const [events, meetings, photos, flyers, dues] = await Promise.all([
     req.payload.find({
       collection: 'events',
       req,
@@ -44,6 +45,13 @@ export default async function Dashboard({ initPageResult }: AdminViewServerProps
       draft: true,
       where: { month: { equals: month } },
       limit: 1,
+      depth: 1,
+    }),
+    req.payload.findGlobal({
+      slug: 'duesReminder',
+      req,
+      overrideAccess: false,
+      draft: false,
       depth: 1,
     }),
   ])
@@ -89,6 +97,13 @@ export default async function Dashboard({ initPageResult }: AdminViewServerProps
       : live
         ? 'Published version on website — draft changes waiting'
         : 'Draft — not on website'
+  const reminder = duesView(dues._status === 'published' ? dues : null)
+  const reminderStatus =
+    reminder.mode === 'legacy'
+      ? 'The earlier poster is still in use. Check its month or switch to an automatic text reminder.'
+      : reminder.mode === 'off'
+        ? 'The reminder is turned off.'
+        : `${reminder.heading}.${reminder.expiredArt ? ' Old artwork is hidden; choose new artwork if wanted.' : ''}`
   const tasks = [
     {
       title: 'Update this month’s flyer',
@@ -104,8 +119,8 @@ export default async function Dashboard({ initPageResult }: AdminViewServerProps
     },
     {
       title: 'Update dues reminder',
-      text: 'Change the reminder shown on the About page.',
-      href: '/admin/globals/clubSettings#field-logoImage',
+      text: reminderStatus,
+      href: '/admin/globals/duesReminder',
       publicHref: '/about',
       publicLabel: 'View About page',
     },

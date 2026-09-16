@@ -35,7 +35,7 @@ export default function Help(props: AdminViewServerProps) {
     ['Monthly flyer', '/admin/collections/monthlyFlyers', '/events'],
     ['Individual event announcements', '/admin/collections/events', '/events'],
     ['Meeting days, times, and details', '/admin/collections/meetings', '/meeting-schedule'],
-    ['About-page dues reminder', '/admin/globals/clubSettings#field-logoImage', '/about'],
+    ['About-page dues reminder', '/admin/globals/duesReminder', '/about'],
     ['Contact details, hours, and homepage pictures', '/admin/globals/clubSettings', '/reach-out'],
     ['Board and team', '/admin/collections/teamMembers', '/about'],
     ['Memberships and shop', '/admin/collections/products', '/shop'],

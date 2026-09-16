@@ -1,9 +1,18 @@
-import { PageHeader, SectionHeader, SerenityImage, TeamGrid } from '@/serenity/ui'
+import { PageHeader, SectionHeader, TeamGrid } from '@/serenity/ui'
 
+import { getCachedGlobal } from '@/utilities/getGlobals'
+import { DuesNotice } from '@/serenity/DuesNotice'
+import { duesView } from '@/serenity/dues'
 import { getSerenityData } from '@/serenity/data'
 
 export default async function AboutPage() {
-  const data = await getSerenityData(['teamMembers'])
+  const [data, reminder] = await Promise.all([
+    getSerenityData(['teamMembers']),
+    getCachedGlobal('duesReminder', 1)(),
+  ])
+  const notice = duesView(reminder._status === 'published' ? reminder : null)
+  const hasNotice =
+    notice.mode !== 'off' && (notice.mode !== 'legacy' || !!data.settings.logoImageUrl)
 
   return (
     <main>
@@ -12,15 +21,10 @@ export default async function AboutPage() {
       </PageHeader>
 
       <section className="bg-white px-4 py-10 md:py-12">
-        <div className="container grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
-          {data.settings.logoImageUrl ? (
-            <SerenityImage
-              alt="Serenity Club of Clearwater logo"
-              className="w-full rounded-lg border border-slate-200 bg-slate-50 object-contain p-8"
-              sizes="(min-width: 1024px) 40vw, 100vw"
-              src={data.settings.logoImageUrl}
-            />
-          ) : null}
+        <div
+          className={`container grid gap-10 lg:items-start ${hasNotice ? 'lg:grid-cols-[0.9fr_1.1fr]' : ''}`}
+        >
+          <DuesNotice notice={notice} legacyImage={data.settings.logoImageUrl} />
           <div>
             <SectionHeader eyebrow="Mission" title="Safe, supportive, and member supported">
               <p>

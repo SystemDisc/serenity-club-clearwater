@@ -5,7 +5,7 @@ import { imagePreviewField } from '@/admin/config'
 
 export const ClubSettings: GlobalConfig = {
   slug: 'clubSettings',
-  label: 'Contact, pictures & dues',
+  label: 'Contact & website pictures',
   access: {
     read: () => true,
   },
@@ -42,10 +42,10 @@ export const ClubSettings: GlobalConfig = {
       name: 'logoImage',
       type: 'upload',
       relationTo: 'media',
-      label: 'Membership dues reminder — About page',
+      label: 'Earlier dues poster — retained for reference',
       admin: {
         description:
-          'This is the monthly dues graphic on About, not the header logo. Check the month before saving. Shared settings change the public website immediately.',
+          'Use Membership dues reminder for the current message. This earlier poster is kept for reference and only appears when that editor chooses the earlier uploaded poster.',
       },
     },
     imagePreviewField('logoImage', 'logoImageUrl'),

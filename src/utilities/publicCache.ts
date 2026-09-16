@@ -37,6 +37,7 @@ const pending = (scopes[scopeKey] ??= new AsyncLocalStorage<Pending>())
 const routes: Record<string, string[]> = {
   meetings: ['/', '/meeting-schedule', '/groups', '/events'],
   events: ['/', '/events'],
+  duesReminder: ['/about'],
   monthlyFlyers: ['/', '/events'],
   galleryItems: ['/gallery', '/gallery/page/[page]'],
   teamMembers: ['/about'],
