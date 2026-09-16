@@ -247,10 +247,11 @@ export const getSerenityData = cache(
           fallbackMeetings,
           (doc) => ({
             days: getText(doc.days),
-            description: getText(doc.description) || undefined,
+            description: getText(doc.publicNotes) || undefined,
             externalUrl: getText(doc.externalUrl) || undefined,
             fellowship: (getText(doc.fellowship, 'AA') as Meeting['fellowship']) || 'AA',
-            format: getText(doc.format) || undefined,
+            sessions: doc.sessions as Meeting['sessions'],
+            exceptions: doc.exceptions as Meeting['exceptions'],
             id: String(doc.id),
             name: getText(doc.name),
             order: getNumber(doc.order),

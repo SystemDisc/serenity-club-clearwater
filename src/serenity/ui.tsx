@@ -251,7 +251,7 @@ export function MeetingList({
       {meetings.map((meeting) => (
         <article
           className="grid gap-4 rounded-lg border border-slate-200 bg-white p-4 md:grid-cols-[9rem_1fr_8rem]"
-          key={`${meeting.name}-${meeting.time}-${meeting.days}`}
+          key={`${meeting.id || meeting.name}-${meeting.time}-${meeting.days}`}
         >
           <div>
             <p className="flex items-center gap-2 text-sm font-semibold text-emerald-900">

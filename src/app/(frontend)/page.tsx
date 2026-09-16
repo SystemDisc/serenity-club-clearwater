@@ -12,12 +12,12 @@ import {
 import { ArrowRight, CalendarDays, HeartHandshake, ShoppingBag } from 'lucide-react'
 
 import { getSerenityData } from '@/serenity/data'
-import { sortedMeetingsByTime } from '@/serenity/meetings'
+import { regularMeetingRows } from '@/serenity/publicMeetings'
 import { siteMetadata } from '@/utilities/siteURL'
 
 export default async function HomePage() {
   const data = await getSerenityData(['meetings', 'events', 'products', 'sponsors'])
-  const sortedMeetings = sortedMeetingsByTime(data.meetings)
+  const sortedMeetings = regularMeetingRows(data.meetings)
   const recoveryMeetings = sortedMeetings.filter((meeting) => meeting.fellowship !== 'Club')
   const firstMeeting = recoveryMeetings[0]
   const lastMeeting = recoveryMeetings[recoveryMeetings.length - 1]
@@ -82,7 +82,7 @@ export default async function HomePage() {
                   Complete schedule
                 </p>
                 <h3 className="mt-3 text-2xl font-semibold text-slate-950">
-                  {data.meetings.length} meetings
+                  {data.meetings.length} groups & club activities
                 </h3>
                 <p className="mt-2 text-sm leading-6 text-slate-700">
                   See the complete AA, NA, and club service schedule before visiting.

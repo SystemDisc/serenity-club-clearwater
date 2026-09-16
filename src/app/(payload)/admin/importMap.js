@@ -15,6 +15,11 @@ import { MetaImageComponent as MetaImageComponent_a8a977ebc872c5d5ea7ee689724c08
 import { MetaDescriptionComponent as MetaDescriptionComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
 import { PreviewComponent as PreviewComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
 import { SlugField as SlugField_2b8867833a34864a02ddf429b0728a40 } from '@payloadcms/next/client'
+import { default as default_3869346f4b905a169fdf46a89e5f17bc } from '@/admin/WeekdayField'
+import { default as default_4c9d324e290add2c2c0d619284747bf1 } from '@/admin/SessionReference'
+import { default as default_4869c3da8de899c02232138cd2e5b711 } from '@/admin/CalendarField'
+import { SessionRowLabel as SessionRowLabel_d589b2f6bc8266cfa95fd8b904bac664 } from '@/admin/SchedulePreview'
+import { default as default_d589b2f6bc8266cfa95fd8b904bac664 } from '@/admin/SchedulePreview'
 import { default as default_a3e8db10b870479131452d5cd3f7f3ed } from '@/admin/ImagePreview'
 import { HorizontalRuleFeatureClient as HorizontalRuleFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { BlocksFeatureClient as BlocksFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
@@ -53,6 +58,11 @@ export const importMap = {
   "@payloadcms/plugin-seo/client#MetaDescriptionComponent": MetaDescriptionComponent_a8a977ebc872c5d5ea7ee689724c0860,
   "@payloadcms/plugin-seo/client#PreviewComponent": PreviewComponent_a8a977ebc872c5d5ea7ee689724c0860,
   "@payloadcms/next/client#SlugField": SlugField_2b8867833a34864a02ddf429b0728a40,
+  "@/admin/WeekdayField#default": default_3869346f4b905a169fdf46a89e5f17bc,
+  "@/admin/SessionReference#default": default_4c9d324e290add2c2c0d619284747bf1,
+  "@/admin/CalendarField#default": default_4869c3da8de899c02232138cd2e5b711,
+  "@/admin/SchedulePreview#SessionRowLabel": SessionRowLabel_d589b2f6bc8266cfa95fd8b904bac664,
+  "@/admin/SchedulePreview#default": default_d589b2f6bc8266cfa95fd8b904bac664,
   "@/admin/ImagePreview#default": default_a3e8db10b870479131452d5cd3f7f3ed,
   "@payloadcms/richtext-lexical/client#HorizontalRuleFeatureClient": HorizontalRuleFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#BlocksFeatureClient": BlocksFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,

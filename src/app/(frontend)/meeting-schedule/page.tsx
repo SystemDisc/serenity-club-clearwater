@@ -1,28 +1,7 @@
 import { ContactBand, MeetingList, PageHeader, SectionHeader } from '@/serenity/ui'
 
 import { getSerenityData } from '@/serenity/data'
-import { meetingRunsOnDate, sortedMeetingsByTime } from '@/serenity/meetings'
-
-const groupNotes = [
-  {
-    title: 'AA group formats',
-    items: [
-      'Feelings Group rotates book study and discussion formats Monday through Saturday.',
-      'TGIF meets at noon daily, with Big Book study on Tuesday and 12 Steps and 12 Traditions on Thursday.',
-      'Mid-Day meets daily at 3pm for open discussion.',
-      'Turner Street meets nightly, with the Saturday campfire meeting.',
-      'Women With Freedom is a closed women-only meeting on Wednesday mornings.',
-    ],
-  },
-  {
-    title: 'NA group formats',
-    items: [
-      'Serenity in Addiction rotates open discussion, literature study, beginner, speaker, celebration, and IP discussion formats.',
-      'Serenity in Addiction holds its business meeting the first Monday of the month at 8pm.',
-      'The Noon Group meets Sundays at noon in the back room.',
-    ],
-  },
-]
+import { meetingsOnDate, regularMeetingRows } from '@/serenity/publicMeetings'
 
 const amenities = [
   {
@@ -45,7 +24,7 @@ const amenities = [
 
 export default async function MeetingSchedulePage() {
   const data = await getSerenityData(['meetings'])
-  const sortedMeetings = sortedMeetingsByTime(data.meetings)
+  const sortedMeetings = regularMeetingRows(data.meetings)
   const aaMeetings = sortedMeetings.filter((meeting) => meeting.fellowship === 'AA')
   const naMeetings = sortedMeetings.filter((meeting) => meeting.fellowship === 'NA')
   const clubMeetings = sortedMeetings.filter((meeting) => meeting.fellowship === 'Club')
@@ -54,7 +33,7 @@ export default async function MeetingSchedulePage() {
     timeZone: 'America/New_York',
     weekday: 'long',
   }).format(now)
-  const todayMeetings = sortedMeetings.filter((meeting) => meetingRunsOnDate(meeting, now))
+  const todayMeetings = meetingsOnDate(data.meetings, now)
 
   return (
     <main>
@@ -70,9 +49,21 @@ export default async function MeetingSchedulePage() {
         <div className="container">
           <div className="grid gap-3 md:grid-cols-3">
             {[
-              { count: aaMeetings.length, href: '#aa', label: 'AA meetings' },
-              { count: naMeetings.length, href: '#na', label: 'NA meetings' },
-              { count: clubMeetings.length, href: '#club', label: 'Club service' },
+              {
+                count: data.meetings.filter((meeting) => meeting.fellowship === 'AA').length,
+                href: '#aa',
+                label: 'AA groups',
+              },
+              {
+                count: data.meetings.filter((meeting) => meeting.fellowship === 'NA').length,
+                href: '#na',
+                label: 'NA groups',
+              },
+              {
+                count: data.meetings.filter((meeting) => meeting.fellowship === 'Club').length,
+                href: '#club',
+                label: 'Club activities',
+              },
             ].map((item) => (
               <a
                 className="rounded-lg border border-slate-200 bg-[#fbfaf7] p-4 transition hover:border-emerald-700 hover:bg-white"
@@ -116,38 +107,6 @@ export default async function MeetingSchedulePage() {
         <div className="container">
           <SectionHeader eyebrow="Club" title="Club meetings and service" />
           <MeetingList meetings={clubMeetings} />
-        </div>
-      </section>
-
-      <section className="bg-[#fbfaf7] px-4 py-10 md:py-12">
-        <div className="container">
-          <SectionHeader eyebrow="Group details" title="Meeting formats and group notes">
-            <p>
-              These notes mirror the group-level details from the club schedule and help visitors
-              choose the right room, day, and format.
-            </p>
-          </SectionHeader>
-          <div className="grid gap-5 lg:grid-cols-2">
-            {groupNotes.map((group) => (
-              <article
-                className="rounded-lg border border-slate-200 bg-white p-5"
-                key={group.title}
-              >
-                <h2 className="text-xl font-semibold text-slate-950">{group.title}</h2>
-                <ul className="mt-4 grid gap-3 text-sm leading-6 text-slate-700">
-                  {group.items.map((item) => (
-                    <li className="flex gap-3" key={item}>
-                      <span
-                        aria-hidden="true"
-                        className="mt-2 size-1.5 shrink-0 rounded-full bg-emerald-800"
-                      />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </article>
-            ))}
-          </div>
         </div>
       </section>
 

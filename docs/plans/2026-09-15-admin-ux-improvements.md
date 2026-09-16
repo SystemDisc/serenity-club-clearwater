@@ -1,6 +1,14 @@
 # Admin improvements — plan for review
 
-Prepared September 15, 2026; expanded after the final public-site/source pass and the user's dues, meeting-format, and DOCX clarifications. **Proposed, not implemented.** This plan follows the [full admin UX audit](../audits/2026-09-15-admin-ux.md). Finding IDs A01–A27 refer to that report.
+Prepared September 15, 2026; expanded after the final public-site/source pass and the user's dues, meeting-format, and DOCX clarifications. **Implementation started locally; not yet released.** This plan follows the [full admin UX audit](../audits/2026-09-15-admin-ux.md). Finding IDs A01–A27 refer to that report. The design below remains the target; the implementation status distinguishes tested work from remaining work.
+
+## Implementation status
+
+- Committed correctness patches: date-aware legacy recurrence (`84d3f43`), gallery publish-time image validation (`3152556`), and explicit rejection of multi-page Word flyers (`81ec440`).
+- Committed workspace foundation (`9985cc0`): task dashboard, section directory/help, restricted manager tools, readable forms, larger selected-image previews, and a paginated visual library picker. A production-mode local build passed; browser checks passed for save/reload of a selected image, Escape/focus return, 320px layout, and anonymous access restrictions. The fifth album task and monthly readiness depend on later schemas.
+- Structured meetings are in progress: additive sessions/exceptions, date preview, safe legacy backfill, and one shared occurrence resolver. See the [11-record migration review](../audits/2026-09-15-meeting-migration-review.md). Actual format/attendance confirmation remains club input.
+- Real Gmail source material has been obtained locally: the September Word flyer plus September 18 movie-night and September 19 bake-sale images. The Word document converts as one page. Original files and email data are ignored local fixtures, not repository content. Nothing from those messages has been uploaded to production yet.
+- Remaining release work includes the rest of phases 1–5, production migration/deployment/smoke checks, and volunteer acceptance. The optional AI pilot still needs a provider, data-handling decision, cost limit, and runner; manual monthly publishing must not depend on that decision.
 
 ## Recommended direction
 

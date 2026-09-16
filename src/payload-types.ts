@@ -799,6 +799,8 @@ export interface Form {
   createdAt: string;
 }
 /**
+ * Change one group here. Set the days that share details, then add sessions for days that differ. Preview the next dates before publishing.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "meetings".
  */
@@ -806,8 +808,94 @@ export interface Meeting {
   id: number;
   name: string;
   fellowship: 'AA' | 'NA' | 'Club';
-  time: string;
-  days: string;
+  /**
+   * Only add confirmed information. These notes appear with this group wherever its schedule is shown.
+   */
+  publicNotes?: string | null;
+  /**
+   * Select all days that share the same time and format. Add another session for days with different details. Times are local to Clearwater.
+   */
+  sessions?:
+    | {
+        key: string;
+        label?: string | null;
+        recurrence: 'weekly' | 'monthly';
+        days: ('Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday')[];
+        ordinal?: ('first' | 'second' | 'third' | 'fourth' | 'fifth' | 'last') | null;
+        /**
+         * Leave empty for an additional monthly session.
+         */
+        replaces?: string | null;
+        time: string;
+        room?: string | null;
+        format?:
+          | (
+              | 'unknown'
+              | 'discussion'
+              | 'book'
+              | 'literature'
+              | 'speaker'
+              | 'beginner'
+              | 'celebration'
+              | 'business'
+              | 'other'
+            )
+          | null;
+        topic?: string | null;
+        /**
+         * Attendance is separate from discussion or study format. Confirm with the group.
+         */
+        attendance?: ('unknown' | 'everyone' | 'recovery' | 'women' | 'men' | 'members') | null;
+        /**
+         * Unconfirmed format and attendance labels are not shown publicly.
+         */
+        confirmed?: boolean | null;
+        from?: string | null;
+        until?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  exceptions?:
+    | {
+        session: string;
+        date: string;
+        action: 'cancel' | 'change';
+        movedTo?: string | null;
+        time?: string | null;
+        room?: string | null;
+        format?:
+          | (
+              | 'unknown'
+              | 'discussion'
+              | 'book'
+              | 'literature'
+              | 'speaker'
+              | 'beginner'
+              | 'celebration'
+              | 'business'
+              | 'other'
+            )
+          | null;
+        topic?: string | null;
+        /**
+         * Attendance is separate from discussion or study format. Confirm with the group.
+         */
+        attendance?: ('unknown' | 'everyone' | 'recovery' | 'women' | 'men' | 'members') | null;
+        /**
+         * Unconfirmed format and attendance labels are not shown publicly.
+         */
+        confirmed?: boolean | null;
+        note?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  checkedOn?: string | null;
+  /**
+   * Group contact or responsible role. This is never included in the public schedule.
+   */
+  checkedBy?: string | null;
+  time?: string | null;
+  days?: string | null;
   room?: string | null;
   format?: string | null;
   description?: string | null;
@@ -1363,6 +1451,44 @@ export interface FormBlockSelect<T extends boolean = true> {
 export interface MeetingsSelect<T extends boolean = true> {
   name?: T;
   fellowship?: T;
+  publicNotes?: T;
+  sessions?:
+    | T
+    | {
+        key?: T;
+        label?: T;
+        recurrence?: T;
+        days?: T;
+        ordinal?: T;
+        replaces?: T;
+        time?: T;
+        room?: T;
+        format?: T;
+        topic?: T;
+        attendance?: T;
+        confirmed?: T;
+        from?: T;
+        until?: T;
+        id?: T;
+      };
+  exceptions?:
+    | T
+    | {
+        session?: T;
+        date?: T;
+        action?: T;
+        movedTo?: T;
+        time?: T;
+        room?: T;
+        format?: T;
+        topic?: T;
+        attendance?: T;
+        confirmed?: T;
+        note?: T;
+        id?: T;
+      };
+  checkedOn?: T;
+  checkedBy?: T;
   time?: T;
   days?: T;
   room?: T;

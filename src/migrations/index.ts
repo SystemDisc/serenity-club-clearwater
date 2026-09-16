@@ -1,6 +1,7 @@
 import * as migration_20260620_025003_baseline_serenity_schema from './20260620_025003_baseline_serenity_schema';
 import * as migration_20260916_005208_platform_reliability from './20260916_005208_platform_reliability';
 import * as migration_20260916_010115_user_roles from './20260916_010115_user_roles';
+import * as migration_20260916_025432_structured_meeting_schedules from './20260916_025432_structured_meeting_schedules';
 
 export const migrations = [
   {
@@ -16,6 +17,11 @@ export const migrations = [
   {
     up: migration_20260916_010115_user_roles.up,
     down: migration_20260916_010115_user_roles.down,
-    name: '20260916_010115_user_roles'
+    name: '20260916_010115_user_roles',
+  },
+  {
+    up: migration_20260916_025432_structured_meeting_schedules.up,
+    down: migration_20260916_025432_structured_meeting_schedules.down,
+    name: '20260916_025432_structured_meeting_schedules'
   },
 ];

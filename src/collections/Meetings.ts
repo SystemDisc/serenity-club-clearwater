@@ -2,6 +2,8 @@ import type { CollectionConfig } from 'payload'
 
 import { authenticated } from '@/access/authenticated'
 import { authenticatedOrPublished } from '@/access/authenticatedOrPublished'
+import { meetingScheduleFields } from '@/fields/meetingSchedule'
+import { validateSchedule } from '@/hooks/validateSchedule'
 import {
   revalidatePublicSiteAfterChange,
   revalidatePublicSiteAfterDelete,
@@ -16,7 +18,9 @@ export const Meetings: CollectionConfig = {
   admin: {
     group: 'Serenity Club',
     useAsTitle: 'name',
-    defaultColumns: ['name', 'fellowship', 'time', 'days', 'room', 'updatedAt'],
+    defaultColumns: ['name', 'fellowship', 'checkedOn', 'updatedAt'],
+    description:
+      'Change one group here. Set the days that share details, then add sessions for days that differ. Preview the next dates before publishing.',
   },
   access: {
     create: authenticated,
@@ -36,15 +40,24 @@ export const Meetings: CollectionConfig = {
         { label: 'Club', value: 'Club' },
       ],
     },
-    { name: 'time', type: 'text', required: true },
-    { name: 'days', type: 'text', required: true },
-    { name: 'room', type: 'text' },
-    { name: 'format', type: 'textarea' },
-    { name: 'description', type: 'textarea' },
-    { name: 'externalUrl', type: 'text', label: 'External URL' },
-    { name: 'order', type: 'number', defaultValue: 100, admin: { position: 'sidebar' } },
+    ...meetingScheduleFields,
+    {
+      type: 'collapsible',
+      label: 'Previous schedule — reference for checking with the group',
+      admin: { initCollapsed: true },
+      fields: [
+        { name: 'time', type: 'text', admin: { readOnly: true } },
+        { name: 'days', type: 'text', admin: { readOnly: true } },
+        { name: 'room', type: 'text' },
+        { name: 'format', type: 'textarea' },
+        { name: 'description', type: 'textarea' },
+        { name: 'externalUrl', type: 'text', label: 'External URL' },
+        { name: 'order', type: 'number', defaultValue: 100, admin: { position: 'sidebar' } },
+      ],
+    },
   ],
   hooks: {
+    beforeChange: [validateSchedule],
     afterChange: [revalidatePublicSiteAfterChange],
     afterDelete: [revalidatePublicSiteAfterDelete],
   },

@@ -28,7 +28,7 @@ export type SiteNavigation = {
   secondaryNavItems: NavItem[]
 }
 
-export type Meeting = {
+export type Meeting = import('./schedule').Schedule & {
   days: string
   description?: string
   externalUrl?: string
