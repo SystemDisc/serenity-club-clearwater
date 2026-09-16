@@ -1,3 +1,4 @@
+import { MAX_IMAGE_BYTES, readLimitedBody } from '../../../services/docx-converter/limits.mjs'
 type ConvertedDocxImage = {
   buffer: Buffer
   filename: string
@@ -10,10 +11,9 @@ type ConvertDocxViaServiceArgs = {
   requestOrigin: string
 }
 
-const getConversionSecret = () =>
-  process.env.DOCX_CONVERSION_SECRET || process.env.CRON_SECRET || process.env.PAYLOAD_SECRET
+const getConversionSecret = () => process.env.DOCX_CONVERSION_SECRET
 
-const getConversionEndpoint = (requestOrigin: string) => {
+const getConversionEndpoint = () => {
   const configuredEndpoint = process.env.DOCX_CONVERTER_ENDPOINT
 
   if (configuredEndpoint) {
@@ -26,7 +26,7 @@ const getConversionEndpoint = (requestOrigin: string) => {
     return new URL('api/docx-to-image', `${serviceURL.replace(/\/+$/, '')}/`).toString()
   }
 
-  return new URL('/api/docx-to-image', `${requestOrigin.replace(/\/+$/, '')}/`).toString()
+  throw new Error('DOCX_CONVERTER_URL or DOCX_CONVERTER_ENDPOINT is required')
 }
 
 const getFilenameFromContentDisposition = (contentDisposition: string | null) => {
@@ -40,17 +40,14 @@ const getFilenameFromContentDisposition = (contentDisposition: string | null) =>
 export const convertDocxViaService = async ({
   docxUrl,
   filename,
-  requestOrigin,
 }: ConvertDocxViaServiceArgs): Promise<ConvertedDocxImage> => {
   const secret = getConversionSecret()
 
   if (!secret) {
-    throw new Error(
-      'DOCX conversion requires DOCX_CONVERSION_SECRET, CRON_SECRET, or PAYLOAD_SECRET.',
-    )
+    throw new Error('DOCX conversion requires its dedicated DOCX_CONVERSION_SECRET.')
   }
 
-  const response = await fetch(getConversionEndpoint(requestOrigin), {
+  const response = await fetch(getConversionEndpoint(), {
     body: JSON.stringify({
       filename: filename || 'document.docx',
       url: docxUrl,
@@ -60,6 +57,8 @@ export const convertDocxViaService = async ({
       'content-type': 'application/json',
     },
     method: 'POST',
+    redirect: 'error',
+    signal: AbortSignal.timeout(120_000),
   })
 
   if (!response.ok) {
@@ -67,13 +66,15 @@ export const convertDocxViaService = async ({
   }
 
   const mimeType = response.headers.get('content-type')?.split(';')[0] || 'image/webp'
+  if (!['image/webp', 'image/jpeg'].includes(mimeType))
+    throw new Error('Unexpected conversion response type')
   const convertedFilename =
     response.headers.get('x-docx-image-filename') ||
     getFilenameFromContentDisposition(response.headers.get('content-disposition')) ||
     (filename || 'document.docx').replace(/\.docx$/i, '.webp')
 
   return {
-    buffer: Buffer.from(await response.arrayBuffer()),
+    buffer: await readLimitedBody(response, MAX_IMAGE_BYTES),
     filename: convertedFilename,
     mimeType,
   }
