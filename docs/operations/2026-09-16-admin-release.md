@@ -1,6 +1,6 @@
 # September 16 admin release
 
-The core release is deployed; authenticated production workflow acceptance is pending. The release covers the core of phases 0–5 in the [admin plan](../plans/2026-09-15-admin-ux-improvements.md). Optional AI extraction, temporary notices, a scheduling runner, and confirmed real meeting formats are separate decisions.
+The core release is merged and deployed, and the authorized September content is published. The release covers the core of phases 0–5 in the [admin plan](../plans/2026-09-15-admin-ux-improvements.md). Optional AI extraction, temporary notices, a scheduling runner, and current organizer confirmation of meeting details are separate decisions.
 
 ## Verified before release
 
@@ -24,11 +24,11 @@ Backups, credentials, private email attachments, runtime evidence, and local reh
 
 ## Production rollout and results
 
-- Database backup and isolated rehearsal completed before production writes. All ten additive migrations and three reviewed backfills were then applied. Existing gallery photos remain ungrouped; the 11 meeting records retain unknown formats. Board and Intergroup event announcements now use the corresponding meeting schedules. The old August event is archived, with its original content retained.
+- Database backup and isolated rehearsal completed before production writes. All ten additive migrations and three reviewed backfills were then applied. At this initial migration step, existing gallery photos remained ungrouped and meeting formats were left unconfirmed. Later authorized content organization and source-backed format restoration are recorded below. Board and Intergroup event announcements now use the corresponding meeting schedules. The old August event is archived, with its original content retained.
 - Commit `f10f1c1` was deployed as `dpl_CCjE2E8tnamsWjNnnnog4oE1Prc7` and promoted to `www.serenityclubofclearwater.org` on September 16. Vercel reported Ready and the domain resolved to that deployment. The previous deployment, `dpl_Br2i4JKat9ozToca2Syo6Zx1w9Xu`, remains available; no down migration was run.
 - Before promotion, the protected candidate was checked through the authenticated Vercel CLI. Home, Events, Meetings, Gallery, About, and News returned HTTP 200 with the expected titles. Anonymous photo-batch reads returned 403.
 - Both the candidate and promoted production API returned working thumbnails for **44 of 44** media records. All seven former local-file fallbacks now resolve to Blob. Gallery Item 20 remains published and its Media 45 thumbnail returns successfully. No original image was rewritten for this correction.
-- Live Chrome verified gallery images, opening the enlarged viewer, keyboard next-photo navigation, Escape, and focus returning to the original photo. It caught light text inherited from the system's dark theme on white gallery sections. Commit `c021457` corrects gallery/album/News section foreground colors; the new light/dark contrast regression passed locally. The follow-up production deployment `dpl_4KPEWLAJT5xFjPXTnPMs83Be37bc` (application source at `347ba56`) was verified Ready, checked before promotion, then promoted. Live Chrome confirmed the corrected heading contrast, successfully loaded visible photos, and 320px public-gallery reflow without horizontal overflow. Temporary viewport settings were reset. Subsequent commits change only tests and documentation.
+- Live Chrome verified gallery images, opening the enlarged viewer, keyboard next-photo navigation, Escape, and focus returning to the original photo. It caught light text inherited from the system's dark theme on white gallery sections. Commit `c021457` corrects gallery/album/News section foreground colors; the new light/dark contrast regression passed locally. The follow-up production deployment `dpl_4KPEWLAJT5xFjPXTnPMs83Be37bc` (application source at `347ba56`) was verified Ready, checked before promotion, then promoted. Live Chrome confirmed the corrected heading contrast, successfully loaded visible photos, and 320px public-gallery reflow without horizontal overflow. Temporary viewport settings were reset. Later production follow-ups are recorded below.
 - Clean GitHub runners exposed test fixtures accidentally becoming the first administrator instead of an editor. The test seed now retains a bootstrap administrator, and editor fixtures assert their actual role. All 15 integration tests passed against a newly created empty local database after migrations and the corrected seed. The public viewer also now receives two synthetic seed images on an empty database. The News regression explicitly leaves a list before inserting a standalone photo, with the correct caret shortcut on each operating system. The complete 30-scenario suite passed against a fresh local database, and the corrected News scenario passed again. These changes affect test setup, not production permissions.
 - A deployment-scoped Vercel runtime query after the final smoke checks returned no error-level entries in its 15-minute window. This is a short observation window, not proof that every authenticated workflow has been exercised.
 - GitHub [Verify run 35132756157](https://github.com/SystemDisc/serenity-club-clearwater/actions/runs/35132756157) passed for `bc6aa2b`: migrations, seed, zero-warning lint, types, 48 unit tests, 15 integration tests, production build, and all 30 browser scenarios on the clean Linux runner.
@@ -46,10 +46,38 @@ Three ordinary anonymous requests per route were measured from this workstation 
 | Gallery | 114,645 | 94,986 | 52 / 62 ms |
 | About | 70,845 | 70,720 | 112 / 61 ms |
 
+## Authorized content publication and follow-up
+
+PR [#2](https://github.com/SystemDisc/serenity-club-clearwater/pull/2) was merged into `main` as `8d464bf`. Focused follow-ups fix original-document Blob metadata persistence, retain useful unconfirmed meeting descriptions, restore source-backed weekday formats, detect deployment changes in open admin sessions, and sort same-day events by their announced start times.
+
+A fresh pre-content production backup was saved at ignored `tmp/content-before-1789582959097.dump` (556,580 bytes). No launch seed or destructive migration was used. Original files, email headers, credentials, maintenance receipts, and backups remain ignored.
+
+| Published content | CMS records and verification |
+| --- | --- |
+| September monthly flyer | Monthly Flyer 1, Source Document 2, rendered Media 52. Original uploaded through the supported maintenance API; production Chrome selected it, called the real conversion service, previewed the generated image, published it, and verified saved state. Anonymous Home and Events show September. |
+| Free movie: Normal Life | Event 4 / Media 48, September 18, 4:30 p.m., coffee bar, free snacks. |
+| September bake sale | Event 5 / Media 49, September 19; time remains unannounced. |
+| Paint like Bob Ross with Sandra D | Event 6 / Media 50, September 19, 10 a.m.–2 p.m.; public flyer price and registration contact retained. |
+| Labor Day BBQ | Event 7 / Media 51, September 7, 1–3 p.m.; retained in past events, not promoted as upcoming. Food-until-gone wording retained. |
+| September bowling | Event 8, September 20; missing time and venue are not invented. Visitors are directed to the coffee-bar flyer. |
+| July bowling album | Album 1 at `/gallery/albums/bowling-event-july-2026`. All 17 original placements (IDs 4–20) were moved using the live organizer, with a cover selected and the album published in Chrome. The 19 total photos and their library files remain intact; two clubhouse photos remain ungrouped. |
+| Membership dues | Published automatic-current-month mode through Chrome after comparing September and October previews. The earlier poster remains retained. |
+| Meeting formats | Six groups received the weekday/monthly details explicitly recorded on the user-supplied old club site. See the meeting migration review and guarded backfill. No claim of fresh organizer confirmation was added. Earlier descriptions remain useful fallbacks with a confirmation reminder. |
+
+The retained Word original was downloaded and its SHA-256 matched the supplied file byte for byte. All **49 current media thumbnails** returned HTTP 200 after publication. Separate anonymous requests verified all seven public routes, the September flyer and events, one bowling album with 17 photos, and 19 preserved photo placements. Chrome visually verified the converted flyer, public event details, album photos, and publication controls. Source documents remain immutable through the editor API.
+
+The real source upload exposed a cloud-only interaction: the immutability hook rejected Payload storage's internal filename-metadata update after Blob upload. The fix admits only its server-context metadata update without a replacement file and with unchanged hash, size, and MIME type. Regression checks still reject ordinary updates, new bytes, and changed identity. The successful real upload and matching original hash verify the storage path.
+
+An admin tab open across deployment promotion briefly called an obsolete server-action ID. Refreshing the saved editor recovered it. The Next.js documented deployment identifier is now explicitly configured for Services builds so clients can detect version changes. This does not guarantee preservation of edits before the first explicit draft save.
+
 ## Remaining acceptance
 
-The Chrome production session expired; the user has been asked to sign in again. **The September Word flyer, September 18 movie announcement, and September 19 bake-sale announcement are still local rehearsals, not production updates.** No production test content was created during this release.
+Chrome extension file-chooser automation requires its “Allow access to file URLs” permission; the extension rejected the initial file selection. This is separate from site upload behavior. Production source ingestion used the supported Payload maintenance API, and conversion, saved original selection, publishing, photo organization/cover selection, and dues editing were exercised in the real admin. The full 30/50-photo workloads and interruption/retry paths have automated local coverage; a real volunteer/device batch session remains useful.
 
-After sign-in, verify the actual admin thumbnail/picker, native Blob batch upload, Word conversion and retained original, save/reload, and publication from a separate anonymous visitor without redeploying. Use the already-authorized September content once and check for existing records first. The user also authorized a temporary gallery placement using an existing image, followed by removal of only that test placement; that live test has not been performed in this release.
+Current group confirmation, volunteer usability testing, a human screen-reader check, 200% browser zoom, and real phone/slow-network checks remain outstanding. Historical schedule evidence is retained with unconfirmed status. AI extraction is not enabled and has no selected provider or spending limit. Optional scheduled publishing remains disabled without an agreed runner.
 
-Actual group-specific study/discussion days must still be supplied by the club. A volunteer acceptance session, human screen-reader check, 200% browser-zoom acceptance, and real phone/slow-network testing remain outstanding. Local 320px and synthetic 30/50-photo browser workloads do not replace those checks. AI extraction is not enabled and has no selected provider or spending limit. Optional scheduled publishing remains disabled without an agreed runner.
+## Final verification
+
+[GitHub Verify 35135399382](https://github.com/SystemDisc/serenity-club-clearwater/actions/runs/35135399382) passed for application commit `094f93a`: **54 unit tests, 15 integration tests, all 30 browser scenarios**, zero-warning lint, TypeScript, migrations/seed, and production build. The earlier integration expectation that hid an unconfirmed format was updated to match the user's explicit request: retain the known description and flag it as unconfirmed.
+
+Live Chrome additionally verified Gallery Item 20's 300px thumbnail and 900px selected preview, the populated existing-image grid, the published September Word flyer, the 17-photo bowling album, and September dues wording. The public meeting schedule shows Tuesday Big Book and Thursday 12 Steps & 12 Traditions for TGIF. Production build `dpl_CcNTec9GUPcEQLJcjfUiF9o3z9qg` verified versioned asset URLs and an emitted deployment identifier; later code also adds chronological same-day event ordering.
