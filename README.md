@@ -41,7 +41,8 @@ environment for routine development. Automatic schema push is disabled by defaul
 Run committed migrations against the local database before starting the app.
 
 ```bash
-npm install
+npm ci
+node scripts/with-env.mjs .env.development.local npm run migrate
 npm run dev
 npm run generate:types
 npm run lint
@@ -69,6 +70,8 @@ reuse another application's server. Override `TEST_SERVER_URL` for another port.
 
 ```bash
 npm run test:unit
+node scripts/with-env.mjs .env.test.local npm run migrate
+npx tsx scripts/seed-test.ts
 node scripts/with-env.mjs .env.test.local npm run build
 npm run test:int
 npm run test:e2e
@@ -77,14 +80,15 @@ npm run test:e2e
 Run migrations against a configured database:
 
 ```bash
-npm run migrate
-npm run migrate:status
+node scripts/with-env.mjs .env.development.local npm run migrate
+node scripts/with-env.mjs .env.development.local npm run migrate:status
 ```
 
-Seed or refresh the Serenity launch content in the configured database:
+Seed launch content only in an intentionally empty local database. This command
+is not part of a routine release and can replace editorial content:
 
 ```bash
-npm run seed:serenity
+node scripts/with-env.mjs .env.development.local npm run seed:serenity
 ```
 
 ## Environment
@@ -102,6 +106,11 @@ Use `.env.development.local` for local work. For Vercel, configure:
 - `RESEND_INBOUND_PRIVATE_COPY_TO`
 - `EMAIL_FROM_ADDRESS`
 - `EMAIL_FROM_NAME`
+- `DOCX_CONVERSION_SECRET` (dedicated converter authentication secret)
+- `DOCX_ALLOWED_SOURCE_ORIGINS` (the exact HTTPS origin of this project's Blob store)
+
+The Vercel service binding supplies `DOCX_CONVERTER_URL`. See
+[document conversion](docs/operations/document-conversion.md) for limits and configuration.
 
 Use the Vercel Marketplace Neon integration for Postgres and Vercel Blob for uploads.
 Email is wired for the official Payload Resend adapter. It stays inactive until
@@ -126,19 +135,14 @@ and send a separate private copy to `zorn.timothy@gmail.com`.
    vercel env pull .env.production.local --environment=production --yes
    ```
 
-5. Run committed Payload migrations:
+5. Back up the database and review the pending migrations. Explicitly opt in to
+   remote maintenance, with schema push disabled:
 
    ```bash
-   npm run migrate
+   node scripts/with-env.mjs .env.production.local env ALLOW_REMOTE_DATABASE=true PAYLOAD_DB_PUSH=false npm run migrate
    ```
 
-6. Seed launch content:
-
-   ```bash
-   npm run seed:serenity
-   ```
-
-7. Deploy:
+6. Deploy the tested commit:
 
    ```bash
    vercel --prod
@@ -147,7 +151,15 @@ and send a separate private copy to `zorn.timothy@gmail.com`.
 After deployment, visit `/admin` to create the first admin user and edit content.
 
 For future schema changes, run `npm run migrate:create -- descriptive_name`, commit the
-generated files in `src/migrations`, and deploy the code that depends on them.
+generated files in `src/migrations`, apply the migrations, then deploy the code that
+depends on them. Follow the [release procedure](docs/operations/migrations.md),
+[publishing behavior](docs/operations/publishing.md), and
+[dependency constraints](docs/operations/dependencies.md).
+
+When switching local databases, remove `.next/cache` before rebuilding so cached
+content from the previous database cannot contaminate local verification. CI starts
+with an empty database, runs the complete migration history, and seeds only its
+isolated test environment.
 
 ## Media integrity
 
@@ -163,8 +175,8 @@ Historical records can be repaired with a reviewed manifest, without uploading o
 deleting Blob files:
 
 ```bash
-node --env-file=.env.development.local --import tsx scripts/repair-media.ts --manifest path/to/manifest.json
-node --env-file=.env.development.local --import tsx scripts/repair-media.ts --manifest path/to/manifest.json --apply --backup path/to/new-backup.json
+node scripts/with-env.mjs .env.development.local npx tsx scripts/repair-media.ts --manifest path/to/manifest.json
+node scripts/with-env.mjs .env.development.local npx tsx scripts/repair-media.ts --manifest path/to/manifest.json --apply --backup path/to/new-backup.json
 ```
 
 The default is a dry run. Apply requires a new backup path, rechecks every record
