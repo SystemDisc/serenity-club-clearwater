@@ -17,6 +17,7 @@ beforeAll(async () => {
     },
     context,
   })
+  expect(editor.role).toBe('editor')
   admin = await payload.create({
     collection: 'users',
     data: {

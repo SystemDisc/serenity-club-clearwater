@@ -29,6 +29,7 @@ beforeAll(async () => {
       role: 'editor',
     },
   })
+  expect(user.role).toBe('editor')
   const data = await sharp({
     create: { width: 80, height: 60, channels: 3, background: '#114433' },
   })

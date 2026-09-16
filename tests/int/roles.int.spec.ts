@@ -30,6 +30,7 @@ it('lets editors manage their profile but not users or their own role', async ()
     context: { disableRevalidate: true },
   })
   ids.push(editor.id)
+  expect(editor.role).toBe('editor')
   const other = await payload.create({
     collection: 'users',
     data: { email: `admin-${Date.now()}@example.test`, password: 'local-test-only', role: 'admin' },
