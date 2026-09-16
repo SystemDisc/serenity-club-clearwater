@@ -27,7 +27,17 @@ export const GalleryItems: CollectionConfig = {
         : {
             and: [
               { _status: { equals: 'published' } },
-              { or: [{ album: { exists: false } }, { 'album._status': { equals: 'published' } }] },
+              {
+                or: [
+                  { album: { exists: false } },
+                  {
+                    and: [
+                      { 'album._status': { equals: 'published' } },
+                      { 'album.deletedAt': { exists: false } },
+                    ],
+                  },
+                ],
+              },
             ],
           },
     update: authenticated,

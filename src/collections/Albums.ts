@@ -97,6 +97,7 @@ export const Albums: CollectionConfig = {
       async ({ id, req }) => {
         const members = await req.payload.count({
           collection: 'galleryItems',
+          trash: true,
           req,
           overrideAccess: false,
           where: { album: { equals: id } },

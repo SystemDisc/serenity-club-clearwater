@@ -26,6 +26,7 @@ import { default as default_a3e8db10b870479131452d5cd3f7f3ed } from '@/admin/Ima
 import { default as default_913c620549801de5cc4401c48bdeb9f7 } from '@/admin/AlbumPhotos'
 import { HorizontalRuleFeatureClient as HorizontalRuleFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { BlocksFeatureClient as BlocksFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
+import { default as default_ca4abcde93697b5f9d1330f88d4d94a7 } from '@/admin/MediaUsage'
 import { FolderTableCell as FolderTableCell_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 import { FolderField as FolderField_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 import { default as default_eeb183ca383b877c81ab30dcd688cb96 } from '@/admin/WordFlyer'
@@ -75,6 +76,7 @@ export const importMap = {
   "@/admin/AlbumPhotos#default": default_913c620549801de5cc4401c48bdeb9f7,
   "@payloadcms/richtext-lexical/client#HorizontalRuleFeatureClient": HorizontalRuleFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#BlocksFeatureClient": BlocksFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
+  "@/admin/MediaUsage#default": default_ca4abcde93697b5f9d1330f88d4d94a7,
   "@payloadcms/next/rsc#FolderTableCell": FolderTableCell_f9c02e79a4aed9a3924487c0cd4cafb1,
   "@payloadcms/next/rsc#FolderField": FolderField_f9c02e79a4aed9a3924487c0cd4cafb1,
   "@/admin/WordFlyer#default": default_eeb183ca383b877c81ab30dcd688cb96,

@@ -6,6 +6,7 @@ import * as migration_20260916_030456_retained_monthly_flyers from './20260916_0
 import * as migration_20260916_031954_dated_events from './20260916_031954_dated_events';
 import * as migration_20260916_033637_membership_dues_reminder from './20260916_033637_membership_dues_reminder';
 import * as migration_20260916_034929_gallery_albums from './20260916_034929_gallery_albums';
+import * as migration_20260916_035716_recoverable_content from './20260916_035716_recoverable_content';
 
 export const migrations = [
   {
@@ -46,6 +47,11 @@ export const migrations = [
   {
     up: migration_20260916_034929_gallery_albums.up,
     down: migration_20260916_034929_gallery_albums.down,
-    name: '20260916_034929_gallery_albums'
+    name: '20260916_034929_gallery_albums',
+  },
+  {
+    up: migration_20260916_035716_recoverable_content.up,
+    down: migration_20260916_035716_recoverable_content.down,
+    name: '20260916_035716_recoverable_content'
   },
 ];

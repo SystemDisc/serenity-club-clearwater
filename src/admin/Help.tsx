@@ -72,6 +72,11 @@ export default function Help(props: AdminViewServerProps) {
           <li>Open the public page to check the result. No redeployment is needed.</li>
         </ol>
         <p>Use Versions in the editor to inspect earlier saved versions before restoring one.</p>
+        <p>
+          Move an unwanted item to Trash to remove it from the website while keeping recovery
+          possible. Open that content list’s Trash view to restore it. Permanent deletion is
+          reserved for the manager.
+        </p>
       </section>
       <section className="club-panel">
         <h2>Photos and files</h2>
@@ -83,6 +88,14 @@ export default function Help(props: AdminViewServerProps) {
         <p>
           Use an image or a one-page Word document for a flyer. A Word file with more pages will be
           rejected rather than losing those pages.
+        </p>
+      </section>
+      <section className="club-panel">
+        <h2>Recovering a photo</h2>
+        <p>
+          Removing a gallery photo does not remove its shared library file. Library files still used
+          by content or previous versions are protected from replacement and deletion. Use “Where
+          this file is used” in its editor, and upload a new file for a replacement picture.
         </p>
       </section>
       <section className="club-panel">

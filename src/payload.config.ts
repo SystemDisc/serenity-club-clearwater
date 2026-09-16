@@ -26,6 +26,7 @@ import { DuesReminder } from './DuesReminder/config'
 import { ClubSettings } from './ClubSettings/config'
 import { Footer } from './Footer/config'
 import { Header } from './Header/config'
+import { recoveryPlugin } from './plugins/recovery'
 import { plugins } from './plugins'
 import { defaultLexical } from '@/fields/defaultLexical'
 import { generatePublicMediaURL } from './utilities/generatePublicMediaURL'
@@ -168,6 +169,7 @@ export default buildConfig({
       token: process.env.BLOB_READ_WRITE_TOKEN,
     }),
     clubAdminPlugin,
+    recoveryPlugin,
   ],
   secret: process.env.PAYLOAD_SECRET,
   sharp,

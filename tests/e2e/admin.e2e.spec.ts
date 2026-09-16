@@ -31,6 +31,85 @@ test.describe('Admin Panel', () => {
     await cleanupTestUser()
   })
 
+  test('trashes and restores a gallery placement while protecting its shared file', async ({
+    request,
+    browser,
+  }) => {
+    const auth = await request.post('/api/users/login', { data: testUser })
+    const { token } = await auth.json()
+    const headers = { authorization: `JWT ${token}` }
+    const visitor = await browser.newContext()
+    const publicPage = await visitor.newPage()
+    const title = `Trash recovery regression ${Date.now()}`
+    let photoID: number | undefined
+    let imageID: number | undefined
+    try {
+      const media = await request.post('/api/media', {
+        headers,
+        multipart: {
+          _payload: JSON.stringify({ alt: title }),
+          file: {
+            name: 'trash-recovery.png',
+            mimeType: 'image/png',
+            buffer: await sharp({
+              create: { width: 80, height: 50, channels: 3, background: '#578e6b' },
+            })
+              .png()
+              .toBuffer(),
+          },
+        },
+      })
+      expect(media.ok(), await media.text()).toBeTruthy()
+      const file = (await media.json()).doc
+      imageID = file.id
+      const photo = await request.post('/api/galleryItems', {
+        headers,
+        data: { title, image: imageID, order: -9000, _status: 'published' },
+      })
+      expect(photo.ok(), await photo.text()).toBeTruthy()
+      photoID = (await photo.json()).doc.id
+      await publicPage.goto('/gallery')
+      await expect(publicPage.getByRole('heading', { name: title, exact: true })).toBeVisible()
+      expect(
+        (
+          await request.patch(`/api/galleryItems/${photoID}`, {
+            headers,
+            data: { deletedAt: new Date().toISOString() },
+          })
+        ).ok(),
+      ).toBeTruthy()
+      await expect
+        .poll(async () => {
+          await publicPage.reload()
+          return publicPage.getByRole('heading', { name: title, exact: true }).count()
+        })
+        .toBe(0)
+      expect((await request.get(file.url)).status()).toBe(200)
+      expect((await request.delete(`/api/media/${imageID}`, { headers })).status()).toBe(409)
+      expect(
+        (
+          await request.patch(`/api/galleryItems/${photoID}?trash=true`, {
+            headers,
+            data: { deletedAt: null },
+          })
+        ).ok(),
+      ).toBeTruthy()
+      await expect
+        .poll(async () => {
+          await publicPage.reload()
+          return publicPage.getByRole('heading', { name: title, exact: true }).count()
+        })
+        .toBe(1)
+      await expect(publicPage.getByRole('img', { name: title, exact: true })).toBeVisible()
+      const uses = await (await request.get(`/api/media/${imageID}/usage`, { headers })).json()
+      expect(uses.uses.some((use: { title: string }) => use.title === title)).toBeTruthy()
+    } finally {
+      if (photoID) await request.delete(`/api/galleryItems/${photoID}?trash=true`, { headers })
+      if (imageID) await request.delete(`/api/media/${imageID}?trash=true`, { headers })
+      await visitor.close()
+    }
+  })
+
   test('publishes and hides a complete album without leaking its photos into the main gallery', async ({
     request,
     browser,
