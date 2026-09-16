@@ -171,6 +171,11 @@ export const meetingScheduleFields: Field[] = [
     type: 'ui',
     admin: { components: { Field: '@/admin/SchedulePreview' } },
   },
+  {
+    name: 'recordScheduleCheck',
+    type: 'ui',
+    admin: { components: { Field: '@/admin/MeetingCheck' } },
+  },
   calendarField('checkedOn', 'Schedule last checked', 'date'),
   {
     name: 'checkedBy',

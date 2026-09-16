@@ -2,13 +2,7 @@ import { unstable_cache } from 'next/cache'
 import { getPayloadClient } from './data'
 import { localDateKey } from './calendar'
 
-export function displayMonth(month: string) {
-  return new Intl.DateTimeFormat('en-US', {
-    month: 'long',
-    year: 'numeric',
-    timeZone: 'UTC',
-  }).format(new Date(`${month}-01T12:00:00Z`))
-}
+export { displayMonth } from './calendar'
 
 export const getMonthlyFlyers = (month = localDateKey().slice(0, 7)) =>
   unstable_cache(

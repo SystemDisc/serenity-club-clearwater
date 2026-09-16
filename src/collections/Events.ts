@@ -115,7 +115,14 @@ export const Events: CollectionConfig = {
       defaultValue: 'Community',
       options: ['Fundraiser', 'Meeting', 'Service', 'Community'],
     },
-    { name: 'summary', type: 'textarea', required: true, label: 'Short description for visitors' },
+    {
+      name: 'summary',
+      type: 'textarea',
+      label: 'Short description for visitors',
+      admin: {
+        description: 'Required before publishing. You can finish this after saving a draft.',
+      },
+    },
     { name: 'image', type: 'upload', relationTo: 'media' },
     { name: 'externalImageUrl', type: 'text', label: 'External Image URL' },
     { name: 'imageAlt', type: 'text', label: 'Describe the picture for people who cannot see it' },
@@ -127,6 +134,7 @@ export const Events: CollectionConfig = {
       label: 'Related monthly flyer (optional)',
       admin: { position: 'sidebar' },
     },
+    { name: 'eventPreview', type: 'ui', admin: { components: { Field: '@/admin/EventPreview' } } },
     { name: 'order', type: 'number', defaultValue: 100, admin: { position: 'sidebar' } },
   ],
   hooks: {

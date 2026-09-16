@@ -3,6 +3,7 @@ import { DefaultTemplate } from '@payloadcms/next/templates'
 import { Gutter } from '@payloadcms/ui'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import TaskGuides from './TaskGuides'
 
 export function AdminPage({
   children,
@@ -61,6 +62,7 @@ export default function Help(props: AdminViewServerProps) {
           </section>
         ))}
       </div>
+      <TaskGuides />
       <section className="club-panel">
         <h2>Save, check, publish</h2>
         <ol>

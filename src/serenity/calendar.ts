@@ -34,3 +34,11 @@ export const displayTime = (time: string) => {
   const [hour, minute] = time.split(':').map(Number)
   return `${hour % 12 || 12}:${String(minute).padStart(2, '0')} ${hour < 12 ? 'AM' : 'PM'}`
 }
+
+export function displayMonth(month: string) {
+  return new Intl.DateTimeFormat('en-US', {
+    month: 'long',
+    year: 'numeric',
+    timeZone: 'UTC',
+  }).format(new Date(`${month}-01T12:00:00Z`))
+}

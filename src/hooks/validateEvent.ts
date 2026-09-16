@@ -5,6 +5,8 @@ export const validateEvent: CollectionBeforeChangeHook = async ({ data, original
   if ((data._status ?? originalDoc?._status) !== 'published') return data
   const event = { ...originalDoc, ...data }
   const errors: { path: string; message: string }[] = []
+  if (!event.summary?.trim())
+    errors.push({ path: 'summary', message: 'Add a short description before publishing.' })
   if (event.kind === 'dated') {
     if (!validDateKey(event.date))
       errors.push({ path: 'date', message: 'Choose the event date before publishing.' })

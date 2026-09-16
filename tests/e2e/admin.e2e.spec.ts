@@ -32,6 +32,92 @@ test.describe('Admin Panel', () => {
     await cleanupTestUser()
   })
 
+  test('everyday drafts autosave without publishing private edits', async ({
+    request,
+    browser,
+  }) => {
+    const { token } = await (await request.post('/api/users/login', { data: testUser })).json()
+    const headers = { authorization: `JWT ${token}` }
+    const visitor = await browser.newContext()
+    const title = `Everyday draft regression ${Date.now()}`
+    let id: number | undefined
+    try {
+      const before = (
+        await (await request.get('/api/events?limit=1&draft=true', { headers })).json()
+      ).totalDocs
+      await page.goto('/admin/collections/events/create')
+      await expect(page.getByText('Nothing saved yet.', { exact: false })).toBeVisible()
+      expect(
+        (await (await request.get('/api/events?limit=1&draft=true', { headers })).json()).totalDocs,
+      ).toBe(before)
+      await page.getByRole('textbox', { name: 'Title *', exact: true }).fill(title)
+      await page.getByRole('button', { name: 'Save Draft', exact: true }).click()
+      await expect(page).toHaveURL(/collections\/events\/\d+$/)
+      id = Number(page.url().split('/').pop())
+      expect((await visitor.request.get(`/api/events/${id}`)).status()).toBe(404)
+      await page.getByLabel('Event date', { exact: true }).fill('2099-09-18')
+      await page
+        .getByLabel('Short description for visitors', { exact: true })
+        .fill('Public event details.')
+      await expect(page.getByRole('region', { name: 'Event preview' })).toContainText(
+        'Public event details.',
+      )
+      await expect
+        .poll(
+          async () =>
+            (await (await request.get(`/api/events/${id}?draft=true`, { headers })).json()).summary,
+        )
+        .toBe('Public event details.')
+      await page.getByRole('button', { name: 'Publish changes', exact: true }).click()
+      await expect
+        .poll(async () => (await visitor.request.get(`/api/events/${id}`)).status())
+        .toBe(200)
+      await page
+        .getByLabel('Short description for visitors', { exact: true })
+        .fill('Private unfinished correction.')
+      await expect
+        .poll(
+          async () =>
+            (await (await request.get(`/api/events/${id}?draft=true`, { headers })).json()).summary,
+        )
+        .toBe('Private unfinished correction.')
+      expect((await (await visitor.request.get(`/api/events/${id}`)).json()).summary).toBe(
+        'Public event details.',
+      )
+      await page.reload()
+      await expect(page.getByLabel('Short description for visitors', { exact: true })).toHaveValue(
+        'Private unfinished correction.',
+      )
+      await expect(page.locator('.club-publication-status')).toContainText('new edits are private')
+      await page.setViewportSize({ width: 320, height: 740 })
+      await page.screenshot({ path: 'tmp/event-editor-phone.png', fullPage: true })
+      expect(
+        await page.evaluate(() => document.documentElement.scrollWidth),
+        JSON.stringify(
+          await page.evaluate(() =>
+            Array.from(document.querySelectorAll('body *'))
+              .filter((el) => el.getBoundingClientRect().right > 321)
+              .slice(-25)
+              .map((el) => ({
+                tag: el.tagName,
+                cls: el.className,
+                text: el.textContent?.slice(0, 80),
+                width: el.getBoundingClientRect().width,
+              })),
+          ),
+        ),
+      ).toBeLessThanOrEqual(320)
+      await page.goto('/admin')
+      await expect(page.getByRole('heading', { name: 'Continue editing' })).toBeVisible()
+      await expect(page.getByRole('link', { name: title, exact: true })).toBeVisible()
+    } finally {
+      await page.setViewportSize({ width: 1280, height: 800 })
+      await page.goto('/admin').catch(() => {})
+      if (id) await request.delete(`/api/events/${id}`, { headers })
+      await visitor.close()
+    }
+  })
+
   test('news writing preserves pasted structure, private drafts, photos, and public freshness', async ({
     request,
     browser,
@@ -777,7 +863,7 @@ test.describe('Admin Panel', () => {
       await expect
         .poll(async () => {
           await publicPage.reload()
-          return card.textContent()
+          return (await card.allTextContents()).join(' ')
         })
         .toContain('4:17 AM')
       const changed = await request.patch(`/api/meetings/${meetingID}`, {
@@ -788,7 +874,7 @@ test.describe('Admin Panel', () => {
       await expect
         .poll(async () => {
           await publicPage.reload()
-          return card.textContent()
+          return (await card.allTextContents()).join(' ')
         })
         .toContain('4:23 AM')
       const hidden = await request.patch(`/api/meetings/${meetingID}`, {

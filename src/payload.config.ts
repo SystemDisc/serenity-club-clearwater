@@ -1,3 +1,4 @@
+import { editorWorkflowPlugin } from '@/admin/editorWorkflow'
 import { isAdmin } from './access/users'
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { resendAdapter } from '@payloadcms/email-resend'
@@ -181,6 +182,7 @@ export default buildConfig({
       token: process.env.BLOB_READ_WRITE_TOKEN,
     }),
     clubAdminPlugin,
+    editorWorkflowPlugin,
     recoveryPlugin,
   ],
   secret: process.env.PAYLOAD_SECRET,

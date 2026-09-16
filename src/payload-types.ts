@@ -989,7 +989,10 @@ export interface Event {
   archived?: boolean | null;
   featured?: boolean | null;
   category?: ('Fundraiser' | 'Meeting' | 'Service' | 'Community') | null;
-  summary: string;
+  /**
+   * Required before publishing. You can finish this after saving a draft.
+   */
+  summary?: string | null;
   image?: (number | null) | Media;
   externalImageUrl?: string | null;
   imageAlt?: string | null;
@@ -1018,7 +1021,7 @@ export interface MonthlyFlyer {
   /**
    * Include dates, event names, and available times so people can read the details without the picture.
    */
-  details: string;
+  details?: string | null;
   updatedAt: string;
   createdAt: string;
   deletedAt?: string | null;

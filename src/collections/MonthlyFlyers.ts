@@ -27,6 +27,11 @@ export const MonthlyFlyers: CollectionConfig = {
   },
   fields: [
     {
+      name: 'publishedFlyer',
+      type: 'ui',
+      admin: { components: { Field: '@/admin/PublishedFlyer' } },
+    },
+    {
       name: 'month',
       type: 'text',
       required: true,
@@ -62,7 +67,6 @@ export const MonthlyFlyers: CollectionConfig = {
     {
       name: 'details',
       type: 'textarea',
-      required: true,
       label: 'Flyer details in text',
       admin: {
         description:
@@ -76,6 +80,18 @@ export const MonthlyFlyers: CollectionConfig = {
       async ({ data, originalDoc, req }) => {
         if ((data._status ?? originalDoc?._status) !== 'published') return data
         const merged = { ...originalDoc, ...data }
+        if (!merged.details?.trim())
+          throw new ValidationError({
+            req,
+            collection: 'monthlyFlyers',
+            errors: [
+              {
+                path: 'details',
+                message:
+                  'Add the flyer details in text before publishing. You can keep unfinished work as a draft.',
+              },
+            ],
+          })
         const id = typeof merged.image === 'object' ? merged.image?.id : merged.image
         const image = id
           ? await req.payload.findByID({
