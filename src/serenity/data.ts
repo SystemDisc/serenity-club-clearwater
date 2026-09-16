@@ -58,6 +58,12 @@ const getImageUrl = (doc: Record<string, unknown>, uploadField: string, external
   return getUploadedUrl(doc[uploadField]) || getText(doc[externalField]) || undefined
 }
 
+const getImageAlt = (doc: Record<string, unknown>) => {
+  const media =
+    doc.image && typeof doc.image === 'object' ? (doc.image as { alt?: unknown }) : undefined
+  return getText(doc.imageAlt) || getText(media?.alt) || undefined
+}
+
 const fallbackSiteNavigation = (): SiteNavigation => ({
   footerNavItems: [...fallbackPrimaryNavItems, ...fallbackSecondaryNavItems],
   primaryNavItems: fallbackPrimaryNavItems,
@@ -111,7 +117,7 @@ export const normalizeGalleryItem = (doc: Record<string, unknown>): GalleryItem 
   category: (getText(doc.category, 'Clubhouse') as GalleryItem['category']) || 'Clubhouse',
   description: getText(doc.description) || undefined,
   id: String(doc.id),
-  imageAlt: getText(doc.imageAlt) || undefined,
+  imageAlt: getImageAlt(doc),
   imageUrl: getImageUrl(doc, 'image', 'externalImageUrl'),
   order: getNumber(doc.order),
   title: getText(doc.title),
@@ -260,7 +266,7 @@ export const getSerenityData = cache(
             category: (getText(doc.category, 'Community') as EventItem['category']) || 'Community',
             dateLabel: getText(doc.dateLabel),
             id: String(doc.id),
-            imageAlt: getText(doc.imageAlt) || undefined,
+            imageAlt: getImageAlt(doc),
             imageUrl: getImageUrl(doc, 'image', 'externalImageUrl'),
             order: getNumber(doc.order),
             summary: getText(doc.summary),
@@ -277,7 +283,7 @@ export const getSerenityData = cache(
           (doc) => ({
             bio: getText(doc.bio),
             id: String(doc.id),
-            imageAlt: getText(doc.imageAlt) || undefined,
+            imageAlt: getImageAlt(doc),
             imageUrl: getImageUrl(doc, 'image', 'externalImageUrl'),
             name: getText(doc.name),
             order: getNumber(doc.order),
@@ -294,7 +300,7 @@ export const getSerenityData = cache(
             description: getText(doc.description),
             fulfillmentNote: getText(doc.fulfillmentNote),
             id: String(doc.id),
-            imageAlt: getText(doc.imageAlt) || undefined,
+            imageAlt: getImageAlt(doc),
             imageUrl: getImageUrl(doc, 'image', 'externalImageUrl'),
             order: getNumber(doc.order),
             price: getText(doc.price),
@@ -319,7 +325,7 @@ export const getSerenityData = cache(
           fallbackSponsors,
           (doc) => ({
             id: String(doc.id),
-            imageAlt: getText(doc.imageAlt) || undefined,
+            imageAlt: getImageAlt(doc),
             imageUrl: getImageUrl(doc, 'image', 'externalImageUrl'),
             name: getText(doc.name),
             order: getNumber(doc.order),

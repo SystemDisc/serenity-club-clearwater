@@ -53,7 +53,7 @@ export function SerenityImage({
       fetchPriority={priority ? 'high' : undefined}
       height={900}
       loading={priority ? 'eager' : 'lazy'}
-      quality={90}
+      quality={85}
       sizes={sizes}
       src={src}
       width={1200}
@@ -186,7 +186,11 @@ export function HomeHero({ settings }: { settings: ClubSettings }) {
         {settings.heroImageUrl ? (
           <div className="relative z-10 order-first aspect-[4/3] w-full min-w-0 max-w-full overflow-visible lg:order-last">
             <div className="absolute inset-x-0 bottom-0 top-[11.2%] overflow-visible rounded-lg border border-slate-200 bg-white">
-              <img
+              <Image
+                width={1200}
+                height={900}
+                quality={85}
+                sizes="(min-width: 1024px) 42vw, 100vw"
                 alt="Serenity Club building sign at 631 Turner Street"
                 className="absolute inset-x-0 top-[-12.62%] z-10 h-[112.62%] w-full max-w-full object-contain object-top"
                 fetchPriority="high"
@@ -342,7 +346,7 @@ export function GalleryGrid({ items }: { items: GalleryItem[] }) {
       {items.map((item) => (
         <figure
           className="overflow-hidden rounded-lg border border-slate-200 bg-white"
-          key={`${item.title}-${item.imageUrl || item.id}`}
+          key={item.id}
         >
           {item.imageUrl ? (
             <a

@@ -32,7 +32,10 @@ export const Media: CollectionConfig = {
     {
       name: 'alt',
       type: 'text',
-      //required: true,
+      admin: {
+        description:
+          'Describe meaningful image content for screen readers. Leave blank only for decorative images; gallery titles provide a fallback.',
+      },
     },
     {
       name: 'caption',
