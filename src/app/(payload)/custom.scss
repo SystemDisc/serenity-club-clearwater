@@ -1,0 +1,202 @@
+.club-admin {
+  padding-block: 32px 64px;
+  font-size: 16px;
+  line-height: 1.6;
+  max-width: 1440px;
+  h1 {
+    font-size: clamp(28px, 4vw, 38px);
+    line-height: 1.2;
+  }
+  h2 {
+    font-size: 22px;
+    line-height: 1.35;
+  }
+  a {
+    text-underline-offset: 4px;
+  }
+  a:focus-visible,
+  button:focus-visible {
+    outline: 3px solid var(--theme-success-500);
+    outline-offset: 4px;
+  }
+}
+.club-admin__heading {
+  max-width: 760px;
+  margin-bottom: 28px;
+}
+.club-task-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 20px;
+}
+.club-task,
+.club-panel {
+  padding: 24px;
+  border: 1px solid var(--theme-elevation-200);
+  border-radius: 10px;
+  background: var(--theme-elevation-50);
+}
+.club-task h2,
+.club-panel h2 {
+  margin-top: 0;
+}
+.club-panel {
+  margin-top: 28px;
+}
+.club-recent {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.club-recent li {
+  padding: 14px 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--theme-elevation-150);
+}
+.club-recent span {
+  font-size: 14px;
+  color: var(--theme-elevation-650);
+}
+.club-nav-links {
+  display: grid;
+  padding-bottom: 24px;
+  gap: 4px;
+}
+.club-nav-links a {
+  padding: 12px 0;
+  font-size: 16px;
+}
+.field-type .field-label {
+  font-size: 16px;
+  line-height: 1.5;
+}
+.field-type input:not([type='checkbox']):not([type='radio']),
+.field-type textarea {
+  font-size: 16px;
+}
+.field-description {
+  font-size: 14px;
+  line-height: 1.5;
+}
+.doc-controls .btn {
+  min-height: 44px;
+  font-size: 16px;
+}
+.club-image-preview {
+  margin-block: 12px 28px;
+  font-size: 16px;
+}
+.club-image-preview figure {
+  margin: 0 0 16px;
+}
+.club-image-preview figure img {
+  display: block;
+  max-height: 420px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  border: 1px solid var(--theme-elevation-200);
+  border-radius: 6px;
+}
+.club-image-preview figcaption {
+  margin-top: 10px;
+}
+.club-image-preview button,
+.club-photo-dialog button {
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 1px solid var(--theme-elevation-400);
+  border-radius: 5px;
+  color: var(--theme-text);
+  background: var(--theme-elevation-100);
+  font: inherit;
+  cursor: pointer;
+}
+.club-image-preview button:focus-visible,
+.club-photo-dialog a:focus-visible {
+  outline: 3px solid var(--theme-success-500);
+  outline-offset: 3px;
+}
+.club-image-preview button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.club-photo-dialog {
+  width: min(1100px, calc(100vw - 24px));
+  max-height: 90dvh;
+  padding: 24px;
+  border: 1px solid var(--theme-elevation-300);
+  border-radius: 10px;
+  color: var(--theme-text);
+  background: var(--theme-bg);
+}
+.club-photo-dialog::backdrop {
+  background: rgb(0 0 0 / 0.65);
+}
+.club-dialog-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.club-photo-search {
+  display: flex;
+  align-items: end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.club-photo-search label {
+  display: grid;
+  flex: 1 1 200px;
+  gap: 6px;
+}
+.club-photo-search input {
+  width: 100%;
+  min-height: 44px;
+  font-size: 16px;
+}
+.club-photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  gap: 20px;
+}
+.club-photo-grid article {
+  min-width: 0;
+  border: 1px solid var(--theme-elevation-250);
+  padding: 12px;
+  border-radius: 6px;
+}
+.club-photo-grid img {
+  width: 100%;
+  height: 160px;
+  object-fit: contain;
+  background: var(--theme-elevation-100);
+}
+.club-photo-grid p {
+  overflow-wrap: anywhere;
+  font-size: 14px;
+}
+.club-photo-grid article > div {
+  display: grid;
+  gap: 12px;
+}
+.club-pager {
+  display: flex;
+  gap: 16px;
+  margin-top: 24px;
+}
+@media (max-width: 480px) {
+  .club-task,
+  .club-panel {
+    padding: 18px;
+  }
+  .club-photo-dialog {
+    padding: 16px;
+  }
+  .club-photo-grid {
+    grid-template-columns: 1fr;
+  }
+}

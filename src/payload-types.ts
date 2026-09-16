@@ -287,6 +287,8 @@ export interface Post {
   _status?: ('draft' | 'published') | null;
 }
 /**
+ * Shared public files. Uploading here stores a file; publish a gallery photo or event to show it on those pages.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".
  */
@@ -1937,7 +1939,13 @@ export interface ClubSetting {
   heroImageUrl?: string | null;
   roomImage?: (number | null) | Media;
   roomImageUrl?: string | null;
+  /**
+   * This is the monthly dues graphic on About, not the header logo. Check the month before saving. Shared settings change the public website immediately.
+   */
   logoImage?: (number | null) | Media;
+  /**
+   * Advanced: used only when no reminder image is selected above.
+   */
   logoImageUrl?: string | null;
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -2004,7 +2012,7 @@ export interface Header {
 export interface Footer {
   id: number;
   /**
-   * Shown in the footer. If empty, the footer uses the header navigation items.
+   * Links shown at the bottom of every page. Leave empty to show no footer menu links. Saving changes the public website immediately.
    */
   navItems?:
     | {

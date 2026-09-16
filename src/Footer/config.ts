@@ -30,7 +30,8 @@ export const Footer: GlobalConfig = {
       ],
       maxRows: 12,
       admin: {
-        description: 'Shown in the footer. If empty, the footer uses the header navigation items.',
+        description:
+          'Links shown at the bottom of every page. Leave empty to show no footer menu links. Saving changes the public website immediately.',
         initCollapsed: true,
         components: {
           RowLabel: '@/Footer/RowLabel#RowLabel',

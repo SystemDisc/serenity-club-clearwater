@@ -1,4 +1,5 @@
 import { test, expect, Page } from '@playwright/test'
+import sharp from 'sharp'
 import { login } from '../helpers/login'
 import { seedTestUser, cleanupTestUser, testUser, queuePublication } from '../helpers/seedUser'
 import { testServerURL } from '../helpers/environment'
@@ -188,6 +189,105 @@ test.describe('Admin Panel', () => {
     await expect(page).toHaveURL(`${testServerURL}/admin`)
     const dashboardArtifact = page.locator('span[title="Dashboard"]').first()
     await expect(dashboardArtifact).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Manage the website' })).toBeVisible()
+    await expect(
+      page.getByRole('link', { name: 'Update dues reminder', exact: true }),
+    ).toBeVisible()
+  })
+
+  test('selects a recognizable library photo and saves it on a draft', async ({ request }) => {
+    const auth = await request.post('/api/users/login', { data: testUser })
+    const { token } = await auth.json()
+    const headers = { authorization: `JWT ${token}` }
+    const image = await request.post('/api/media', {
+      headers,
+      multipart: {
+        _payload: JSON.stringify({ alt: 'Photo picker test image' }),
+        file: {
+          name: 'photo-picker-test.png',
+          mimeType: 'image/png',
+          buffer: await sharp({
+            create: { width: 600, height: 400, channels: 3, background: '#176b50' },
+          })
+            .png()
+            .toBuffer(),
+        },
+      },
+    })
+    expect(image.ok(), await image.text()).toBeTruthy()
+    const imageID = (await image.json()).doc.id
+    const created = await request.post('/api/galleryItems?draft=true', {
+      headers,
+      data: { title: 'Photo picker regression', _status: 'draft' },
+    })
+    expect(created.ok(), await created.text()).toBeTruthy()
+    const id = (await created.json()).doc.id
+    try {
+      await page.goto(`/admin/collections/galleryItems/${id}`)
+      const choose = page.getByRole('button', { name: 'Choose from photo grid' })
+      await choose.click()
+      const dialog = page.getByRole('dialog', { name: 'Choose an existing photo' })
+      await expect(dialog.getByRole('button', { name: 'Use this photo' }).first()).toBeVisible()
+      await expect
+        .poll(() =>
+          dialog
+            .locator('img')
+            .first()
+            .evaluate((img: HTMLImageElement) => img.naturalWidth),
+        )
+        .toBeGreaterThan(0)
+      await page.keyboard.press('Escape')
+      await expect(dialog).not.toBeVisible()
+      await expect(choose).toBeFocused()
+      await choose.click()
+      await dialog.getByRole('button', { name: 'Use this photo' }).first().click()
+      await expect(dialog).not.toBeVisible()
+      await expect(page.getByRole('link', { name: 'View full size ↗' })).toBeVisible()
+      await page.getByRole('button', { name: 'Save Draft', exact: true }).click()
+      await expect
+        .poll(async () => {
+          const doc = await (
+            await request.get(`/api/galleryItems/${id}?draft=true&depth=0`, { headers })
+          ).json()
+          return typeof doc.image
+        })
+        .toBe('number')
+      await page.reload()
+      await expect(page.getByRole('link', { name: 'View full size ↗' })).toBeVisible()
+    } finally {
+      await request.delete(`/api/galleryItems/${id}`, { headers })
+      await request.delete(`/api/media/${imageID}`, { headers })
+    }
+  })
+
+  test('keeps task navigation usable at phone width and protects custom admin pages', async ({
+    browser,
+  }) => {
+    await page.setViewportSize({ width: 320, height: 700 })
+    try {
+      await page.goto('/admin')
+      await expect(page.getByRole('heading', { name: 'Manage the website' })).toBeVisible()
+      expect(
+        await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
+      ).toBeTruthy()
+      await page.goto('/admin/help')
+      await expect(page.getByRole('heading', { name: 'Help & website sections' })).toBeVisible()
+      expect(
+        await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
+      ).toBeTruthy()
+    } finally {
+      await page.setViewportSize({ width: 1280, height: 720 })
+    }
+    const anonymous = await browser.newContext()
+    try {
+      const visitor = await anonymous.newPage()
+      for (const path of ['/admin/help', '/admin/tools']) {
+        await visitor.goto(path)
+        await expect(visitor).toHaveURL(/\/admin\/login/)
+      }
+    } finally {
+      await anonymous.close()
+    }
   })
 
   test('can navigate to list view', async () => {

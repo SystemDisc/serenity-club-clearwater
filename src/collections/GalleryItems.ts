@@ -40,7 +40,7 @@ export const GalleryItems: CollectionConfig = {
       relationTo: 'media',
       filterOptions: {
         mimeType: {
-          in: ['image/jpeg', 'image/png', 'image/webp', 'image/avif', 'image/gif', 'image/tiff'],
+          in: ['image/jpeg', 'image/png', 'image/webp', 'image/avif', 'image/gif'],
         },
       },
     },

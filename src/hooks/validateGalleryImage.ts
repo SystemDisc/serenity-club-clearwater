@@ -38,7 +38,7 @@ export const validateGalleryImage: CollectionBeforeChangeHook<GalleryItem> = asy
     })
     if (
       media &&
-      /^image\/(jpeg|png|webp|avif|gif|tiff)$/.test(media.mimeType || '') &&
+      /^image\/(jpeg|png|webp|avif|gif)$/.test(media.mimeType || '') &&
       media.width &&
       media.height &&
       media.filename &&

@@ -28,6 +28,7 @@ import { defaultLexical } from '@/fields/defaultLexical'
 import { generatePublicMediaURL } from './utilities/generatePublicMediaURL'
 import { getServerSideURL } from './utilities/getURL'
 import { assertDatabaseSafety, isLocalDatabase } from './utilities/databaseSafety'
+import { clubAdminPlugin } from './admin/config'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -68,12 +69,14 @@ const getEmailAdapter = () => {
 export default buildConfig({
   admin: {
     components: {
-      // The `BeforeLogin` component renders a message that you see while logging into your admin panel.
-      // Feel free to delete this at any time. Simply remove the line below.
       beforeLogin: ['@/components/BeforeLogin'],
-      // The `BeforeDashboard` component renders the 'welcome' block that you see after logging into your admin panel.
-      // Feel free to delete this at any time. Simply remove the line below.
-      beforeDashboard: ['@/components/BeforeDashboard'],
+      Nav: '@/admin/Navigation',
+      beforeNavLinks: ['@/admin/NavLinks'],
+      views: {
+        dashboard: { Component: '@/admin/Dashboard' },
+        help: { Component: '@/admin/Help', path: '/help' },
+        tools: { Component: '@/admin/Help#Tools', path: '/tools' },
+      },
     },
     importMap: {
       baseDir: path.resolve(dirname),
@@ -127,6 +130,7 @@ export default buildConfig({
   ],
   cors: [getServerSideURL()].filter(Boolean),
   globals: [ClubSettings, Header, Footer],
+  folders: { browseByFolder: false },
   plugins: [
     ...plugins,
     vercelBlobStorage({
@@ -142,10 +146,14 @@ export default buildConfig({
       token: process.env.BLOB_READ_WRITE_TOKEN,
     }),
     docxToImagePlugin(),
+    clubAdminPlugin,
   ],
   secret: process.env.PAYLOAD_SECRET,
   sharp,
   typescript: {
+    // The optional scheduled-publishing task must be included consistently.
+    // Generate explicitly with npm run generate:types, regardless of the runtime flag.
+    autoGenerate: false,
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
   jobs: {
