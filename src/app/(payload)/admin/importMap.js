@@ -16,6 +16,7 @@ import { MetaDescriptionComponent as MetaDescriptionComponent_a8a977ebc872c5d5ea
 import { PreviewComponent as PreviewComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
 import { SlugField as SlugField_2b8867833a34864a02ddf429b0728a40 } from '@payloadcms/next/client'
 import { default as default_77acb8fd0807eb8a827113d51a6812c2 } from '@/admin/SimpleSelectField'
+import { default as default_f32c371240f1bb26e0064b7eaf57c58b } from '@/admin/WeeklyEditor'
 import { default as default_3869346f4b905a169fdf46a89e5f17bc } from '@/admin/WeekdayField'
 import { default as default_4c9d324e290add2c2c0d619284747bf1 } from '@/admin/SessionReference'
 import { default as default_4869c3da8de899c02232138cd2e5b711 } from '@/admin/CalendarField'
@@ -38,6 +39,7 @@ import { default as default_8a7ab0eb7ab5c511aba12e68480bfe5e } from '@/component
 import { default as default_6200c97ae5079f401d371e2f29b337d7 } from '@/admin/NavLinks'
 import { VercelBlobClientUploadHandler as VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e } from '@payloadcms/storage-vercel-blob/client'
 import { default as default_c602bba5f858100118b6b3553ff47182 } from '@/admin/Dashboard'
+import { default as default_6554de1ea58f4d5ea162237914816af5 } from '@/admin/MeetingsWeek'
 import { default as default_8c9a6dccdff59119bea969dc1e6cc062 } from '@/admin/Help'
 import { Tools as Tools_8c9a6dccdff59119bea969dc1e6cc062 } from '@/admin/Help'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
@@ -62,6 +64,7 @@ export const importMap = {
   "@payloadcms/plugin-seo/client#PreviewComponent": PreviewComponent_a8a977ebc872c5d5ea7ee689724c0860,
   "@payloadcms/next/client#SlugField": SlugField_2b8867833a34864a02ddf429b0728a40,
   "@/admin/SimpleSelectField#default": default_77acb8fd0807eb8a827113d51a6812c2,
+  "@/admin/WeeklyEditor#default": default_f32c371240f1bb26e0064b7eaf57c58b,
   "@/admin/WeekdayField#default": default_3869346f4b905a169fdf46a89e5f17bc,
   "@/admin/SessionReference#default": default_4c9d324e290add2c2c0d619284747bf1,
   "@/admin/CalendarField#default": default_4869c3da8de899c02232138cd2e5b711,
@@ -84,6 +87,7 @@ export const importMap = {
   "@/admin/NavLinks#default": default_6200c97ae5079f401d371e2f29b337d7,
   "@payloadcms/storage-vercel-blob/client#VercelBlobClientUploadHandler": VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e,
   "@/admin/Dashboard#default": default_c602bba5f858100118b6b3553ff47182,
+  "@/admin/MeetingsWeek#default": default_6554de1ea58f4d5ea162237914816af5,
   "@/admin/Help#default": default_8c9a6dccdff59119bea969dc1e6cc062,
   "@/admin/Help#Tools": Tools_8c9a6dccdff59119bea969dc1e6cc062,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1

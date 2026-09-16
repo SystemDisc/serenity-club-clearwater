@@ -264,3 +264,60 @@
   outline: 2px solid var(--theme-text);
   outline-offset: 1px;
 }
+
+.club-week-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr));
+  gap: 12px;
+}
+.club-week-grid .club-task {
+  padding: 16px;
+}
+.club-week-grid button,
+.club-agenda-controls button,
+.club-agenda-controls input,
+.club-agenda-controls select {
+  min-height: 44px;
+  padding: 8px;
+  font-size: 16px;
+  background: var(--theme-elevation-100);
+  color: var(--theme-text);
+  border: 1px solid var(--theme-elevation-500);
+  border-radius: 5px;
+}
+.club-agenda-controls {
+  display: flex;
+  align-items: end;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 24px 0;
+}
+.club-agenda-controls label {
+  display: grid;
+  gap: 6px;
+}
+
+.club-agenda-list,
+.club-group-list {
+  list-style: none;
+  padding: 0;
+}
+.club-agenda-list li {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--theme-elevation-250);
+}
+.club-agenda-list li p {
+  margin: 6px 0 0;
+}
+.club-group-list li {
+  padding: 16px 0;
+}
+@media (max-width: 500px) {
+  .club-agenda-list li {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+}

@@ -11,6 +11,9 @@ export default function NavLinks() {
       <Link href="/admin" onClick={() => setNavOpen(false)}>
         Home
       </Link>
+      <Link href="/admin/meetings" onClick={() => setNavOpen(false)}>
+        Change a meeting
+      </Link>
       <Link href="/admin/help" onClick={() => setNavOpen(false)}>
         Help & website sections
       </Link>

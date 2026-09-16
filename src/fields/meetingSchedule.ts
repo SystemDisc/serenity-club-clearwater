@@ -40,6 +40,7 @@ const details = (): Field[] => [
 ]
 
 export const meetingScheduleFields: Field[] = [
+  { name: 'weeklyEditor', type: 'ui', admin: { components: { Field: '@/admin/WeeklyEditor' } } },
   {
     name: 'publicNotes',
     type: 'textarea',

@@ -2,6 +2,7 @@
 
 import { useFormFields, useRowLabel } from '@payloadcms/ui'
 import { reduceFieldsToValues } from 'payload/shared'
+import { scheduleFromForm } from './scheduleFromForm'
 import { useState } from 'react'
 import { displayDate, displayTime, localDateKey, validDateKey } from '@/serenity/calendar'
 import {
@@ -27,7 +28,7 @@ export function SessionRowLabel() {
 
 export default function SchedulePreview() {
   const [date, setDate] = useState(() => localDateKey())
-  const schedule = useFormFields(([fields]) => reduceFieldsToValues(fields, true) as Schedule)
+  const schedule = useFormFields(([fields]) => scheduleFromForm(reduceFieldsToValues(fields, true)))
   // Incomplete array rows are normal while typing; validation describes what remains.
   const usable: Schedule = {
     ...schedule,

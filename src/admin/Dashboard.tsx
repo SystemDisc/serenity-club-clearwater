@@ -127,7 +127,7 @@ export default async function Dashboard({ initPageResult }: AdminViewServerProps
     {
       title: 'Change a meeting',
       text: `${meetings.totalDocs} groups and club activities. ${needsChecking} need their schedule or format details checked.`,
-      href: '/admin/collections/meetings',
+      href: '/admin/meetings',
       publicHref: '/meeting-schedule',
       publicLabel: 'View meeting schedule',
     },

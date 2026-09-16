@@ -31,6 +31,68 @@ test.describe('Admin Panel', () => {
     await cleanupTestUser()
   })
 
+  test('separates one meeting day without changing the other days', async ({ request }) => {
+    const auth = await request.post('/api/users/login', { data: testUser })
+    const { token } = await auth.json()
+    const headers = { authorization: `JWT ${token}` }
+    const created = await request.post('/api/meetings', {
+      headers,
+      data: {
+        name: 'Synthetic day editor',
+        fellowship: 'AA',
+        sessions: [
+          {
+            key: 'base',
+            recurrence: 'weekly',
+            days: ['Monday', 'Tuesday'],
+            time: '10:00',
+            format: 'discussion',
+            attendance: 'everyone',
+            confirmed: true,
+          },
+        ],
+        _status: 'draft',
+      },
+    })
+    expect(created.ok(), await created.text()).toBeTruthy()
+    const id = (await created.json()).doc.id
+    try {
+      await page.goto(`/admin/collections/meetings/${id}`)
+      await page.getByRole('button', { name: 'Separate Monday at 10:00 AM' }).click()
+      await expect(
+        page.getByRole('status').filter({ hasText: 'Monday now has its own session' }),
+      ).toBeVisible()
+      await page.getByLabel('Meeting format', { exact: true }).nth(1).selectOption('book')
+      const savedRequest = page.waitForResponse(
+        (response) =>
+          response.url().includes(`/api/meetings/${id}`) && response.request().method() === 'PATCH',
+      )
+      await page.getByRole('button', { name: 'Save Draft', exact: true }).click()
+      const savedResponse = await savedRequest
+      expect(savedResponse.ok(), await savedResponse.text()).toBeTruthy()
+      const saved = await (await request.get(`/api/meetings/${id}?draft=true`, { headers })).json()
+      expect(saved.sessions).toHaveLength(2)
+      expect(
+        saved.sessions.find((session: { days: string[] }) => session.days.includes('Monday'))
+          .format,
+      ).toBe('book')
+      expect(
+        saved.sessions.find((session: { days: string[] }) => session.days.includes('Tuesday'))
+          .format,
+      ).toBe('discussion')
+      await page.goto('/admin/meetings')
+      await page.getByRole('searchbox', { name: 'Find a group' }).fill('Synthetic day editor')
+      await expect(page.getByRole('link', { name: 'Synthetic day editor' }).first()).toBeVisible()
+      await page.setViewportSize({ width: 320, height: 740 })
+      expect(
+        await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
+      ).toBeTruthy()
+    } finally {
+      await page.setViewportSize({ width: 1280, height: 720 })
+      await request.delete(`/api/meetings/${id}`, { headers })
+    }
+  })
+
   test('previews and publishes dues text without exposing a draft', async ({
     request,
     browser,

@@ -76,6 +76,7 @@ export default buildConfig({
       beforeNavLinks: ['@/admin/NavLinks'],
       views: {
         dashboard: { Component: '@/admin/Dashboard' },
+        meetings: { Component: '@/admin/MeetingsWeek', path: '/meetings' },
         help: { Component: '@/admin/Help', path: '/help' },
         tools: { Component: '@/admin/Help#Tools', path: '/tools' },
       },
