@@ -18,3 +18,6 @@ export const PATCH = withPublicRevalidation(REST_PATCH(config))
 
 export const PUT = withPublicRevalidation(REST_PUT(config))
 export const OPTIONS = REST_OPTIONS(config)
+
+// Bounded image processing and atomic publication of a reviewed photo batch.
+export const maxDuration = 120

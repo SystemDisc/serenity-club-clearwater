@@ -72,6 +72,8 @@ export interface Config {
     events: Event;
     galleryItems: GalleryItem;
     albums: Album;
+    photoBatches: PhotoBatch;
+    photoBatchItems: PhotoBatchItem;
     teamMembers: TeamMember;
     products: Product;
     policies: Policy;
@@ -104,6 +106,8 @@ export interface Config {
     events: EventsSelect<false> | EventsSelect<true>;
     galleryItems: GalleryItemsSelect<false> | GalleryItemsSelect<true>;
     albums: AlbumsSelect<false> | AlbumsSelect<true>;
+    photoBatches: PhotoBatchesSelect<false> | PhotoBatchesSelect<true>;
+    photoBatchItems: PhotoBatchItemsSelect<false> | PhotoBatchItemsSelect<true>;
     teamMembers: TeamMembersSelect<false> | TeamMembersSelect<true>;
     products: ProductsSelect<false> | ProductsSelect<true>;
     policies: PoliciesSelect<false> | PoliciesSelect<true>;
@@ -304,6 +308,8 @@ export interface Post {
  */
 export interface Media {
   id: number;
+  contentHash?: string | null;
+  uploadKey?: string | null;
   /**
    * Original retained separately when this image was made from a Word flyer.
    */
@@ -1009,6 +1015,8 @@ export interface MonthlyFlyer {
  */
 export interface GalleryItem {
   id: number;
+  importKey?: string | null;
+  takenOn?: string | null;
   title: string;
   category?: ('Clubhouse' | 'Event' | 'People' | 'Flyer' | 'Community') | null;
   description?: string | null;
@@ -1047,6 +1055,54 @@ export interface Album {
   createdAt: string;
   deletedAt?: string | null;
   _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "photoBatches".
+ */
+export interface PhotoBatch {
+  id: number;
+  title: string;
+  date?: string | null;
+  album?: (number | null) | Album;
+  albumRevision?: string | null;
+  cover?: (number | null) | Media;
+  createdBy?: (number | null) | User;
+  revision: number;
+  state: 'reviewing' | 'published';
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "photoBatchItems".
+ */
+export interface PhotoBatchItem {
+  id: number;
+  batch: number | PhotoBatch;
+  key: string;
+  fingerprint: string;
+  filename: string;
+  title: string;
+  caption?: string | null;
+  alt?: string | null;
+  position: number;
+  status: 'pending' | 'ready' | 'error' | 'excluded' | 'published';
+  error?: string | null;
+  receipt?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  media?: (number | null) | Media;
+  photoRevision?: string | null;
+  photo?: (number | null) | GalleryItem;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1328,6 +1384,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'albums';
         value: number | Album;
+      } | null)
+    | ({
+        relationTo: 'photoBatches';
+        value: number | PhotoBatch;
+      } | null)
+    | ({
+        relationTo: 'photoBatchItems';
+        value: number | PhotoBatchItem;
       } | null)
     | ({
         relationTo: 'teamMembers';
@@ -1660,6 +1724,8 @@ export interface EventsSelect<T extends boolean = true> {
  * via the `definition` "galleryItems_select".
  */
 export interface GalleryItemsSelect<T extends boolean = true> {
+  importKey?: T;
+  takenOn?: T;
   title?: T;
   category?: T;
   description?: T;
@@ -1689,6 +1755,44 @@ export interface AlbumsSelect<T extends boolean = true> {
   createdAt?: T;
   deletedAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "photoBatches_select".
+ */
+export interface PhotoBatchesSelect<T extends boolean = true> {
+  title?: T;
+  date?: T;
+  album?: T;
+  albumRevision?: T;
+  cover?: T;
+  createdBy?: T;
+  revision?: T;
+  state?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "photoBatchItems_select".
+ */
+export interface PhotoBatchItemsSelect<T extends boolean = true> {
+  batch?: T;
+  key?: T;
+  fingerprint?: T;
+  filename?: T;
+  title?: T;
+  caption?: T;
+  alt?: T;
+  position?: T;
+  status?: T;
+  error?: T;
+  receipt?: T;
+  media?: T;
+  photoRevision?: T;
+  photo?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1794,6 +1898,8 @@ export interface PostsSelect<T extends boolean = true> {
  * via the `definition` "media_select".
  */
 export interface MediaSelect<T extends boolean = true> {
+  contentHash?: T;
+  uploadKey?: T;
   sourceDocument?: T;
   alt?: T;
   caption?: T;

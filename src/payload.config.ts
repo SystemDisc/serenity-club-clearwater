@@ -7,6 +7,7 @@ import path from 'path'
 import { buildConfig, PayloadRequest } from 'payload'
 import { fileURLToPath } from 'url'
 
+import { PhotoBatches, PhotoBatchItems } from './collections/PhotoBatches'
 import { Albums } from './collections/Albums'
 import { Categories } from './collections/Categories'
 import { Events } from './collections/Events'
@@ -125,6 +126,8 @@ export default buildConfig({
     Events,
     GalleryItems,
     Albums,
+    PhotoBatches,
+    PhotoBatchItems,
     TeamMembers,
     Products,
     Policies,

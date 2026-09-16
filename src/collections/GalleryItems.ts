@@ -1,6 +1,7 @@
 import type { CollectionConfig, AccessResult } from 'payload'
 
 import { authenticated } from '@/access/authenticated'
+import { calendarField } from '@/fields/calendarFields'
 import { validateGalleryImage } from '@/hooks/validateGalleryImage'
 import {
   revalidatePublicSiteAfterChange,
@@ -43,6 +44,18 @@ export const GalleryItems: CollectionConfig = {
     update: authenticated,
   },
   fields: [
+    {
+      name: 'importKey',
+      type: 'text',
+      unique: true,
+      admin: { hidden: true },
+      access: {
+        create: ({ req }) => req.context.photoBatchAction === true,
+        update: () => false,
+        read: ({ req }) => !!req.user,
+      },
+    },
+    calendarField('takenOn', 'Photo date (optional)', 'date'),
     { name: 'title', type: 'text', required: true },
     {
       name: 'category',

@@ -1,3 +1,4 @@
+import { inspectBatchUpload, saveContentHash } from '@/photoBatches/mediaUpload'
 import { APIError, type CollectionConfig } from 'payload'
 
 import {
@@ -30,6 +31,28 @@ export const Media: CollectionConfig = {
     update: authenticated,
   },
   fields: [
+    {
+      name: 'contentHash',
+      type: 'text',
+      index: true,
+      admin: { hidden: true },
+      access: {
+        create: ({ req }) => !!req.context.mediaContentHash,
+        update: ({ req }) => !!req.context.mediaContentHash,
+        read: ({ req }) => !!req.user,
+      },
+    },
+    {
+      name: 'uploadKey',
+      type: 'text',
+      unique: true,
+      admin: { hidden: true },
+      access: {
+        create: ({ req }) => !!req.context.batchUpload,
+        update: () => false,
+        read: ({ req }) => !!req.user,
+      },
+    },
     {
       name: 'sourceDocument',
       type: 'relationship',
@@ -64,7 +87,9 @@ export const Media: CollectionConfig = {
     },
   ],
   hooks: {
+    beforeOperation: [inspectBatchUpload],
     beforeChange: [
+      saveContentHash,
       ({ data, req }) => {
         if (req.file?.name?.toLowerCase().endsWith('.docx') || isDocxMimeType(req.file?.mimetype))
           throw new APIError(
@@ -76,7 +101,12 @@ export const Media: CollectionConfig = {
         return data
       },
     ],
-    afterChange: [revalidatePublicSiteAfterChange],
+    afterChange: [
+      (args) =>
+        args.operation === 'create' && args.req.context.batchUpload
+          ? args.doc
+          : revalidatePublicSiteAfterChange(args),
+    ],
     afterDelete: [revalidatePublicSiteAfterDelete],
   },
   upload: {
