@@ -22,7 +22,7 @@ export default async function AboutPage() {
 
       <section className="bg-white px-4 py-10 md:py-12">
         <div
-          className={`container grid gap-10 lg:items-start ${hasNotice ? 'lg:grid-cols-[0.9fr_1.1fr]' : ''}`}
+          className={`container grid gap-10 lg:items-center ${hasNotice ? 'lg:grid-cols-[0.9fr_1.1fr]' : ''}`}
         >
           <DuesNotice notice={notice} legacyImage={data.settings.logoImageUrl} />
           <div>
