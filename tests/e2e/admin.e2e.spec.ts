@@ -2,6 +2,7 @@ import { test, expect, Page } from '@playwright/test'
 import { login } from '../helpers/login'
 import { seedTestUser, cleanupTestUser, testUser, queuePublication } from '../helpers/seedUser'
 import { testServerURL } from '../helpers/environment'
+import { fallbackClubSettings } from '../../src/serenity/content'
 
 test.describe('Admin Panel', () => {
   let page: Page
@@ -45,7 +46,12 @@ test.describe('Admin Panel', () => {
       await Promise.all(publicClients.map((client) => client.get('/gallery'))) // warm the public cache before creating anything
       const created = await request.post('/api/galleryItems', {
         headers,
-        data: { title, order: -1000, _status: 'published' },
+        data: {
+          title,
+          order: -1000,
+          _status: 'published',
+          externalImageUrl: fallbackClubSettings.heroImageUrl,
+        },
       })
       expect(created.ok(), await created.text()).toBeTruthy()
       id = (await created.json()).doc.id
@@ -99,7 +105,12 @@ test.describe('Admin Panel', () => {
           Array.from({ length: Math.min(6, 109 - start) }, async (_, offset) => {
             const response = await request.post('/api/galleryItems', {
               headers,
-              data: { title: `${prefix}${start + offset}`, order: -2000, _status: 'published' },
+              data: {
+                title: `${prefix}${start + offset}`,
+                order: -2000,
+                _status: 'published',
+                externalImageUrl: fallbackClubSettings.heroImageUrl,
+              },
             })
             expect(response.ok()).toBeTruthy()
             ids.push((await response.json()).doc.id)

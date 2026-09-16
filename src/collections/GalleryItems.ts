@@ -2,6 +2,7 @@ import type { CollectionConfig } from 'payload'
 
 import { authenticated } from '@/access/authenticated'
 import { authenticatedOrPublished } from '@/access/authenticatedOrPublished'
+import { validateGalleryImage } from '@/hooks/validateGalleryImage'
 import {
   revalidatePublicSiteAfterChange,
   revalidatePublicSiteAfterDelete,
@@ -33,12 +34,22 @@ export const GalleryItems: CollectionConfig = {
       options: ['Clubhouse', 'Event', 'People', 'Flyer', 'Community'],
     },
     { name: 'description', type: 'textarea' },
-    { name: 'image', type: 'upload', relationTo: 'media' },
+    {
+      name: 'image',
+      type: 'upload',
+      relationTo: 'media',
+      filterOptions: {
+        mimeType: {
+          in: ['image/jpeg', 'image/png', 'image/webp', 'image/avif', 'image/gif', 'image/tiff'],
+        },
+      },
+    },
     { name: 'externalImageUrl', type: 'text', label: 'External Image URL' },
     { name: 'imageAlt', type: 'text', label: 'Image Alt Text' },
     { name: 'order', type: 'number', defaultValue: 100, admin: { position: 'sidebar' } },
   ],
   hooks: {
+    beforeChange: [validateGalleryImage],
     afterChange: [revalidatePublicSiteAfterChange],
     afterDelete: [revalidatePublicSiteAfterDelete],
   },
