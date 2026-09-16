@@ -148,3 +148,28 @@ After deployment, visit `/admin` to create the first admin user and edit content
 
 For future schema changes, run `npm run migrate:create -- descriptive_name`, commit the
 generated files in `src/migrations`, and deploy the code that depends on them.
+
+## Media integrity
+
+The pinned Payload 3.89.0 Blob adapter is patched by `scripts/patch-blob-adapter.mjs`
+after installation. Its upstream random-suffix handling overwrites original filenames
+with derivative names. The small patch assigns each uploaded filename to its own
+size metadata, retaining collision protection for direct client uploads. Installation
+fails if the adapter version/source changes unexpectedly; review/remove the patch
+when upgrading to an upstream fix. `tests/unit/blobAdapter.test.ts` exercises the
+installed implementation with concurrent uploads.
+
+Historical records can be repaired with a reviewed manifest, without uploading or
+deleting Blob files:
+
+```bash
+node --env-file=.env.development.local --import tsx scripts/repair-media.ts --manifest path/to/manifest.json
+node --env-file=.env.development.local --import tsx scripts/repair-media.ts --manifest path/to/manifest.json --apply --backup path/to/new-backup.json
+```
+
+The default is a dry run. Apply requires a new backup path, rechecks every record
+and target file, and refuses stale or ambiguous changes. Remote maintenance also
+requires the explicit database opt-in described above. Production apply requires
+`REVALIDATE_URL` pointing to the site's `/next/revalidate` endpoint and `CRON_SECRET`;
+never put credentials in a manifest, command argument, or committed file. The
+September incident findings and repair sequence are in `docs/audits/`.
