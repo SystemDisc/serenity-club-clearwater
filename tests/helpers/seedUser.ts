@@ -30,7 +30,7 @@ export async function seedTestUser(): Promise<void> {
   await payload.create({
     context: { disableRevalidate: true },
     collection: 'users',
-    data: testUser,
+    data: { ...testUser, role: 'admin' },
   })
 }
 
@@ -51,4 +51,10 @@ export async function cleanupTestUser(): Promise<void> {
     },
   })
   await payload.destroy()
+}
+
+export async function queuePublication(id: number, type: 'publish' | 'unpublish') {
+  assertTestDatabase()
+  const payload = await getPayload({ config })
+  return payload.jobs.queue({ task: 'schedulePublish', input: { type, doc: { relationTo: 'pages', value: id } }, waitUntil: new Date(Date.now() - 1000) })
 }

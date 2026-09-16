@@ -1,3 +1,4 @@
+import { isAdmin } from './access/users'
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { resendAdapter } from '@payloadcms/email-resend'
 import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
@@ -150,8 +151,8 @@ export default buildConfig({
   jobs: {
     access: {
       run: ({ req }: { req: PayloadRequest }): boolean => {
-        // Allow logged in users to execute this endpoint (default)
-        if (req.user) return true
+        // Administrators and the authenticated scheduled runner can execute jobs.
+        if (isAdmin(req.user)) return true
 
         const secret = process.env.CRON_SECRET
         if (!secret) return false
