@@ -193,5 +193,6 @@ export default async function MeetingSchedulePage() {
 }
 
 export const metadata = {
+  alternates: { canonical: '/meeting-schedule' },
   title: 'Meeting Schedule | Serenity Club of Clearwater',
 }

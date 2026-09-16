@@ -21,6 +21,7 @@ export async function generateMetadata({ params }: Args) {
   const product = await getProductBySlug(slug)
 
   return {
+    alternates: { canonical: `/shop/${slug}` },
     title: product
       ? `${product.title} | Serenity Club of Clearwater`
       : 'Shop | Serenity Club of Clearwater',

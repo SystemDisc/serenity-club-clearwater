@@ -93,5 +93,6 @@ export default async function ReachOutPage() {
 }
 
 export const metadata = {
+  alternates: { canonical: '/reach-out' },
   title: 'Reach Out | Serenity Club of Clearwater',
 }

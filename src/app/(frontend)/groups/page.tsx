@@ -69,5 +69,6 @@ export default async function GroupsPage() {
 }
 
 export const metadata = {
+  alternates: { canonical: '/groups' },
   title: 'Groups | Serenity Club of Clearwater',
 }

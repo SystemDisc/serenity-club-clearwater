@@ -172,6 +172,7 @@ export default async function HomePage() {
 }
 
 export const metadata = {
+  alternates: { canonical: '/' },
   description: siteMetadata.description,
   title: siteMetadata.title,
 }

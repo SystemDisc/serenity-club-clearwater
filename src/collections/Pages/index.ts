@@ -1,3 +1,4 @@
+import { validatePageSlug } from '@/utilities/pagePaths'
 import type { CollectionConfig } from 'payload'
 
 import { authenticated } from '../../access/authenticated'
@@ -120,7 +121,7 @@ export const Pages: CollectionConfig<'pages'> = {
         position: 'sidebar',
       },
     },
-    slugField(),
+    slugField({ overrides: (row) => ({ ...row, fields: row.fields.map((field) => 'name' in field && field.name === 'slug' && field.type === 'text' ? { ...field, validate: validatePageSlug } : field) }) }),
   ],
   hooks: {
     afterChange: [revalidatePublicSiteAfterChange],

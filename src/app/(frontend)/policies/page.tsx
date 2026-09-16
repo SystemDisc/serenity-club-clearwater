@@ -24,5 +24,6 @@ export default async function PoliciesPage() {
 }
 
 export const metadata = {
+  alternates: { canonical: '/policies' },
   title: 'Policies | Serenity Club of Clearwater',
 }

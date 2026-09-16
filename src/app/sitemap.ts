@@ -1,3 +1,4 @@
+import { reservedPageSlugs } from '@/utilities/pagePaths'
 import type { MetadataRoute } from 'next'
 
 import configPromise from '@payload-config'
@@ -27,8 +28,6 @@ const publicRoutes: Array<{
   { path: '/groups', changeFrequency: 'weekly', priority: 0.7 },
   { path: '/gallery', changeFrequency: 'weekly', priority: 0.7 },
 ]
-
-const reservedSlugs = new Set(['admin', 'api', 'next', 'portfolio', 'posts', 'resend', 'search'])
 
 const normalizeSlug = (slug: string) => slug.trim().replace(/^\/+|\/+$/g, '')
 
@@ -61,7 +60,7 @@ const getCmsEntries = unstable_cache(
         collection: 'pages',
         depth: 0,
         draft: false,
-        limit: 1000,
+        limit: 0,
         overrideAccess: false,
         pagination: false,
         select: {
@@ -78,7 +77,7 @@ const getCmsEntries = unstable_cache(
         collection: 'products',
         depth: 0,
         draft: false,
-        limit: 1000,
+        limit: 0,
         overrideAccess: false,
         pagination: false,
         select: {
@@ -96,7 +95,7 @@ const getCmsEntries = unstable_cache(
     const pageEntries = pages.docs.flatMap((page): SitemapEntry[] => {
       const slug = normalizeSlug(page.slug || '')
 
-      if (!slug || reservedSlugs.has(slug)) return []
+      if (!slug || reservedPageSlugs.has(slug)) return []
 
       return [
         {

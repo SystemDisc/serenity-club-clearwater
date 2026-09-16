@@ -27,5 +27,6 @@ export default async function ShopPage() {
 }
 
 export const metadata = {
+  alternates: { canonical: '/shop' },
   title: 'Shop | Serenity Club of Clearwater',
 }

@@ -36,5 +36,6 @@ export default async function EventsPage() {
 }
 
 export const metadata = {
+  alternates: { canonical: '/events' },
   title: 'Events | Serenity Club of Clearwater',
 }

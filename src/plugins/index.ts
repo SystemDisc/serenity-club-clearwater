@@ -1,3 +1,4 @@
+import { documentPath } from '@/utilities/pagePaths'
 import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
 import { nestedDocsPlugin } from '@payloadcms/plugin-nested-docs'
 import { redirectsPlugin } from '@payloadcms/plugin-redirects'
@@ -21,10 +22,10 @@ const generateTitle: GenerateTitle<Post | Page> = ({ doc }) => {
   return doc?.title ? `${doc.title} | Serenity Club of Clearwater` : 'Serenity Club of Clearwater'
 }
 
-const generateURL: GenerateURL<Post | Page> = ({ doc }) => {
+const generateURL: GenerateURL<Post | Page> = ({ doc, collectionConfig }) => {
   const url = getServerSideURL()
 
-  return doc?.slug ? `${url}/${doc.slug}` : url
+  return `${url}${documentPath(doc?.slug, collectionConfig?.slug === 'posts' ? 'posts' : 'pages')}`
 }
 
 export const plugins: Plugin[] = [

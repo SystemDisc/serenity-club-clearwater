@@ -161,5 +161,6 @@ export default async function WaysToGivePage() {
 }
 
 export const metadata = {
+  alternates: { canonical: '/ways-to-give' },
   title: 'Ways to Give | Serenity Club of Clearwater',
 }

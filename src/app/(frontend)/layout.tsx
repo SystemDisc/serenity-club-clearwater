@@ -48,9 +48,6 @@ export const revalidate = 300
 
 export const metadata: Metadata = {
   applicationName: siteMetadata.name,
-  alternates: {
-    canonical: '/',
-  },
   description: siteMetadata.description,
   metadataBase: new URL(getCanonicalSiteURL()),
   openGraph: mergeOpenGraph(),
