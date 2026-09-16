@@ -1,8 +1,8 @@
 # Dependency maintenance
 
-Reviewed September 15, 2026. Node 24 is the project runtime. Use `npm ci`; peer-dependency checking is enabled. The web app and converter have independent lockfiles.
+Reviewed September 16, 2026. Node 24 is the project runtime. Use `npm ci`; peer-dependency checking is enabled. The web app and converter have independent lockfiles.
 
-The Payload packages are aligned at 3.89.0, Next at 16.3.5, React at 19.3.0, Sharp at 0.35.4, and Vitest at 5.0.1. All other direct dependencies were checked with `npm outdated` and updated to the latest compatible release.
+The Payload packages are aligned at 3.89.0, Next at 16.3.5, React at 19.3.0, Sharp at 0.35.4, and Vitest at 5.0.1. jsdom is 30.0.1 and Prettier is 3.9.7 after the September 16 check. All other direct dependencies were checked with `npm outdated` and updated to the latest compatible release.
 
 Intentional compatibility limits:
 
