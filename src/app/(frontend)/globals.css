@@ -222,3 +222,93 @@ html[data-theme='dark'],
 html[data-theme='light'] {
   opacity: initial;
 }
+
+.club-gallery-dialog {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  width: min(1200px, 100%);
+  height: min(950px, 100dvh);
+  max-width: 100%;
+  max-height: 100dvh;
+  padding: 0;
+  border: 0;
+  background: #0f172a;
+  color: white;
+}
+.club-gallery-dialog::backdrop {
+  background: rgb(0 0 0 / 85%);
+}
+.club-gallery-viewer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 16px;
+  gap: 12px;
+}
+.club-gallery-viewer header,
+.club-gallery-viewer footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+}
+.club-gallery-viewer h2 {
+  font-size: 20px;
+  overflow-wrap: anywhere;
+  flex: 1;
+  min-width: 100px;
+}
+.club-gallery-viewer button,
+.club-gallery-viewer footer a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 14px;
+  border: 1px solid #64748b;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.club-gallery-viewer button:hover:not(:disabled),
+.club-gallery-viewer footer a:hover {
+  background: #334155;
+}
+.club-gallery-viewer :focus-visible {
+  outline: 3px solid #fcd34d;
+  outline-offset: 3px;
+}
+.club-gallery-viewer button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.club-gallery-image {
+  position: relative;
+  flex: 1;
+  min-height: 120px;
+  touch-action: pan-y pinch-zoom;
+}
+.club-gallery-caption {
+  max-height: 20vh;
+  overflow: auto;
+}
+.club-gallery-hint {
+  font-size: 14px;
+  color: #cbd5e1;
+}
+@media (max-width: 500px) {
+  .club-gallery-viewer {
+    padding: 12px;
+    gap: 8px;
+  }
+  .club-gallery-viewer footer {
+    justify-content: center;
+    gap: 8px;
+  }
+  .club-gallery-viewer footer a {
+    order: 3;
+  }
+  .club-gallery-hint {
+    font-size: 12px;
+  }
+}

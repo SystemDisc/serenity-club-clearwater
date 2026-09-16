@@ -21,7 +21,7 @@ export async function GalleryPageContent({ page = 1 }: { page?: number }) {
           {result.albums.length ? (
             <>
               <h2 className="mb-5 text-2xl font-semibold">Albums</h2>
-              <div className="mb-10 grid gap-5 md:grid-cols-3">
+              <div className="mb-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                 {result.albums.map((album) => {
                   const cover = typeof album.cover === 'object' ? album.cover : null
                   return (
@@ -54,7 +54,10 @@ export async function GalleryPageContent({ page = 1 }: { page?: number }) {
             <p>No photos have been published yet.</p>
           ) : null}
           {result.totalPages > 1 && (
-            <nav aria-label="Gallery pages" className="mt-8 flex items-center justify-center gap-6">
+            <nav
+              aria-label="Gallery pages"
+              className="mt-8 flex flex-wrap items-center justify-center gap-6"
+            >
               {page > 1 && (
                 <Link href={href(page - 1)} rel="prev">
                   Previous

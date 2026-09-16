@@ -15,6 +15,48 @@ const publicPages = [
 ]
 
 test.describe('Frontend', () => {
+  test('gallery viewer supports keyboard, focus return, phone swipe, and bounded image loading', async ({
+    page,
+  }) => {
+    await page.goto('/gallery')
+    const first = page.getByRole('link', { name: /^Enlarge / }).first()
+    await first.click()
+    const viewer = page.getByRole('dialog')
+    await expect(viewer).toBeVisible()
+    await expect(viewer.getByText(/Photo 1 of/)).toBeVisible()
+    await page.keyboard.press('ArrowRight')
+    await expect(viewer.getByText(/Photo 2 of/)).toBeVisible()
+    await page.keyboard.press('ArrowLeft')
+    await expect(viewer.getByText(/Photo 1 of/)).toBeVisible()
+    expect(await viewer.locator('img').count()).toBe(1)
+    await expect
+      .poll(() =>
+        viewer
+          .locator('img')
+          .evaluate((image: HTMLImageElement) => image.complete && image.naturalWidth > 0),
+      )
+      .toBeTruthy()
+    const accessibility = await new AxeBuilder({ page }).include('.club-gallery-dialog').analyze()
+    expect(accessibility.violations).toEqual([])
+    await page.keyboard.press('Escape')
+    await expect(viewer).not.toBeVisible()
+    await expect(first).toBeFocused()
+    await page.setViewportSize({ width: 320, height: 700 })
+    await first.click()
+    await viewer
+      .locator('.club-gallery-image')
+      .dispatchEvent('touchstart', { touches: [{ identifier: 0, clientX: 270, clientY: 200 }] })
+    await viewer
+      .locator('.club-gallery-image')
+      .dispatchEvent('touchend', { changedTouches: [{ identifier: 0, clientX: 60, clientY: 200 }] })
+    await expect(viewer.getByText(/Photo 2 of/)).toBeVisible()
+    expect(
+      await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
+    ).toBeTruthy()
+    await viewer.getByRole('button', { name: 'Close photos ×' }).click()
+    await expect(first).toBeFocused()
+  })
+
   test('can load homepage', async ({ page }) => {
     await page.goto('/')
 
