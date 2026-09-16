@@ -42,6 +42,12 @@ export type Meeting = import('./schedule').Schedule & {
 }
 
 export type EventItem = {
+  date?: string
+  endDate?: string
+  featured?: boolean
+  visible?: boolean
+  archived?: boolean
+  location?: string
   category: 'Fundraiser' | 'Meeting' | 'Service' | 'Community'
   dateLabel: string
   id?: string | number

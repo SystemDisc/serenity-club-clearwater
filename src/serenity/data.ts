@@ -2,6 +2,8 @@ import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import { cache } from 'react'
 import { unstable_cache } from 'next/cache'
+import type { Event } from '@/payload-types'
+import { eventCalendarDetails, sortEvents } from './events'
 
 import {
   type ClubSettings,
@@ -97,7 +99,14 @@ const collectionDocuments = (collection: SerenityCollection) =>
       return result.docs
     },
     ['public-collection', collection],
-    { revalidate: 300, tags: [`public-${collection}`, 'public-media'] },
+    {
+      revalidate: 300,
+      tags: [
+        `public-${collection}`,
+        'public-media',
+        ...(collection === 'events' ? ['public-meetings'] : []),
+      ],
+    },
   )()
 
 async function findCollection<T>(
@@ -265,15 +274,16 @@ export const getSerenityData = cache(
           fallbackEvents,
           (doc) => ({
             category: (getText(doc.category, 'Community') as EventItem['category']) || 'Community',
-            dateLabel: getText(doc.dateLabel),
+            featured: doc.featured !== false,
+            location: getText(doc.location) || undefined,
             id: String(doc.id),
             imageAlt: getImageAlt(doc),
             imageUrl: getImageUrl(doc, 'image', 'externalImageUrl'),
             order: getNumber(doc.order),
             summary: getText(doc.summary),
-            timeLabel: getText(doc.timeLabel) || undefined,
             title: getText(doc.title),
             url: getText(doc.url) || undefined,
+            ...eventCalendarDetails(doc as unknown as Event),
           }),
           selected,
         ),
@@ -338,7 +348,7 @@ export const getSerenityData = cache(
 
     return {
       ...fallbackSerenityData,
-      events: sortByOrder(events),
+      events: sortEvents(events.filter((event) => event.visible !== false)),
       galleryItems: sortByOrder(galleryItems),
       meetings: sortByOrder(meetings),
       policies: sortByOrder(policies),

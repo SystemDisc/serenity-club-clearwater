@@ -3,6 +3,7 @@ import * as migration_20260916_005208_platform_reliability from './20260916_0052
 import * as migration_20260916_010115_user_roles from './20260916_010115_user_roles';
 import * as migration_20260916_025432_structured_meeting_schedules from './20260916_025432_structured_meeting_schedules';
 import * as migration_20260916_030456_retained_monthly_flyers from './20260916_030456_retained_monthly_flyers';
+import * as migration_20260916_031954_dated_events from './20260916_031954_dated_events';
 
 export const migrations = [
   {
@@ -28,6 +29,11 @@ export const migrations = [
   {
     up: migration_20260916_030456_retained_monthly_flyers.up,
     down: migration_20260916_030456_retained_monthly_flyers.down,
-    name: '20260916_030456_retained_monthly_flyers'
+    name: '20260916_030456_retained_monthly_flyers',
+  },
+  {
+    up: migration_20260916_031954_dated_events.up,
+    down: migration_20260916_031954_dated_events.down,
+    name: '20260916_031954_dated_events'
   },
 ];

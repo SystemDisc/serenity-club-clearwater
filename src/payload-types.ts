@@ -936,21 +936,59 @@ export interface Meeting {
   _status?: ('draft' | 'published') | null;
 }
 /**
+ * For one activity, choose its date and details here. Use Monthly flyers for the whole month. Recurring club meetings can use their existing meeting schedule.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "events".
  */
 export interface Event {
   id: number;
   title: string;
-  dateLabel: string;
+  kind: 'dated' | 'meeting' | 'legacy';
+  date?: string | null;
+  endDate?: string | null;
+  timeMode?: ('known' | 'allDay' | 'unannounced') | null;
+  startTime?: string | null;
+  endTime?: string | null;
+  location?: string | null;
+  /**
+   * Dates and times come from this meeting. Correct them in Meetings so all public pages agree.
+   */
+  meeting?: (number | null) | Meeting;
+  dateLabel?: string | null;
   timeLabel?: string | null;
+  archived?: boolean | null;
+  featured?: boolean | null;
   category?: ('Fundraiser' | 'Meeting' | 'Service' | 'Community') | null;
   summary: string;
   image?: (number | null) | Media;
   externalImageUrl?: string | null;
   imageAlt?: string | null;
   url?: string | null;
+  sourceFlyer?: (number | null) | MonthlyFlyer;
   order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * One flyer per month. Keep next month as a draft until it is ready. Previous images and original documents remain available through Versions.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "monthlyFlyers".
+ */
+export interface MonthlyFlyer {
+  id: number;
+  month: string;
+  image?: (number | null) | Media;
+  /**
+   * Use the Word flyer control below to retain the original and create a separate image.
+   */
+  sourceDocument?: (number | null) | SourceDocument;
+  /**
+   * Include dates, event names, and available times so people can read the details without the picture.
+   */
+  details: string;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -1035,28 +1073,6 @@ export interface Sponsor {
   externalImageUrl?: string | null;
   imageAlt?: string | null;
   order?: number | null;
-  updatedAt: string;
-  createdAt: string;
-  _status?: ('draft' | 'published') | null;
-}
-/**
- * One flyer per month. Keep next month as a draft until it is ready. Previous images and original documents remain available through Versions.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "monthlyFlyers".
- */
-export interface MonthlyFlyer {
-  id: number;
-  month: string;
-  image?: (number | null) | Media;
-  /**
-   * Use the Word flyer control below to retain the original and create a separate image.
-   */
-  sourceDocument?: (number | null) | SourceDocument;
-  /**
-   * Include dates, event names, and available times so people can read the details without the picture.
-   */
-  details: string;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -1566,14 +1582,25 @@ export interface MeetingsSelect<T extends boolean = true> {
  */
 export interface EventsSelect<T extends boolean = true> {
   title?: T;
+  kind?: T;
+  date?: T;
+  endDate?: T;
+  timeMode?: T;
+  startTime?: T;
+  endTime?: T;
+  location?: T;
+  meeting?: T;
   dateLabel?: T;
   timeLabel?: T;
+  archived?: T;
+  featured?: T;
   category?: T;
   summary?: T;
   image?: T;
   externalImageUrl?: T;
   imageAlt?: T;
   url?: T;
+  sourceFlyer?: T;
   order?: T;
   updatedAt?: T;
   createdAt?: T;

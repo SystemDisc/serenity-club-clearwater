@@ -10,6 +10,26 @@ const names: Record<string, [string, string, string]> = {
   policies: ['Club rule', 'Club rules', 'Website details'],
 }
 
+function readableChoices(fields: Field[]): Field[] {
+  return fields.map((field) => {
+    if (field.type === 'select' && !field.hasMany && !field.admin?.components?.Field)
+      return {
+        ...field,
+        admin: {
+          ...field.admin,
+          components: { ...field.admin?.components, Field: '@/admin/SimpleSelectField' },
+        },
+      }
+    if ('fields' in field) return { ...field, fields: readableChoices(field.fields) }
+    if (field.type === 'tabs')
+      return {
+        ...field,
+        tabs: field.tabs.map((tab) => ({ ...tab, fields: readableChoices(tab.fields) })),
+      }
+    return field
+  })
+}
+
 export function imagePreviewField(imageField: string, externalField = 'externalImageUrl'): Field {
   return {
     name: `${imageField}Preview`,
@@ -45,7 +65,7 @@ export const clubAdminPlugin: Plugin = (config) => ({
             ? 'Shared public files. Uploading here stores a file; publish a gallery photo or event to show it on those pages.'
             : collection.admin?.description,
       },
-      fields: collection.fields.flatMap((field) =>
+      fields: readableChoices(collection.fields).flatMap((field) =>
         'name' in field && field.type === 'upload' && field.relationTo === 'media'
           ? [field, imagePreviewField(field.name)]
           : [field],

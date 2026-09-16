@@ -188,7 +188,7 @@ async function seedSerenity() {
   for (const event of fallbackEvents) {
     await upsertCollectionDoc({
       collection: 'events',
-      data: event,
+      data: { ...event, kind: 'legacy', featured: true },
       field: 'title',
       payload,
       value: event.title,

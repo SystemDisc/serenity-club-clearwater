@@ -5,9 +5,13 @@ import { getSerenityData } from '@/serenity/data'
 import { getMonthlyFlyers, displayMonth } from '@/serenity/flyers'
 import { FlyerCard } from '@/serenity/FlyerCard'
 import { localDateKey } from '@/serenity/calendar'
+import { isPastEvent } from '@/serenity/events'
 
 export default async function EventsPage() {
   const [data, flyers] = await Promise.all([getSerenityData(['events']), getMonthlyFlyers()])
+  const today = localDateKey()
+  const upcoming = data.events.filter((event) => !isPastEvent(event, today))
+  const past = data.events.filter((event) => isPastEvent(event, today)).reverse()
 
   return (
     <main>
@@ -26,9 +30,28 @@ export default async function EventsPage() {
               The {displayMonth(localDateKey().slice(0, 7))} monthly flyer has not been posted yet.
             </p>
           )}
-          <EventGrid events={data.events} headingLevel="h2" />
+          <h2 className="mb-6 text-2xl font-semibold">Today and upcoming</h2>
+          {upcoming.length ? (
+            <EventGrid events={upcoming} headingLevel="h3" />
+          ) : (
+            <p>Check the monthly flyer or ask at the coffee bar for upcoming activities.</p>
+          )}
         </div>
       </section>
+      {past.length ? (
+        <section className="bg-white px-4 py-10">
+          <div className="container">
+            <details>
+              <summary className="cursor-pointer py-3 text-xl font-semibold">
+                Past events and announcements
+              </summary>
+              <div className="mt-5">
+                <EventGrid events={past} />
+              </div>
+            </details>
+          </div>
+        </section>
+      ) : null}
       {flyers.archive.length ? (
         <section className="bg-[#fbfaf7] px-4 py-10">
           <div className="container">

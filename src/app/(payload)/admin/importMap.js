@@ -15,6 +15,7 @@ import { MetaImageComponent as MetaImageComponent_a8a977ebc872c5d5ea7ee689724c08
 import { MetaDescriptionComponent as MetaDescriptionComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
 import { PreviewComponent as PreviewComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
 import { SlugField as SlugField_2b8867833a34864a02ddf429b0728a40 } from '@payloadcms/next/client'
+import { default as default_77acb8fd0807eb8a827113d51a6812c2 } from '@/admin/SimpleSelectField'
 import { default as default_3869346f4b905a169fdf46a89e5f17bc } from '@/admin/WeekdayField'
 import { default as default_4c9d324e290add2c2c0d619284747bf1 } from '@/admin/SessionReference'
 import { default as default_4869c3da8de899c02232138cd2e5b711 } from '@/admin/CalendarField'
@@ -59,6 +60,7 @@ export const importMap = {
   "@payloadcms/plugin-seo/client#MetaDescriptionComponent": MetaDescriptionComponent_a8a977ebc872c5d5ea7ee689724c0860,
   "@payloadcms/plugin-seo/client#PreviewComponent": PreviewComponent_a8a977ebc872c5d5ea7ee689724c0860,
   "@payloadcms/next/client#SlugField": SlugField_2b8867833a34864a02ddf429b0728a40,
+  "@/admin/SimpleSelectField#default": default_77acb8fd0807eb8a827113d51a6812c2,
   "@/admin/WeekdayField#default": default_3869346f4b905a169fdf46a89e5f17bc,
   "@/admin/SessionReference#default": default_4c9d324e290add2c2c0d619284747bf1,
   "@/admin/CalendarField#default": default_4869c3da8de899c02232138cd2e5b711,

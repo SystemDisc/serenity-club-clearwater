@@ -35,7 +35,7 @@ const scopes = globalThis as unknown as Record<symbol, AsyncLocalStorage<Pending
 const pending = (scopes[scopeKey] ??= new AsyncLocalStorage<Pending>())
 
 const routes: Record<string, string[]> = {
-  meetings: ['/', '/meeting-schedule', '/groups'],
+  meetings: ['/', '/meeting-schedule', '/groups', '/events'],
   events: ['/', '/events'],
   monthlyFlyers: ['/', '/events'],
   galleryItems: ['/gallery', '/gallery/page/[page]'],

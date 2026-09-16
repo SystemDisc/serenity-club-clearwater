@@ -297,7 +297,7 @@ export function EventGrid({
       {events.map((event) => (
         <article
           className="overflow-hidden rounded-lg border border-slate-200 bg-white"
-          key={event.title}
+          key={event.id || event.title}
         >
           {event.imageUrl ? (
             <a
@@ -327,6 +327,9 @@ export function EventGrid({
               {event.timeLabel ? ` | ${event.timeLabel}` : ''}
             </p>
             <p className="mt-3 text-sm leading-6 text-slate-700">{event.summary}</p>
+            {event.location ? (
+              <p className="mt-3 text-sm text-slate-700">Location: {event.location}</p>
+            ) : null}
             {event.url ? (
               <ButtonLink className="mt-5" href={event.url} variant="secondary">
                 Details

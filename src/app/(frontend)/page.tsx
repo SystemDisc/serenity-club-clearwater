@@ -16,6 +16,7 @@ import { regularMeetingRows } from '@/serenity/publicMeetings'
 import { siteMetadata } from '@/utilities/siteURL'
 import { getMonthlyFlyers } from '@/serenity/flyers'
 import { FlyerCard } from '@/serenity/FlyerCard'
+import { isPastEvent } from '@/serenity/events'
 
 export default async function HomePage() {
   const [data, flyers] = await Promise.all([
@@ -26,7 +27,9 @@ export default async function HomePage() {
   const recoveryMeetings = sortedMeetings.filter((meeting) => meeting.fellowship !== 'Club')
   const firstMeeting = recoveryMeetings[0]
   const lastMeeting = recoveryMeetings[recoveryMeetings.length - 1]
-  const featuredEvents = data.events.slice(0, 3)
+  const featuredEvents = data.events
+    .filter((event) => event.featured !== false && !isPastEvent(event))
+    .slice(0, 3)
   const featuredProducts = data.products.slice(0, 4)
 
   return (

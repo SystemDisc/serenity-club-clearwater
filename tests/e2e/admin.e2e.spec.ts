@@ -31,6 +31,85 @@ test.describe('Admin Panel', () => {
     await cleanupTestUser()
   })
 
+  test('refreshes recurring event dates when its authoritative meeting changes', async ({
+    request,
+    browser,
+  }) => {
+    const auth = await request.post('/api/users/login', { data: testUser })
+    const { token } = await auth.json()
+    const headers = { authorization: `JWT ${token}` }
+    const visitor = await browser.newContext()
+    const publicPage = await visitor.newPage()
+    const title = `Recurring event regression ${Date.now()}`
+    let meetingID: number | undefined
+    let eventID: number | undefined
+    const session = {
+      recurrence: 'weekly',
+      key: 'daily-test',
+      days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+      time: '04:17',
+      format: 'unknown',
+      attendance: 'unknown',
+      confirmed: false,
+    }
+    try {
+      await publicPage.goto('/events')
+      const meeting = await request.post('/api/meetings', {
+        headers,
+        data: { name: title, fellowship: 'Club', sessions: [session], _status: 'published' },
+      })
+      expect(meeting.ok(), await meeting.text()).toBeTruthy()
+      meetingID = (await meeting.json()).doc.id
+      const event = await request.post('/api/events', {
+        headers,
+        data: {
+          title,
+          kind: 'meeting',
+          meeting: meetingID,
+          summary: 'Synthetic recurring test',
+          _status: 'published',
+        },
+      })
+      expect(event.ok(), await event.text()).toBeTruthy()
+      eventID = (await event.json()).doc.id
+      const card = publicPage
+        .locator('article')
+        .filter({ has: publicPage.getByRole('heading', { name: title, exact: true }) })
+      await expect
+        .poll(async () => {
+          await publicPage.reload()
+          return card.textContent()
+        })
+        .toContain('4:17 AM')
+      const changed = await request.patch(`/api/meetings/${meetingID}`, {
+        headers,
+        data: { sessions: [{ ...session, time: '04:23' }] },
+      })
+      expect(changed.ok(), await changed.text()).toBeTruthy()
+      await expect
+        .poll(async () => {
+          await publicPage.reload()
+          return card.textContent()
+        })
+        .toContain('4:23 AM')
+      const hidden = await request.patch(`/api/meetings/${meetingID}`, {
+        headers,
+        data: { _status: 'draft' },
+      })
+      expect(hidden.ok(), await hidden.text()).toBeTruthy()
+      await expect
+        .poll(async () => {
+          await publicPage.reload()
+          return card.count()
+        })
+        .toBe(0)
+    } finally {
+      if (eventID) await request.delete(`/api/events/${eventID}`, { headers })
+      if (meetingID) await request.delete(`/api/meetings/${meetingID}`, { headers })
+      await visitor.close()
+    }
+  })
+
   test('publishes, edits, unpublishes, republishes, and deletes gallery content without rebuilding', async ({
     request,
     playwright,
