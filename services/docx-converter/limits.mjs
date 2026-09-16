@@ -1,6 +1,25 @@
 export const MAX_DOCUMENT_BYTES = 25 * 1024 * 1024
 export const MAX_IMAGE_BYTES = 20 * 1024 * 1024
 
+export function requireSinglePage(pages) {
+  if (!Number.isSafeInteger(pages) || pages < 1) {
+    throw Object.assign(
+      new Error(
+        'Could not determine the document page count. Export a one-page image and upload it instead.',
+      ),
+      { statusCode: 422 },
+    )
+  }
+  if (pages !== 1) {
+    throw Object.assign(
+      new Error(
+        `This document has ${pages} pages. Flyers currently support one page. Save each page as an image, or upload a one-page Word document. No pages were published.`,
+      ),
+      { statusCode: 422 },
+    )
+  }
+}
+
 export function validateSourceURL(value, origins = process.env.DOCX_ALLOWED_SOURCE_ORIGINS || '') {
   const url = new URL(value)
   const allowed = origins

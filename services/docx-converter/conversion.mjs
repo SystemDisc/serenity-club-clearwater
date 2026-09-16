@@ -4,7 +4,7 @@ import os from 'node:os'
 import path from 'node:path'
 import { promisify } from 'node:util'
 import sharp from 'sharp'
-import { MAX_DOCUMENT_BYTES } from './limits.mjs'
+import { MAX_DOCUMENT_BYTES, requireSinglePage } from './limits.mjs'
 const execFileAsync = promisify(execFile)
 const getConfiguredDpi = () => {
   const rawValue = Number.parseInt(process.env.DOCX_IMAGE_DPI || '200', 10)
@@ -131,8 +131,7 @@ export const convertDocxBufferToImage = async (docxBuffer, sourceFilename) => {
     if ((await stat(pdfPath)).size > 50 * 1024 * 1024) throw new Error('Converted PDF is too large')
     const { stdout } = await runCommand(process.env.PDFINFO_PATH || 'pdfinfo', [pdfPath])
     const pages = Number(/^Pages:\s+(\d+)/m.exec(stdout)?.[1])
-    if (!Number.isSafeInteger(pages) || pages < 1 || pages > 25)
-      throw new Error('Documents must have 1–25 pages')
+    requireSinglePage(pages)
     const pngPath = await rasterizeFirstPage(pdfPath, tempDir)
     const buffer = await encodeImage(pngPath, format)
 

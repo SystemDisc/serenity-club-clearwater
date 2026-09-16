@@ -1,4 +1,5 @@
 import { MAX_IMAGE_BYTES, readLimitedBody } from '../../../services/docx-converter/limits.mjs'
+import { APIError } from 'payload'
 type ConvertedDocxImage = {
   buffer: Buffer
   filename: string
@@ -62,6 +63,15 @@ export const convertDocxViaService = async ({
   })
 
   if (!response.ok) {
+    if (response.status === 422) {
+      const failure = (await response.json()) as { error?: string }
+      throw new APIError(
+        failure.error || 'Upload a one-page Word flyer or an image.',
+        422,
+        undefined,
+        true,
+      )
+    }
     throw new Error(`DOCX conversion service failed: ${response.status} ${await response.text()}`)
   }
 

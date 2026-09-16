@@ -1,5 +1,15 @@
 import { expect, it } from 'vitest'
-import { readLimitedBody, validateSourceURL } from '../../services/docx-converter/limits.mjs'
+import {
+  readLimitedBody,
+  requireSinglePage,
+  validateSourceURL,
+} from '../../services/docx-converter/limits.mjs'
+it('rejects multi-page flyers before rasterizing only their first page', () => {
+  expect(() => requireSinglePage(1)).not.toThrow()
+  expect(() => requireSinglePage(2)).toThrow('2 pages')
+  expect(() => requireSinglePage(25)).toThrow('one page')
+  expect(() => requireSinglePage(NaN)).toThrow('page count')
+})
 it('accepts only explicitly configured HTTPS storage origins', () => {
   const origin = 'https://test.public.blob.vercel-storage.com'
   expect(validateSourceURL(`${origin}/document.docx`, origin).origin).toBe(origin)
