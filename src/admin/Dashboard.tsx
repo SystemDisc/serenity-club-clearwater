@@ -133,8 +133,8 @@ export default async function Dashboard({ initPageResult }: AdminViewServerProps
     },
     {
       title: 'Add photos',
-      text: 'Choose a photo, check its preview, and publish it to the gallery.',
-      href: '/admin/collections/galleryItems/create',
+      text: 'Choose many photos, resume saved uploads, review, and publish together.',
+      href: '/admin/photos',
       publicHref: '/gallery',
       publicLabel: 'View Gallery',
     },
@@ -142,7 +142,7 @@ export default async function Dashboard({ initPageResult }: AdminViewServerProps
   tasks.push({
     title: 'Create an album',
     text: 'Group an event’s photos together, choose a cover, and publish the whole album.',
-    href: '/admin/collections/albums/create',
+    href: '/admin/photos?destination=new',
     publicHref: '/gallery',
     publicLabel: 'View Gallery',
   })

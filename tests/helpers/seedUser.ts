@@ -85,3 +85,36 @@ export async function cleanupFlyerTest(
   // Test teardown is a trusted maintenance operation, outside the editor's immutable-source API.
   for (const id of sourceIDs) await payload.delete({ collection: 'sourceDocuments', id, context })
 }
+
+/** Remove only a named synthetic batch, in reference order, from the isolated test database. */
+export async function cleanupPhotoBatchTest(id: number) {
+  assertTestDatabase()
+  const payload = await getPayload({ config })
+  const context = { disableRevalidate: true }
+  const batch = await payload.findByID({ collection: 'photoBatches', id, depth: 0 })
+  const items = await payload.find({
+    collection: 'photoBatchItems',
+    where: { batch: { equals: id } },
+    limit: 100,
+    depth: 0,
+  })
+  const relationID = (value: number | { id: number } | null | undefined) =>
+    typeof value === 'object' ? value?.id : value
+  for (const item of items.docs)
+    await payload.delete({ collection: 'photoBatchItems', id: item.id, context })
+  for (const item of items.docs)
+    if (relationID(item.photo))
+      await payload.delete({
+        collection: 'galleryItems',
+        id: relationID(item.photo)!,
+        trash: true,
+        context,
+      })
+  await payload.delete({ collection: 'photoBatches', id, context })
+  if (relationID(batch.album))
+    await payload.delete({ collection: 'albums', id: relationID(batch.album)!, context })
+  for (const mediaID of new Set(
+    items.docs.flatMap((item) => (relationID(item.media) ? [relationID(item.media)!] : [])),
+  ))
+    await payload.delete({ collection: 'media', id: mediaID, context })
+}

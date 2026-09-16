@@ -321,3 +321,87 @@
     gap: 4px;
   }
 }
+
+.club-photos label {
+  display: grid;
+  gap: 8px;
+  margin: 16px 0;
+}
+.club-photos input,
+.club-photos textarea,
+.club-photos select,
+.club-photos button {
+  min-height: 44px;
+  min-width: 0;
+  max-width: 100%;
+  padding: 10px;
+  font: inherit;
+  background: var(--theme-elevation-100);
+  color: var(--theme-text);
+  border: 1px solid var(--theme-elevation-500);
+  border-radius: 6px;
+}
+.club-photos textarea {
+  resize: vertical;
+  min-height: 84px;
+}
+.club-photos button {
+  cursor: pointer;
+}
+.club-photos button:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+.club-photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: 24px;
+}
+.club-photo-card {
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--theme-elevation-300);
+  border-radius: 8px;
+  overflow-wrap: anywhere;
+}
+.club-photo-card img,
+.club-photo-placeholder {
+  width: 100%;
+  height: 240px;
+  object-fit: contain;
+  background: var(--theme-elevation-100);
+}
+.club-photo-card h3 {
+  margin-bottom: 8px;
+}
+.club-photo-filename {
+  font-size: 14px;
+}
+.club-photo-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 16px;
+}
+.club-library-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+}
+.club-library-grid img {
+  height: 160px;
+}
+.club-photos input[type='checkbox'] {
+  width: 24px;
+  height: 24px;
+  min-height: 24px;
+  vertical-align: middle;
+}
+.club-cover-preview {
+  width: 320px;
+  max-width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+.club-photo-file input {
+  width: 100%;
+}

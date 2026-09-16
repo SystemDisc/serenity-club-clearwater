@@ -80,6 +80,7 @@ export default buildConfig({
       views: {
         dashboard: { Component: '@/admin/Dashboard' },
         meetings: { Component: '@/admin/MeetingsWeek', path: '/meetings' },
+        photos: { Component: '@/admin/Photos', path: '/photos' },
         help: { Component: '@/admin/Help', path: '/help' },
         tools: { Component: '@/admin/Help#Tools', path: '/tools' },
       },

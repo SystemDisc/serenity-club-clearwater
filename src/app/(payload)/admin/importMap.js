@@ -42,6 +42,7 @@ import { default as default_6200c97ae5079f401d371e2f29b337d7 } from '@/admin/Nav
 import { VercelBlobClientUploadHandler as VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e } from '@payloadcms/storage-vercel-blob/client'
 import { default as default_c602bba5f858100118b6b3553ff47182 } from '@/admin/Dashboard'
 import { default as default_6554de1ea58f4d5ea162237914816af5 } from '@/admin/MeetingsWeek'
+import { default as default_a3ffca29f5a60690d351cc84cf6aaa03 } from '@/admin/Photos'
 import { default as default_8c9a6dccdff59119bea969dc1e6cc062 } from '@/admin/Help'
 import { Tools as Tools_8c9a6dccdff59119bea969dc1e6cc062 } from '@/admin/Help'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
@@ -92,6 +93,7 @@ export const importMap = {
   "@payloadcms/storage-vercel-blob/client#VercelBlobClientUploadHandler": VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e,
   "@/admin/Dashboard#default": default_c602bba5f858100118b6b3553ff47182,
   "@/admin/MeetingsWeek#default": default_6554de1ea58f4d5ea162237914816af5,
+  "@/admin/Photos#default": default_a3ffca29f5a60690d351cc84cf6aaa03,
   "@/admin/Help#default": default_8c9a6dccdff59119bea969dc1e6cc062,
   "@/admin/Help#Tools": Tools_8c9a6dccdff59119bea969dc1e6cc062,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1

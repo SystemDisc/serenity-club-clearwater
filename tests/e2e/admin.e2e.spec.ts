@@ -7,6 +7,7 @@ import {
   testUser,
   queuePublication,
   cleanupFlyerTest,
+  cleanupPhotoBatchTest,
 } from '../helpers/seedUser'
 import { readFile } from 'node:fs/promises'
 import { createHash } from 'node:crypto'
@@ -30,6 +31,121 @@ test.describe('Admin Panel', () => {
   test.afterAll(async () => {
     await cleanupTestUser()
   })
+
+  for (const [destination, count] of [
+    ['main', 30],
+    ['new', 50],
+  ] as const) {
+    test(`photo batch publishes ${count} ${destination} photos with refresh and retry`, async ({
+      browser,
+    }) => {
+      test.setTimeout(180_000)
+      const title = `Batch browser ${destination} ${Date.now()}`
+      const visitor = await browser.newContext()
+      const publicPage = await visitor.newPage()
+      let batchID: number | undefined
+      try {
+        await publicPage.goto('/gallery')
+        await page.goto('/admin/photos')
+        await page.getByLabel('Shared photo or album name').fill(title)
+        await page.getByLabel('Where should they appear?').selectOption(destination)
+        await page.getByRole('button', { name: 'Continue to choose photos' }).click()
+        await expect(page).toHaveURL(/batch=\d+/)
+        batchID = Number(new URL(page.url()).searchParams.get('batch'))
+        const files = await Promise.all(
+          Array.from({ length: count }, async (_, index) => ({
+            name: `${title}-${index}.png`,
+            mimeType: 'image/png',
+            buffer: await sharp({
+              create: {
+                width: 100 + index,
+                height: 80,
+                channels: 3,
+                background: { r: destination === 'main' ? 30 : 120, g: index * 4, b: 65 },
+              },
+            })
+              .png()
+              .toBuffer(),
+          })),
+        )
+        let interrupted = false
+        await page.route('**/api/media', async (route) => {
+          if (!interrupted && route.request().method() === 'POST') {
+            interrupted = true
+            await route.fulfill({
+              status: 503,
+              contentType: 'application/json',
+              body: JSON.stringify({
+                errors: [{ message: 'Test interrupted upload. Try again.' }],
+              }),
+            })
+          } else await route.continue()
+        })
+        await page.getByLabel('Choose photos', { exact: true }).setInputFiles(files)
+        await expect(page.getByRole('button', { name: 'Retry unfinished uploads' })).toBeEnabled({
+          timeout: 90_000,
+        })
+        await expect(
+          page.getByText(`${count - 1} ready to review · 1 need attention · 0 published`, {
+            exact: true,
+          }),
+        ).toBeVisible()
+        await page.reload()
+        await expect(page.getByRole('article')).toHaveCount(count)
+        await page.getByLabel('Choose photos', { exact: true }).setInputFiles(files)
+        await expect(
+          page.getByRole('button', { name: `Publish ${count} photos`, exact: true }),
+        ).toBeEnabled({ timeout: 90_000 })
+        await expect(page.getByRole('article')).toHaveCount(count)
+        const first = page.getByRole('article').first()
+        await first.getByLabel('Caption shown below this photo').fill('Reviewed club photo')
+        await first.getByRole('button', { name: 'Save photo details' }).click()
+        await expect(
+          page.getByRole('button', { name: `Publish ${count} photos`, exact: true }),
+        ).toBeEnabled()
+        if (destination === 'new') {
+          await first.getByRole('button', { name: 'Make album cover' }).click()
+          await expect(page.getByRole('heading', { name: 'Album cover crop' })).toBeVisible()
+        }
+        await page.setViewportSize({ width: 320, height: 800 })
+        expect(
+          await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
+        ).toBeTruthy()
+        await page.setViewportSize({ width: 1280, height: 900 })
+        await page.getByRole('button', { name: `Publish ${count} photos`, exact: true }).click()
+        await expect(page.getByText('Published on the website.', { exact: true })).toBeVisible({
+          timeout: 60_000,
+        })
+        const href = await page
+          .getByRole('link', { name: 'View on website ↗', exact: true })
+          .getAttribute('href')
+        await publicPage.goto(href!)
+        await expect(
+          publicPage.getByRole('heading', {
+            name: destination === 'new' ? title : `${title} — 1`,
+            exact: true,
+          }),
+        ).toBeVisible()
+        if (destination === 'new') {
+          await publicPage.goto(`${href}/page/3`)
+          await expect(
+            publicPage.getByRole('heading', { name: `${title} — 50`, exact: true }),
+          ).toBeVisible()
+        }
+        await page.reload()
+        await expect(page.getByRole('article')).toHaveCount(count)
+        await expect(
+          page.getByText(`0 ready to review · 0 need attention · ${count} published`, {
+            exact: true,
+          }),
+        ).toBeVisible()
+      } finally {
+        await page.unroute('**/api/media')
+        if (batchID) await cleanupPhotoBatchTest(batchID)
+        await visitor.close()
+      }
+    })
+  }
 
   test('trashes and restores a gallery placement while protecting its shared file', async ({
     request,

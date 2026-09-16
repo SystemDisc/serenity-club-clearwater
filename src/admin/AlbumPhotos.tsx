@@ -20,6 +20,9 @@ export default function AlbumPhotos() {
             {result.value?.totalDocs ?? 'Loading'} photos. Draft photos remain private until
             published.
           </p>
+          <p>
+            <Link href={`/admin/photos?album=${id}`}>Add photos to this album</Link>
+          </p>
           <Link href={`/admin/collections/galleryItems?where[album][equals]=${id}`}>
             Manage this album’s photos
           </Link>
