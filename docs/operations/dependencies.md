@@ -14,3 +14,5 @@ Intentional compatibility limits:
 Recheck these limits when upgrading their parent integrations. Do not use `--force` or `--legacy-peer-deps` to conceal conflicts. Run unit/integration tests, type checking, lint, a production build, and browser tests against the isolated test database.
 
 The pinned Blob adapter patch in `scripts/patch-blob-adapter.mjs` prevents concurrent size uploads from corrupting filenames. Its installation deliberately fails on a changed Payload version until the patch is reviewed. The installed adapter is tested, including concurrent original and size uploads. Remove the patch only after verifying an upstream fix with these regressions.
+
+The opt-in `scripts/verify-storage.ts` check exercises actual Blob uploads against a loopback `*_test` database. It requires `ALLOW_TEST_BLOB_WRITES=true` and a reviewed Blob token, creates uniquely named synthetic files, and cleans up only its own objects and records. Keep it separate from CI and ordinary tests. It covers full Payload persistence for client-upload metadata, concurrent repeated names, replacement, focal points, and small-image fallback.
