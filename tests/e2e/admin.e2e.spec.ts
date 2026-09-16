@@ -55,6 +55,34 @@ test.describe('Admin Panel', () => {
     }
   })
 
+  test('keeps more than 100 gallery records accessible through stable pages', async ({ request, page: galleryPage }) => {
+    test.setTimeout(180_000)
+    const auth = await request.post('/api/users/login', { data: testUser })
+    const { token } = await auth.json()
+    const headers = { authorization: `JWT ${token}` }
+    const prefix = `Pagination regression ${Date.now()} `
+    const ids: number[] = []
+    try {
+      for (let start = 0; start < 109; start += 6) {
+        await Promise.all(Array.from({ length: Math.min(6, 109 - start) }, async (_, offset) => {
+          const response = await request.post('/api/galleryItems', { headers, data: { title: `${prefix}${start + offset}`, order: -2000, _status: 'published' } })
+          expect(response.ok()).toBeTruthy()
+          ids.push((await response.json()).doc.id)
+        }))
+      }
+      const titles: string[] = []
+      for (let number = 1; number <= 5; number++) {
+        await galleryPage.goto(number === 1 ? '/gallery' : `/gallery/page/${number}`)
+        titles.push(...(await galleryPage.locator('figure h2').allTextContents()).filter((title) => title.startsWith(prefix)))
+      }
+      expect(titles).toHaveLength(109)
+      expect(new Set(titles).size).toBe(109)
+      expect((await request.get('/gallery/page/99999')).status()).toBe(404)
+    } finally {
+      for (const id of ids) expect((await request.delete(`/api/galleryItems/${id}`, { headers })).ok()).toBeTruthy()
+    }
+  })
+
   test('can navigate to dashboard', async () => {
     await page.goto(`${testServerURL}/admin`)
     await expect(page).toHaveURL(`${testServerURL}/admin`)
