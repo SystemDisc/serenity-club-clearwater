@@ -6,7 +6,7 @@
     "start": "node server.mjs"
   },
   "dependencies": {
-    "sharp": "0.34.5"
+    "sharp": "0.35.4"
   },
   "engines": {
     "node": "24.x"
