@@ -426,3 +426,10 @@ Final application verification for `094f93a` passed in [GitHub CI](https://githu
 - Preserve existing chosen covers; validate membership on publication and fall back safely if the chosen photo later leaves the album or becomes private.
 - Keep covers responsive, lazy-loaded, and optimized; reuse existing image derivatives instead of generating duplicate media. Show the published photo count and a clear View album prompt.
 - Verify draft exclusion, reordered collages, selected-cover fallback, bulk-upload defaults/reset, save/reload/publication, and a 320-pixel editor. Local checks passed: 54 unit tests, eight related integration tests, four album/bulk browser scenarios, lint, type checks, and a production build. Production application is recorded in the release log.
+
+### Implemented follow-up: stable navigation and lighter presentation
+
+- Preserve the desktop sidebar across task and collection navigation; retain manual collapse and Payload's mobile overlay dismissal.
+- Reduce oversized dashboard cards, keep a small recognizable flyer preview, lighten panel surfaces/borders, and use consistent control styling.
+- Highlight the current task without changing navigation labels or content workflows.
+- Verify desktop/manual/phone navigation, light/dark presentation, narrow-screen layout, and existing editor/album scenarios. Local checks passed; see the release record for verification scope.

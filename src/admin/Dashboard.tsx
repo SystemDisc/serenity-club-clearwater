@@ -234,29 +234,25 @@ export default async function Dashboard({ initPageResult }: AdminViewServerProps
           ready for visitors.
         </p>
       </header>
-      <div className="club-task-grid">
+      <div className="club-task-grid club-dashboard-tasks">
         {tasks.map((task) => (
-          <section className="club-task" key={task.title}>
-            <h2>
-              <Link href={task.href}>{task.title}</Link>
-            </h2>
-            <p>{task.text}</p>
-            {task.image ? (
-              <>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
+          <section className="club-task club-dashboard-task" key={task.title}>
+            <div className="club-dashboard-task__body">
+              <div>
+                <h2>
+                  <Link href={task.href}>{task.title}</Link>
+                </h2>
+                <p>{task.text}</p>
+              </div>
+              {task.image ? (
+                /* eslint-disable-next-line @next/next/no-img-element */
                 <img
+                  className="club-dashboard-task__preview"
                   src={task.image}
                   alt="Current monthly flyer preview"
-                  style={{
-                    maxHeight: 220,
-                    maxWidth: '100%',
-                    objectFit: 'contain',
-                    display: 'block',
-                    marginBottom: 16,
-                  }}
                 />
-              </>
-            ) : null}
+              ) : null}
+            </div>
             <a href={task.publicHref} target="_blank" rel="noreferrer">
               {task.publicLabel} ↗
             </a>

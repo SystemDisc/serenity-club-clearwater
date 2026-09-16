@@ -1,14 +1,14 @@
 .club-admin {
-  padding-block: 32px 64px;
+  padding-block: 24px 48px;
   font-size: 16px;
-  line-height: 1.6;
+  line-height: 1.5;
   max-width: 1440px;
   h1 {
-    font-size: clamp(28px, 4vw, 38px);
+    font-size: clamp(28px, 4vw, 32px);
     line-height: 1.2;
   }
   h2 {
-    font-size: 22px;
+    font-size: 20px;
     line-height: 1.35;
   }
   a {
@@ -22,26 +22,29 @@
 }
 .club-admin__heading {
   max-width: 760px;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
 }
 .club-task-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
-  gap: 20px;
+  gap: 16px;
+  align-items: start;
 }
 .club-task,
 .club-panel {
-  padding: 24px;
-  border: 1px solid var(--theme-elevation-200);
-  border-radius: 10px;
+  padding: 20px;
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: var(--style-radius-m);
   background: var(--theme-elevation-50);
 }
 .club-task h2,
 .club-panel h2 {
   margin-top: 0;
+  margin-bottom: 12px;
 }
 .club-panel {
-  margin-top: 28px;
+  margin-top: 24px;
+  background: var(--theme-bg);
 }
 .club-recent {
   list-style: none;
@@ -62,12 +65,73 @@
 }
 .club-nav-links {
   display: grid;
-  padding-bottom: 24px;
-  gap: 4px;
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--theme-elevation-150);
 }
 .club-nav-links a {
-  padding: 12px 0;
-  font-size: 16px;
+  display: flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 8px;
+  margin-inline: -8px;
+  font-size: 14px;
+  line-height: 1.4;
+  text-decoration: none;
+  border-radius: var(--style-radius-s);
+}
+.club-nav-links a:hover,
+.club-nav-links a[aria-current='page'] {
+  background: var(--theme-elevation-100);
+}
+.club-nav-links a[aria-current='page'] {
+  font-weight: 600;
+}
+.club-nav-links a:focus-visible {
+  outline: 2px solid var(--theme-text);
+  outline-offset: 2px;
+}
+.club-dashboard-tasks {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  align-items: stretch;
+}
+.club-dashboard-task {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.club-dashboard-task__body {
+  display: flex;
+  align-items: start;
+  gap: 16px;
+  flex: 1;
+  > div {
+    min-width: 0;
+    flex: 1;
+  }
+  h2 {
+    margin-bottom: 8px;
+  }
+  h2 a {
+    text-decoration: none;
+  }
+  h2 a:hover {
+    text-decoration: underline;
+  }
+  p {
+    margin: 0;
+  }
+}
+.club-dashboard-task__preview {
+  width: 64px;
+  max-height: 92px;
+  object-fit: contain;
+  flex-shrink: 0;
+  border-radius: var(--style-radius-s);
+}
+.club-dashboard-task > a {
+  font-size: 14px;
+  width: fit-content;
 }
 .field-type .field-label {
   font-size: 16px;
@@ -108,8 +172,8 @@
 .club-photo-dialog button {
   min-height: 44px;
   padding: 10px 16px;
-  border: 1px solid var(--theme-elevation-400);
-  border-radius: 5px;
+  border: 1px solid var(--theme-elevation-250);
+  border-radius: var(--style-radius-s);
   color: var(--theme-text);
   background: var(--theme-elevation-100);
   font: inherit;
@@ -199,6 +263,11 @@
     min-height: 44px;
     width: 100%;
     font: inherit;
+    padding: 10px 12px;
+    border: 1px solid var(--theme-elevation-150);
+    border-radius: var(--style-radius-s);
+    background: var(--theme-input-bg);
+    color: var(--theme-text);
   }
 }
 .club-weekdays {
@@ -221,7 +290,7 @@
     padding: 10px 14px;
     min-height: 44px;
     border: 1px solid var(--theme-elevation-300);
-    border-radius: 5px;
+    border-radius: var(--style-radius-s);
     cursor: pointer;
   }
   input {
@@ -254,10 +323,10 @@
   min-height: 44px;
   font-size: 16px;
   padding: 8px 14px;
-  background: var(--theme-elevation-100);
+  background: var(--theme-input-bg);
   color: var(--theme-text);
-  border: 1px solid var(--theme-elevation-500);
-  border-radius: 5px;
+  border: 1px solid var(--theme-elevation-250);
+  border-radius: var(--style-radius-s);
   cursor: pointer;
 }
 .club-preview-controls button[aria-pressed='true'] {
@@ -280,10 +349,10 @@
   min-height: 44px;
   padding: 8px;
   font-size: 16px;
-  background: var(--theme-elevation-100);
+  background: var(--theme-input-bg);
   color: var(--theme-text);
-  border: 1px solid var(--theme-elevation-500);
-  border-radius: 5px;
+  border: 1px solid var(--theme-elevation-250);
+  border-radius: var(--style-radius-s);
 }
 .club-agenda-controls {
   display: flex;
@@ -336,9 +405,9 @@
   max-width: 100%;
   padding: 10px;
   font: inherit;
-  background: var(--theme-elevation-100);
+  background: var(--theme-input-bg);
   color: var(--theme-text);
-  border: 1px solid var(--theme-elevation-500);
+  border: 1px solid var(--theme-elevation-250);
   border-radius: 6px;
 }
 .club-photos textarea {
@@ -438,7 +507,7 @@
 .club-task-guide li {
   margin: 12px 0;
   max-width: 65ch;
-  line-height: 1.6;
+  line-height: 1.5;
 }
 
 @media (max-width: 600px) {
@@ -480,7 +549,7 @@
 }
 .club-password-help {
   font-size: 16px;
-  line-height: 1.6;
+  line-height: 1.5;
   max-width: 36rem;
   margin: auto;
 }
@@ -493,12 +562,45 @@
   font: inherit;
   padding: 12px;
   min-height: 44px;
-  border: 1px solid var(--theme-elevation-400);
-  border-radius: 5px;
+  border: 1px solid var(--theme-elevation-250);
+  border-radius: var(--style-radius-s);
   background: var(--theme-input-bg);
   color: var(--theme-text);
 }
 .club-password-help button {
   margin-top: 20px;
   cursor: pointer;
+}
+
+// Custom controls share Payload's neutral surfaces and clear keyboard focus.
+.club-calendar-field :is(input, select):focus-visible,
+.club-agenda-controls :is(input, select):focus-visible,
+.club-photos :is(input, textarea, select):focus-visible {
+  outline: 2px solid var(--theme-text);
+  outline-offset: 2px;
+}
+:is(
+    .club-image-preview,
+    .club-photo-dialog,
+    .club-preview-controls,
+    .club-week-grid,
+    .club-agenda-controls,
+    .club-photos,
+    .club-password-help
+  )
+  button {
+  font-family: inherit;
+  background: var(--theme-elevation-50);
+  transition:
+    background-color 120ms,
+    border-color 120ms;
+  &:not(:disabled):hover {
+    background: var(--theme-elevation-150);
+    border-color: var(--theme-elevation-400);
+  }
+}
+@media (max-width: 768px) {
+  .club-nav-links a {
+    min-height: 44px;
+  }
 }

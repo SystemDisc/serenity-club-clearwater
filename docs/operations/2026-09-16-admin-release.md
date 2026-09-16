@@ -93,3 +93,9 @@ The previous Album 1 value was retained in ignored `tmp/album-before-collage.jso
 ## Homepage flyer spacing
 
 The homepage's compact flyer presentation now contains the image and a small full-size link, without the large bordered two-column panel, repeated month heading, or filler paragraph. The full Events page retains the text alternative. The image uses its actual dimensions and responsive sizing. Chrome verification with the real September flyer confirmed the desktop layout and 390-pixel phone presentation; 320- and 390-pixel widths had no horizontal overflow. Targeted lint, TypeScript checking, and the production build passed. This is a presentation-only change; no CMS records or original files were changed.
+
+## Admin navigation and presentation follow-up
+
+The custom task links called `setNavOpen(false)` on every click, including desktop navigation. Removing that override restores Payload's native behavior: desktop navigation retains the sidebar and manual collapse preference, while the phone overlay closes when the route changes. A browser regression covers custom and collection links, manual collapse, and the phone overlay.
+
+Custom screens now use more compact dashboard cards with a small adjacent flyer preview, quieter panel backgrounds/borders, consistent input/button styling, and a visible current-task indicator in the sidebar. Readable 16px content/controls, clear labels, image previews, and phone touch targets remain. Local Chrome checked light/dark dashboards, meeting navigation, flyer editing, photo intake, and a 320px dashboard without horizontal overflow. The production build (including TypeScript), lint, and four targeted browser scenarios passed. All visual fixtures were confined to the isolated test database; no production content was edited.
