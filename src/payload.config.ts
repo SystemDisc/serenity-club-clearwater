@@ -88,6 +88,7 @@ export default buildConfig({
         dashboard: { Component: '@/admin/Dashboard' },
         meetings: { Component: '@/admin/MeetingsWeek', path: '/meetings' },
         photos: { Component: '@/admin/Photos', path: '/photos' },
+        organizePhotos: { Component: '@/admin/GalleryOrganizer', path: '/organize-photos' },
         help: { Component: '@/admin/Help', path: '/help' },
         tools: { Component: '@/admin/Help#Tools', path: '/tools' },
       },

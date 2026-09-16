@@ -1,11 +1,12 @@
 'use client'
 /* eslint-disable @next/next/no-img-element -- CMS supplies bounded thumbnail URLs. */
-import { useDocumentInfo } from '@payloadcms/ui'
+import { useDocumentInfo, useField } from '@payloadcms/ui'
 import Link from 'next/link'
 import type { GalleryItem } from '@/payload-types'
 import { useResource } from './useResource'
 export default function AlbumPhotos() {
   const { id } = useDocumentInfo()
+  const { setValue: setCover } = useField<number>({ path: 'cover' })
   const result = useResource<{ docs: GalleryItem[]; totalDocs: number }>(
     id
       ? `/api/galleryItems?where[album][equals]=${id}&draft=true&limit=12&depth=1&sort=order,id`
@@ -23,9 +24,8 @@ export default function AlbumPhotos() {
           <p>
             <Link href={`/admin/photos?album=${id}`}>Add photos to this album</Link>
           </p>
-          <Link href={`/admin/collections/galleryItems?where[album][equals]=${id}`}>
-            Manage this album’s photos
-          </Link>
+          <Link href={`/admin/organize-photos?album=${id}`}>Move, reorder, or remove photos</Link>
+          <p>Choosing a cover changes this form. Save a draft or publish the album to keep it.</p>
           {result.error ? <p role="alert">{result.error}</p> : null}
           <div className="club-week-grid">
             {result.value?.docs.map((photo) => {
@@ -40,6 +40,11 @@ export default function AlbumPhotos() {
                     />
                   ) : null}
                   <Link href={`/admin/collections/galleryItems/${photo.id}`}>{photo.title}</Link>
+                  {image ? (
+                    <button type="button" onClick={() => setCover(image.id)}>
+                      Use as album cover
+                    </button>
+                  ) : null}
                   <p>{photo._status === 'published' ? 'Published photo' : 'Draft photo'}</p>
                 </div>
               )

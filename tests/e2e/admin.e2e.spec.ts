@@ -366,6 +366,23 @@ test.describe('Admin Panel', () => {
         if (destination === 'new') {
           await first.getByRole('button', { name: 'Make album cover' }).click()
           await expect(page.getByRole('heading', { name: 'Album cover crop' })).toBeVisible()
+          const dragHandle = page
+            .getByRole('article')
+            .nth(1)
+            .getByRole('button', { name: /Drag to reorder/ })
+          await expect(dragHandle).toBeEnabled()
+          await dragHandle.dragTo(first.getByRole('heading'))
+          await expect(page.getByRole('article').first().getByRole('heading')).toHaveText(
+            `${title} — 2`,
+          )
+          await page
+            .getByRole('article')
+            .nth(1)
+            .getByRole('button', { name: 'Move up', exact: true })
+            .click()
+          await expect(page.getByRole('article').first().getByRole('heading')).toHaveText(
+            `${title} — 1`,
+          )
         }
         await page.setViewportSize({ width: 320, height: 800 })
         expect(
@@ -392,7 +409,41 @@ test.describe('Admin Panel', () => {
             publicPage.getByRole('heading', { name: `${title} — 50`, exact: true }),
           ).toBeVisible()
         }
-        await page.reload()
+        if (destination === 'new') {
+          const savedBatch = await (
+            await page.request.get(`/api/photoBatches/${batchID}?depth=0`)
+          ).json()
+          await page.goto(`/admin/organize-photos?album=${savedBatch.album}`)
+          await expect(page.getByRole('article')).toHaveCount(24)
+          await page
+            .getByRole('article')
+            .nth(1)
+            .getByRole('button', { name: 'Move up on this page' })
+            .click()
+          await expect(page.getByRole('article').first().getByRole('heading')).toHaveText(
+            `${title} — 2`,
+          )
+          await page.getByLabel(`Select ${title} — 1`, { exact: true }).check()
+          await page.getByLabel(`Select ${title} — 2`, { exact: true }).check()
+          await page.getByRole('button', { name: 'Move 2 selected photos', exact: true }).click()
+          await expect(page.getByText('Photos moved.', { exact: false })).toBeVisible()
+          await expect(page.getByRole('article').first().getByRole('heading')).toHaveText(
+            `${title} — 3`,
+          )
+          await publicPage.goto(href!)
+          await expect(
+            publicPage.getByRole('heading', { name: `${title} — 1`, exact: true }),
+          ).toHaveCount(0)
+          await expect(
+            publicPage.getByRole('heading', { name: `${title} — 3`, exact: true }),
+          ).toBeVisible()
+          await page.setViewportSize({ width: 320, height: 800 })
+          expect(
+            await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
+          ).toBeTruthy()
+          await page.setViewportSize({ width: 1280, height: 900 })
+          await page.goto(`/admin/photos?batch=${batchID}`)
+        } else await page.reload()
         await expect(page.getByRole('article')).toHaveCount(count)
         await expect(
           page.getByText(`0 ready to review · 0 need attention · ${count} published`, {

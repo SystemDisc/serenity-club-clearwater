@@ -17,6 +17,9 @@ export default function NavLinks() {
       <Link href="/admin/photos" onClick={() => setNavOpen(false)}>
         Add photos
       </Link>
+      <Link href="/admin/organize-photos" onClick={() => setNavOpen(false)}>
+        Organize gallery photos
+      </Link>
       <Link href="/admin/help" onClick={() => setNavOpen(false)}>
         Help & website sections
       </Link>

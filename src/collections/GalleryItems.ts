@@ -1,5 +1,6 @@
 import type { CollectionConfig, AccessResult } from 'payload'
 
+import { organizePhotos } from '@/gallery/organize'
 import { authenticated } from '@/access/authenticated'
 import { calendarField } from '@/fields/calendarFields'
 import { validateGalleryImage } from '@/hooks/validateGalleryImage'
@@ -19,6 +20,7 @@ export const GalleryItems: CollectionConfig = {
     useAsTitle: 'title',
     defaultColumns: ['title', 'category', 'order', 'updatedAt'],
   },
+  endpoints: [{ path: '/organize', method: 'post', handler: organizePhotos }],
   access: {
     create: authenticated,
     delete: authenticated,
@@ -85,8 +87,18 @@ export const GalleryItems: CollectionConfig = {
       },
     },
     { name: 'externalImageUrl', type: 'text', label: 'External Image URL' },
-    { name: 'imageAlt', type: 'text', label: 'Image Alt Text' },
-    { name: 'order', type: 'number', defaultValue: 100, admin: { position: 'sidebar' } },
+    {
+      name: 'imageAlt',
+      type: 'text',
+      label: 'Description for people who cannot see this photo (optional)',
+    },
+    {
+      name: 'order',
+      label: 'Position in gallery',
+      type: 'number',
+      defaultValue: 100,
+      admin: { position: 'sidebar' },
+    },
   ],
   hooks: {
     beforeChange: [validateGalleryImage],

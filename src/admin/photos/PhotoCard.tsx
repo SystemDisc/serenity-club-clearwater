@@ -57,6 +57,18 @@ export default function PhotoCard({
         }
       }}
     >
+      <button
+        type="button"
+        draggable={!sortingDisabled}
+        disabled={sortingDisabled}
+        aria-label={`Drag to reorder ${item.title}; or use Move up and Move down`}
+        onDragStart={(event) => {
+          event.dataTransfer.setData('application/x-serenity-photo', String(item.id))
+          event.dataTransfer.effectAllowed = 'move'
+        }}
+      >
+        Drag to reorder
+      </button>
       {src ? (
         <a
           href={media?.url || preview}
@@ -137,18 +149,6 @@ export default function PhotoCard({
             />
           </label>
           <div className="club-photo-actions">
-            <button
-              type="button"
-              draggable={!sortingDisabled}
-              disabled={sortingDisabled}
-              aria-label={`Drag to reorder ${item.title}; or use Move up and Move down`}
-              onDragStart={(event) => {
-                event.dataTransfer.setData('application/x-serenity-photo', String(item.id))
-                event.dataTransfer.effectAllowed = 'move'
-              }}
-            >
-              Drag to reorder
-            </button>
             <button
               type="button"
               disabled={busy || !!changed}

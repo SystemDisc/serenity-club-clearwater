@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import type { AdminViewServerProps } from 'payload'
 import { AdminPage } from './Help'
 import PhotoWorkspace from './photos/PhotoWorkspace'
@@ -53,6 +54,9 @@ export default async function Photos(props: AdminViewServerProps) {
     <AdminPage {...props}>
       <h1>Add photos</h1>
       <p>Choose several photos, check their previews, then publish them together.</p>
+      <p>
+        <Link href="/admin/organize-photos">Organize photos already in the gallery</Link>
+      </p>
       <PhotoWorkspace
         key={initial?.batch.id || 'new'}
         initial={initial}
