@@ -1,16 +1,29 @@
 'use client'
 
-import { useField } from '@payloadcms/ui'
+import { useForm, useFieldPath, useFormFields } from '@payloadcms/ui'
 import { useRef, useState } from 'react'
 import type { Media } from '@/payload-types'
 import { useResource } from './useResource'
 import { mediaDisplayName } from './mediaDisplayName'
 
-type Props = { imageField: string; externalField?: string }
+type Props = { imageField: string; externalField?: string; path?: string }
 
-export default function ImagePreview({ imageField, externalField = 'externalImageUrl' }: Props) {
-  const { value, setValue } = useField<number | Media | null>({ path: imageField })
-  const { value: external } = useField<string>({ path: externalField })
+export default function ImagePreview({
+  imageField,
+  externalField = 'externalImageUrl',
+  path,
+}: Props) {
+  const currentPath = useFieldPath() || path
+  const prefix = currentPath?.split('.').slice(0, -1).join('.')
+  const imagePath = prefix ? `${prefix}.${imageField}` : imageField
+  const externalPath = prefix ? `${prefix}.${externalField}` : externalField
+  const value = useFormFields(([fields]) => fields[imagePath]?.value) as number | Media | null
+  const external = useFormFields(([fields]) => fields[externalPath]?.value) as string | undefined
+  const { dispatchFields, setModified } = useForm()
+  const setValue = (value: number) => {
+    dispatchFields({ type: 'UPDATE', path: imagePath, value })
+    setModified(true)
+  }
   const [page, setPage] = useState(1)
   const [query, setQuery] = useState('')
   const [search, setSearch] = useState('')

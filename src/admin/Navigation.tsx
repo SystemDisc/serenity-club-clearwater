@@ -4,6 +4,7 @@ import type { PayloadRequest, ServerProps } from 'payload'
 const everyday = new Set([
   'meetings',
   'events',
+  'posts',
   'monthlyFlyers',
   'galleryItems',
   'albums',

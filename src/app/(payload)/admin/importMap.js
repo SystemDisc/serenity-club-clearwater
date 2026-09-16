@@ -10,6 +10,8 @@ import { BoldFeatureClient as BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864
 import { ItalicFeatureClient as ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { LinkFeatureClient as LinkFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { default as default_ccc9591761f49c165b1f9ff1ad747313 } from '@/admin/WebsiteLinkField'
+import { default as default_a3e8db10b870479131452d5cd3f7f3ed } from '@/admin/ImagePreview'
+import { default as default_c445dbfd5aad59b388baccc6a5daf3ad } from '@/admin/NewsPhotoBlock'
 import { OverviewComponent as OverviewComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
 import { MetaTitleComponent as MetaTitleComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
 import { MetaImageComponent as MetaImageComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
@@ -23,10 +25,12 @@ import { default as default_4c9d324e290add2c2c0d619284747bf1 } from '@/admin/Ses
 import { default as default_4869c3da8de899c02232138cd2e5b711 } from '@/admin/CalendarField'
 import { SessionRowLabel as SessionRowLabel_d589b2f6bc8266cfa95fd8b904bac664 } from '@/admin/SchedulePreview'
 import { default as default_d589b2f6bc8266cfa95fd8b904bac664 } from '@/admin/SchedulePreview'
-import { default as default_a3e8db10b870479131452d5cd3f7f3ed } from '@/admin/ImagePreview'
 import { default as default_913c620549801de5cc4401c48bdeb9f7 } from '@/admin/AlbumPhotos'
 import { HorizontalRuleFeatureClient as HorizontalRuleFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { BlocksFeatureClient as BlocksFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
+import { BlockquoteFeatureClient as BlockquoteFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
+import { OrderedListFeatureClient as OrderedListFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
+import { UnorderedListFeatureClient as UnorderedListFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { default as default_ca4abcde93697b5f9d1330f88d4d94a7 } from '@/admin/MediaUsage'
 import { FolderTableCell as FolderTableCell_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 import { FolderField as FolderField_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
@@ -63,6 +67,8 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#ItalicFeatureClient": ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#LinkFeatureClient": LinkFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@/admin/WebsiteLinkField#default": default_ccc9591761f49c165b1f9ff1ad747313,
+  "@/admin/ImagePreview#default": default_a3e8db10b870479131452d5cd3f7f3ed,
+  "@/admin/NewsPhotoBlock#default": default_c445dbfd5aad59b388baccc6a5daf3ad,
   "@payloadcms/plugin-seo/client#OverviewComponent": OverviewComponent_a8a977ebc872c5d5ea7ee689724c0860,
   "@payloadcms/plugin-seo/client#MetaTitleComponent": MetaTitleComponent_a8a977ebc872c5d5ea7ee689724c0860,
   "@payloadcms/plugin-seo/client#MetaImageComponent": MetaImageComponent_a8a977ebc872c5d5ea7ee689724c0860,
@@ -76,10 +82,12 @@ export const importMap = {
   "@/admin/CalendarField#default": default_4869c3da8de899c02232138cd2e5b711,
   "@/admin/SchedulePreview#SessionRowLabel": SessionRowLabel_d589b2f6bc8266cfa95fd8b904bac664,
   "@/admin/SchedulePreview#default": default_d589b2f6bc8266cfa95fd8b904bac664,
-  "@/admin/ImagePreview#default": default_a3e8db10b870479131452d5cd3f7f3ed,
   "@/admin/AlbumPhotos#default": default_913c620549801de5cc4401c48bdeb9f7,
   "@payloadcms/richtext-lexical/client#HorizontalRuleFeatureClient": HorizontalRuleFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#BlocksFeatureClient": BlocksFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
+  "@payloadcms/richtext-lexical/client#BlockquoteFeatureClient": BlockquoteFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
+  "@payloadcms/richtext-lexical/client#OrderedListFeatureClient": OrderedListFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
+  "@payloadcms/richtext-lexical/client#UnorderedListFeatureClient": UnorderedListFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@/admin/MediaUsage#default": default_ca4abcde93697b5f9d1330f88d4d94a7,
   "@payloadcms/next/rsc#FolderTableCell": FolderTableCell_f9c02e79a4aed9a3924487c0cd4cafb1,
   "@payloadcms/next/rsc#FolderField": FolderField_f9c02e79a4aed9a3924487c0cd4cafb1,

@@ -56,6 +56,7 @@ const routes: Record<string, string[]> = {
   teamMembers: ['/about'],
   products: ['/', '/shop', '/shop/[slug]', '/sitemap.xml'],
   policies: ['/policies'],
+  posts: ['/posts', '/posts/page/[pageNumber]', '/posts/[slug]', '/sitemap.xml'],
   sponsors: ['/'],
 }
 
@@ -82,7 +83,7 @@ export function invalidatePublicChanges(changes: Change[]): void {
     tags.add(`public-${change.collection}`)
     if (routes[change.collection]) routes[change.collection].forEach((path) => paths.add(path))
     else layout = true // Shared media, navigation, forms, and authored-page relationships.
-    if (['pages', 'products', 'albums'].includes(change.collection)) {
+    if (['pages', 'posts', 'products', 'albums'].includes(change.collection)) {
       tags.add(`${change.collection}-sitemap`)
       paths.add('/sitemap.xml')
     }

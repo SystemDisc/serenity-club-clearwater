@@ -250,13 +250,26 @@ export interface Page {
   _status?: ('draft' | 'published') | null;
 }
 /**
+ * Write an update, preview it on a phone or computer, then publish. Save your first draft, then later edits autosave. A publication date is a display date; it does not schedule publication.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "posts".
  */
 export interface Post {
   id: number;
   title: string;
+  /**
+   * Shown in the news list and above the article.
+   */
+  excerpt?: string | null;
+  /**
+   * For example: Serenity Club. Leave empty to publish without a personal byline.
+   */
+  byline?: string | null;
   heroImage?: (number | null) | Media;
+  /**
+   * Use the toolbar for headings, lists, links, quotes, and Add photo. Paste text from Word or Google Docs, then check the preview.
+   */
   content: {
     root: {
       type: string;
@@ -612,6 +625,8 @@ export interface ContentBlock {
  */
 export interface MediaBlock {
   media: number | Media;
+  caption?: string | null;
+  alt?: string | null;
   id?: string | null;
   blockName?: string | null;
   blockType: 'mediaBlock';
@@ -1631,6 +1646,8 @@ export interface ContentBlockSelect<T extends boolean = true> {
  */
 export interface MediaBlockSelect<T extends boolean = true> {
   media?: T;
+  caption?: T;
+  alt?: T;
   id?: T;
   blockName?: T;
 }
@@ -1896,6 +1913,8 @@ export interface SponsorsSelect<T extends boolean = true> {
  */
 export interface PostsSelect<T extends boolean = true> {
   title?: T;
+  excerpt?: T;
+  byline?: T;
   heroImage?: T;
   content?: T;
   relatedPosts?: T;
@@ -2374,7 +2393,7 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   createdAt?: T;
 }
 /**
- * Saving updates the public website immediately. Earlier saved settings are available in Previous versions. Donation and social links are managed by a website manager.
+ * Saving updates the public website immediately. A manager can restore earlier saved settings from Previous versions. Donation and social links are managed by a website manager.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "clubSettings".
@@ -2690,42 +2709,6 @@ export interface TaskSchedulePublish {
     user?: (number | null) | User;
   };
   output?: unknown;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "BannerBlock".
- */
-export interface BannerBlock {
-  style: 'info' | 'warning' | 'error' | 'success';
-  content: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'banner';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "CodeBlock".
- */
-export interface CodeBlock {
-  language?: ('typescript' | 'javascript' | 'css') | null;
-  code: string;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'code';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

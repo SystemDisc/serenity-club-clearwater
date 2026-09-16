@@ -1,4 +1,13 @@
-import type { BannerBlock as BannerBlockProps } from '@/payload-types'
+import type { DefaultTypedEditorState } from '@payloadcms/richtext-lexical'
+
+/** Retain rendering for earlier saved rich text without offering this block in routine writing. */
+export type BannerBlockProps = {
+  blockType: 'banner'
+  style: 'info' | 'warning' | 'error' | 'success'
+  content: DefaultTypedEditorState
+  id?: string | null
+  blockName?: string | null
+}
 
 import { cn } from '@/utilities/ui'
 import React from 'react'

@@ -33,6 +33,7 @@ export function AdminPage({
 export default function Help(props: AdminViewServerProps) {
   const sections = [
     ['Monthly flyer', '/admin/collections/monthlyFlyers', '/events'],
+    ['News & updates', '/admin/collections/posts', '/posts'],
     ['Individual event announcements', '/admin/collections/events', '/events'],
     ['Meeting days, times, and details', '/admin/collections/meetings', '/meeting-schedule'],
     ['About-page dues reminder', '/admin/globals/duesReminder', '/about'],
@@ -124,7 +125,7 @@ export function Tools(props: AdminViewServerProps) {
   if (req.user.role !== 'admin') redirect('/admin')
   const labels: Record<string, string> = {
     pages: 'Additional custom pages',
-    posts: 'News drafts — public launch pending',
+    posts: 'News & updates',
     search: 'Generated search records',
     forms: 'Forms — no contact form is currently connected',
     'form-submissions': 'Form submissions — not the club email inbox',

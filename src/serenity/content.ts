@@ -159,6 +159,7 @@ export const fallbackPrimaryNavItems: NavItem[] = [
 ]
 
 export const fallbackSecondaryNavItems: NavItem[] = [
+  { href: '/posts', label: 'News & updates' },
   { href: '/ways-to-give', label: 'Ways to Give' },
   { href: '/policies', label: 'Policies' },
   { href: '/groups', label: 'Groups' },

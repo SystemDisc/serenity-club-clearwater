@@ -32,6 +32,205 @@ test.describe('Admin Panel', () => {
     await cleanupTestUser()
   })
 
+  test('news writing preserves pasted structure, private drafts, photos, and public freshness', async ({
+    request,
+    browser,
+  }) => {
+    test.setTimeout(120_000)
+    page.setDefaultTimeout(15_000)
+    const { token } = await (await request.post('/api/users/login', { data: testUser })).json()
+    const headers = { authorization: `JWT ${token}` }
+    const visitor = await browser.newContext()
+    const publicPage = await visitor.newPage()
+    const title = `News writing regression ${Date.now()}`
+    let postID: number | undefined, mediaID: number | undefined
+    try {
+      const upload = await request.post('/api/media', {
+        headers,
+        multipart: {
+          _payload: JSON.stringify({ alt: title }),
+          file: {
+            name: `${title}.png`,
+            mimeType: 'image/png',
+            buffer: await sharp({
+              create: { width: 240, height: 160, channels: 3, background: '#307d62' },
+            })
+              .png()
+              .toBuffer(),
+          },
+        },
+      })
+      mediaID = (await upload.json()).doc.id
+      await publicPage.goto('/posts')
+      const before = await (await request.get('/api/posts?limit=1&draft=true', { headers })).json()
+      await page.goto('/admin/collections/posts/create')
+      await expect(page.getByRole('textbox', { name: 'Title *', exact: true })).toBeVisible()
+      expect(
+        (await (await request.get('/api/posts?limit=1&draft=true', { headers })).json()).totalDocs,
+      ).toBe(before.totalDocs)
+      await page.getByRole('textbox', { name: 'Title *', exact: true }).fill(title)
+      await page
+        .getByLabel('Short introduction (optional)', { exact: true })
+        .fill('An update from the clubhouse.')
+      const body = page.locator('[contenteditable="true"]').first()
+      await body.click()
+      await body.evaluate((element) => {
+        const clipboard = new DataTransfer()
+        clipboard.setData(
+          'text/html',
+          '<h2>From the club</h2><p style="font-family: Comic Sans MS; color: red">Pasted <strong>important</strong> words.</p><ul><li>First item</li><li>Second item</li></ul>',
+        )
+        clipboard.setData(
+          'text/plain',
+          'From the club\nPasted important words.\nFirst item\nSecond item',
+        )
+        element.dispatchEvent(
+          new ClipboardEvent('paste', {
+            bubbles: true,
+            cancelable: true,
+            clipboardData: clipboard,
+          }),
+        )
+      })
+      await expect(body.locator('h2')).toHaveText('From the club')
+      await expect(body.locator('li')).toHaveCount(2)
+      await page.getByRole('button', { name: 'Choose from photo grid', exact: true }).click()
+      const picker = page.getByRole('dialog', { name: 'Choose an existing photo' })
+      await picker.getByLabel('Find by filename or description').fill(title)
+      await picker.getByRole('button', { name: 'Search photos' }).click()
+      await picker.getByRole('button', { name: 'Use this photo' }).click()
+      await body.click()
+      await body.press('ControlOrMeta+End')
+      await page.getByRole('button', { name: 'blocks dropdown', exact: true }).click()
+      await page.getByRole('button', { name: 'Add photo', exact: true }).click()
+      await body.getByRole('button', { name: 'Edit photo and caption', exact: true }).last().click()
+      await page.getByRole('button', { name: 'Choose from photo grid', exact: true }).last().click()
+      const bodyPicker = page.getByRole('dialog', { name: 'Choose an existing photo' })
+      await bodyPicker.getByLabel('Find by filename or description').fill(title)
+      await bodyPicker.getByRole('button', { name: 'Search photos' }).click()
+      await bodyPicker.getByRole('button', { name: 'Use this photo' }).click()
+      await page
+        .getByLabel('Caption below this photo (optional)')
+        .fill('The clubhouse in September.')
+      await page.locator('input[id="field-alt"]').fill('Green synthetic photo for this test')
+      await page.getByRole('button', { name: 'Save changes', exact: true }).click()
+      await expect(page.getByRole('dialog', { name: /drawer_/ })).toBeHidden()
+      await expect(body).toContainText('The clubhouse in September.')
+      const save = page.waitForResponse(
+        (response) =>
+          new URL(response.url()).pathname === '/api/posts' &&
+          response.request().method() === 'POST',
+      )
+      await page.getByRole('button', { name: 'Save Draft', exact: true }).click()
+      const savedResponse = await save
+      const created = await savedResponse.json()
+      expect(created.errors, JSON.stringify(created.errors)).toBeUndefined()
+      postID = created.doc.id
+      await expect(page).toHaveURL(new RegExp(`/posts/${postID}$`))
+      const draft = await (
+        await request.get(`/api/posts/${postID}?draft=true&depth=0`, { headers })
+      ).json()
+      expect(JSON.stringify(draft.content)).not.toContain('Comic Sans')
+      expect(JSON.stringify(draft.content)).not.toContain('color: red')
+      expect((await visitor.request.get(`/api/posts/${postID}?draft=true`)).status()).toBe(404)
+      const publish = page.waitForResponse(
+        (response) =>
+          new URL(response.url()).pathname === `/api/posts/${postID}` &&
+          response.request().method() === 'PATCH' &&
+          !response.url().includes('autosave=true'),
+      )
+      await page.getByRole('button', { name: 'Publish changes', exact: true }).click()
+      expect((await publish).ok()).toBeTruthy()
+      await expect
+        .poll(async () => {
+          await publicPage.reload()
+          return publicPage.getByRole('heading', { name: title, exact: true }).count()
+        })
+        .toBe(1)
+      await publicPage.getByRole('heading', { name: title, exact: true }).click()
+      await expect(publicPage.getByRole('heading', { name: title, level: 1 })).toBeVisible()
+      await expect(
+        publicPage.getByRole('heading', { name: 'From the club', level: 2 }),
+      ).toBeVisible()
+      await expect(publicPage.locator('.news-article li')).toHaveCount(2)
+      await expect(publicPage.locator('.news-article')).toContainText('The clubhouse in September.')
+      await expect(publicPage.getByAltText('Green synthetic photo for this test')).toBeVisible()
+      await publicPage.setViewportSize({ width: 320, height: 740 })
+      expect(
+        await publicPage.evaluate(() => document.documentElement.scrollWidth),
+      ).toBeLessThanOrEqual(320)
+      await publicPage.setViewportSize({ width: 1280, height: 800 })
+      await expect(publicPage.locator('link[rel="canonical"]')).toHaveAttribute(
+        'href',
+        new RegExp(`/posts/${draft.slug}$`),
+      )
+      await expect(publicPage.locator('meta[name="robots"]')).toHaveAttribute(
+        'content',
+        'index, follow',
+      )
+      await expect
+        .poll(async () => (await visitor.request.get('/sitemap.xml')).text())
+        .toContain(`/posts/${draft.slug}`)
+      await page
+        .getByRole('textbox', { name: 'Title *', exact: true })
+        .fill(`${title} private revision`)
+      await expect
+        .poll(
+          async () =>
+            (
+              await (
+                await request.get(`/api/posts/${postID}?draft=true&depth=0`, { headers })
+              ).json()
+            ).title,
+        )
+        .toBe(`${title} private revision`)
+      await publicPage.reload()
+      await expect(
+        publicPage.getByRole('heading', { name: title, level: 1, exact: true }),
+      ).toBeVisible()
+      const previewLink = page.getByRole('link', { name: 'Preview', exact: true })
+      const previewURL = await previewLink.getAttribute('href')
+      expect(previewURL).toBeTruthy()
+      const previewPage = await page.context().newPage()
+      await previewPage.goto(previewURL!)
+      await expect(
+        previewPage.getByRole('heading', { name: `${title} private revision`, level: 1 }),
+      ).toBeVisible()
+      await expect(previewPage.locator('meta[name="robots"]')).toHaveAttribute(
+        'content',
+        'noindex, nofollow',
+      )
+      expect((await visitor.request.get(previewURL!)).status()).toBe(403)
+      await previewPage.goto('/next/exit-preview')
+      await previewPage.close()
+      const versions = await (
+        await request.get(
+          `/api/posts/versions?where[parent][equals]=${postID}&sort=-updatedAt&limit=20`,
+          { headers },
+        )
+      ).json()
+      const publishedVersion = versions.docs.find(
+        (version: { version: { title: string; _status: string } }) =>
+          version.version.title === title && version.version._status === 'published',
+      )
+      expect(publishedVersion).toBeTruthy()
+      expect(
+        (await request.post(`/api/posts/versions/${publishedVersion.id}`, { headers })).ok(),
+      ).toBeTruthy()
+      await page.reload()
+      await expect(page.getByRole('textbox', { name: 'Title *', exact: true })).toHaveValue(title)
+    } catch (error) {
+      if (!page.isClosed())
+        await page.screenshot({ path: 'tmp/news-save-debug.png', fullPage: true })
+      throw error
+    } finally {
+      await page.goto('/admin').catch(() => {})
+      if (postID) await request.delete(`/api/posts/${postID}?trash=true`, { headers })
+      if (mediaID) await request.delete(`/api/media/${mediaID}?trash=true`, { headers })
+      await visitor.close()
+    }
+  })
+
   test('shared settings update repeated contact text and restore a saved version', async ({
     request,
     browser,

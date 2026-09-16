@@ -26,6 +26,7 @@ const publicRoutes: Array<{
   { path: '/ways-to-give', changeFrequency: 'monthly', priority: 0.7 },
   { path: '/policies', changeFrequency: 'monthly', priority: 0.6 },
   { path: '/groups', changeFrequency: 'weekly', priority: 0.7 },
+  { path: '/posts', changeFrequency: 'weekly', priority: 0.7 },
   { path: '/gallery', changeFrequency: 'weekly', priority: 0.7 },
 ]
 
@@ -55,7 +56,7 @@ const getCmsEntries = unstable_cache(
 
     const payload = await getPayload({ config: configPromise })
 
-    const [pages, products, albums] = await Promise.all([
+    const [pages, products, posts, albums] = await Promise.all([
       payload.find({
         collection: 'pages',
         depth: 0,
@@ -89,6 +90,15 @@ const getCmsEntries = unstable_cache(
             equals: 'published',
           },
         },
+      }),
+      payload.find({
+        collection: 'posts',
+        depth: 0,
+        draft: false,
+        limit: 0,
+        pagination: false,
+        overrideAccess: false,
+        select: { slug: true, updatedAt: true },
       }),
       payload.find({
         collection: 'albums',
@@ -132,6 +142,12 @@ const getCmsEntries = unstable_cache(
     })
 
     return [
+      ...posts.docs.map((post): SitemapEntry => ({
+        url: `${siteUrl}/posts/${post.slug}`,
+        lastModified: getLastModified(post.updatedAt),
+        changeFrequency: 'monthly',
+        priority: 0.6,
+      })),
       ...pageEntries,
       ...productEntries,
       ...albums.docs.map((album): SitemapEntry => ({
@@ -145,7 +161,7 @@ const getCmsEntries = unstable_cache(
   ['public-sitemap'],
   {
     revalidate: 300,
-    tags: ['pages-sitemap', 'products-sitemap', 'albums-sitemap'],
+    tags: ['posts-sitemap', 'pages-sitemap', 'products-sitemap', 'albums-sitemap'],
   },
 )
 

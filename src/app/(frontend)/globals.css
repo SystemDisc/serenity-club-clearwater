@@ -312,3 +312,23 @@ html[data-theme='light'] {
     font-size: 12px;
   }
 }
+
+/* Articles have a white reading surface regardless of the saved admin theme. */
+.news-article {
+  --tw-prose-body: #334155;
+  --tw-prose-headings: #0f172a;
+  --tw-prose-links: #064e3b;
+  --tw-prose-bold: #0f172a;
+  --tw-prose-quotes: #0f172a;
+  color: #334155;
+}
+.news-article h2,
+.news-article h3,
+.news-article strong,
+.news-article blockquote {
+  color: #0f172a;
+}
+.news-article a {
+  color: #064e3b;
+  text-decoration: underline;
+}
