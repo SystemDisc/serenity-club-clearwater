@@ -34,7 +34,8 @@ async function call(data: Record<string, unknown>, id?: number): Promise<Snapsho
   const result = (await response.json()) as Snapshot
   if (!id) {
     batches.push(result.batch.id)
-    if (idOf(result.batch.album)) albums.push(idOf(result.batch.album)!)
+    if (idOf(result.batch.album) && !albums.includes(idOf(result.batch.album)!))
+      albums.push(idOf(result.batch.album)!)
   }
   return result
 }
@@ -217,4 +218,35 @@ it('denies anonymous batch reads and direct writes outside the authenticated wor
       data: { title: 'Bypass' },
     }),
   ).rejects.toThrow()
+})
+
+it('recognizes a file selected through the library and appends new batches after existing album photos', async () => {
+  const source = await makeFile('#997541')
+  let first = await call({ title: 'Append order fixture', destination: 'new' })
+  first = await action(first, {
+    action: 'reserve',
+    files: [{ fingerprint: source.hash, name: source.file.name }],
+  })
+  first = await upload(first, first.items[0], source)
+  const mediaID = idOf(first.items[0].media)!
+  first = await action(first, {
+    action: 'reserve',
+    files: [{ fingerprint: `media:${mediaID}`, name: 'Same library photo' }],
+  })
+  expect(first.items).toHaveLength(1)
+  first = await action(first, { action: 'publish' })
+  const albumID = idOf(first.batch.album)!
+  let second = await call({ title: 'Later album batch', destination: 'existing', album: albumID })
+  second = await action(second, {
+    action: 'reserve',
+    files: [
+      { fingerprint: `media:${mediaID}`, name: 'Existing photo' },
+      { fingerprint: source.hash, name: 'Same original bytes' },
+    ],
+  })
+  expect(second.items).toHaveLength(1)
+  expect(second.items[0].position).toBeGreaterThan(first.items[0].position)
+  const appendedPosition = second.items[0].position
+  second = await action(second, { action: 'reorder', ids: second.items.map((item) => item.id) })
+  expect(second.items[0].position).toBe(appendedPosition)
 })

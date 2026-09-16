@@ -442,6 +442,12 @@ export default function PhotoWorkspace({
             Open a photo to see it larger. A caption is optional. Excluding a photo keeps its
             library file.
           </p>
+          {published > 0 && batch.state !== 'published' ? (
+            <p>
+              Some photos are already public. Finish this batch, then use the album or photo editor
+              to change their order.
+            </p>
+          ) : null}
           {dirty.size ? (
             <p role="status">Save the changed photo details before adding or publishing photos.</p>
           ) : null}
@@ -451,6 +457,18 @@ export default function PhotoWorkspace({
                 key={`${item.id}:${item.photoRevision || ''}:${item.updatedAt}`}
                 item={item}
                 busy={busy}
+                sortingDisabled={busy || !!dirty.size || published > 0}
+                drop={(source) =>
+                  void run(async () => {
+                    const ids = current.current!.items.map((entry) => entry.id)
+                    const from = ids.indexOf(source),
+                      to = ids.indexOf(item.id)
+                    if (from < 0 || to < 0) return
+                    ids.splice(from, 1)
+                    ids.splice(to, 0, source)
+                    await action('reorder', { ids })
+                  })
+                }
                 album={!!album}
                 cover={idOf(batch.cover) === idOf(item.media) && !!idOf(batch.cover)}
                 preview={previews[item.fingerprint]}

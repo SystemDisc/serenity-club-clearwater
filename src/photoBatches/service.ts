@@ -296,7 +296,23 @@ export const batchAction: PayloadHandler = async (req) => {
     if (data.action === 'reserve') {
       if (!Array.isArray(data.files) || data.files.length > MAX_BATCH_PHOTOS)
         fail('Choose up to 100 photos per batch.')
-      let position = items.length ? Math.max(...items.map((entry) => entry.position)) + 1 : 0
+      const lastPhoto = await req.payload.find({
+        collection: 'galleryItems',
+        req,
+        overrideAccess: false,
+        draft: true,
+        depth: 0,
+        where: idOf(batch.album)
+          ? { album: { equals: idOf(batch.album) } }
+          : { album: { exists: false } },
+        sort: '-order',
+        limit: 1,
+      })
+      let position =
+        Math.max(-1, ...items.map((entry) => entry.position), lastPhoto.docs[0]?.order ?? -1) + 1
+      const mediaIDs = new Set(
+        items.flatMap((entry) => (idOf(entry.media) ? [idOf(entry.media)!] : [])),
+      )
       const fingerprints = new Set(items.map((entry) => entry.fingerprint))
       for (const file of data.files) {
         const fingerprint = text(file.fingerprint, 80)
@@ -305,21 +321,6 @@ export const batchAction: PayloadHandler = async (req) => {
         if (fingerprints.has(fingerprint)) continue
         if (fingerprints.size >= MAX_BATCH_PHOTOS)
           fail('This batch already has 100 photos. Start another batch for the rest.')
-        fingerprints.add(fingerprint)
-        const created = await req.payload.create({
-          collection: 'photoBatchItems',
-          req,
-          overrideAccess: false,
-          data: {
-            batch: id,
-            key: randomUUID(),
-            fingerprint,
-            filename: text(file.name, 240) || 'Library photo',
-            title: `${batch.title} — ${position + 1}`,
-            position: position++,
-            status: 'pending',
-          },
-        })
         const existing = await req.payload.find({
           collection: 'media',
           req,
@@ -330,7 +331,26 @@ export const batchAction: PayloadHandler = async (req) => {
             ? { id: { equals: Number(fingerprint.slice(6)) } }
             : { contentHash: { equals: fingerprint } },
         })
-        if (existing.docs[0]) await finishItem(req, batch, created, existing.docs[0].id)
+        if (existing.docs[0] && mediaIDs.has(existing.docs[0].id)) continue
+        fingerprints.add(fingerprint)
+        const created = await req.payload.create({
+          collection: 'photoBatchItems',
+          req,
+          overrideAccess: false,
+          data: {
+            batch: id,
+            key: randomUUID(),
+            fingerprint,
+            filename: text(file.name, 240) || 'Library photo',
+            title: `${batch.title} — ${fingerprints.size}`,
+            position: position++,
+            status: 'pending',
+          },
+        })
+        if (existing.docs[0]) {
+          await finishItem(req, batch, created, existing.docs[0].id)
+          mediaIDs.add(existing.docs[0].id)
+        }
       }
     } else if (data.action === 'receipt') {
       if (item!.status === 'published' || item!.status === 'excluded')
@@ -451,7 +471,9 @@ export const batchAction: PayloadHandler = async (req) => {
         data.ids.some((value: unknown) => !items.some((entry) => entry.id === value))
       )
         fail('Reload the batch before changing its order.', 409)
-      for (const [position, itemID] of data.ids.entries()) {
+      const firstPosition = Math.min(...items.map((entry) => entry.position))
+      for (const [offset, itemID] of data.ids.entries()) {
+        const position = firstPosition + offset
         const entry = items.find((value) => value.id === itemID)!
         if (['published', 'excluded'].includes(entry.status)) continue
         if (idOf(entry.photo)) await currentPhoto(entry)

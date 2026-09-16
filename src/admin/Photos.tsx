@@ -33,6 +33,22 @@ export default async function Photos(props: AdminViewServerProps) {
     }),
     Number.isSafeInteger(id) && id > 0 ? batchSnapshot(req, id) : Promise.resolve(null),
   ])
+  const selectedAlbum = Number(params?.album)
+  if (
+    Number.isSafeInteger(selectedAlbum) &&
+    selectedAlbum > 0 &&
+    !albums.docs.some((album) => album.id === selectedAlbum)
+  ) {
+    const selected = await req.payload.findByID({
+      collection: 'albums',
+      id: selectedAlbum,
+      req,
+      overrideAccess: false,
+      draft: true,
+      depth: 0,
+    })
+    albums.docs.push(selected)
+  }
   return (
     <AdminPage {...props}>
       <h1>Add photos</h1>

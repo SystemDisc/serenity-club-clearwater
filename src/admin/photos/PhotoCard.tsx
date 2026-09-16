@@ -15,6 +15,8 @@ export default function PhotoCard({
   action,
   move,
   dirtyChanged,
+  drop,
+  sortingDisabled,
 }: {
   item: PhotoBatchItem
   busy: boolean
@@ -26,6 +28,8 @@ export default function PhotoCard({
   last: boolean
   action: (action: string, data?: Record<string, unknown>) => void
   move: (direction: -1 | 1) => void
+  drop: (id: number) => void
+  sortingDisabled: boolean
   dirtyChanged: (dirty: boolean) => void
 }) {
   const [title, setTitle] = useState(item.title)
@@ -37,7 +41,22 @@ export default function PhotoCard({
   const src = media?.sizes?.small?.url || media?.url || preview
   const editable = item.status !== 'published'
   return (
-    <article className="club-photo-card" aria-label={item.title}>
+    <article
+      className="club-photo-card"
+      aria-label={item.title}
+      onDragOver={(event) => {
+        if (!sortingDisabled && event.dataTransfer.types.includes('application/x-serenity-photo'))
+          event.preventDefault()
+      }}
+      onDrop={(event) => {
+        if (sortingDisabled) return
+        const source = Number(event.dataTransfer.getData('application/x-serenity-photo'))
+        if (source && source !== item.id) {
+          event.preventDefault()
+          drop(source)
+        }
+      }}
+    >
       {src ? (
         <a
           href={media?.url || preview}
@@ -120,15 +139,35 @@ export default function PhotoCard({
           <div className="club-photo-actions">
             <button
               type="button"
+              draggable={!sortingDisabled}
+              disabled={sortingDisabled}
+              aria-label={`Drag to reorder ${item.title}; or use Move up and Move down`}
+              onDragStart={(event) => {
+                event.dataTransfer.setData('application/x-serenity-photo', String(item.id))
+                event.dataTransfer.effectAllowed = 'move'
+              }}
+            >
+              Drag to reorder
+            </button>
+            <button
+              type="button"
               disabled={busy || !!changed}
               onClick={() => action('edit', { title, caption, alt })}
             >
               Save photo details
             </button>
-            <button type="button" disabled={busy || first || !!changed} onClick={() => move(-1)}>
+            <button
+              type="button"
+              disabled={sortingDisabled || first || !!changed}
+              onClick={() => move(-1)}
+            >
               Move up
             </button>
-            <button type="button" disabled={busy || last || !!changed} onClick={() => move(1)}>
+            <button
+              type="button"
+              disabled={sortingDisabled || last || !!changed}
+              onClick={() => move(1)}
+            >
               Move down
             </button>
             {album && item.status === 'ready' ? (

@@ -34,7 +34,9 @@ export const Albums: CollectionConfig = {
       type: 'upload',
       relationTo: 'media',
       label: 'Album cover',
-      filterOptions: { mimeType: { in: ['image/jpeg', 'image/png', 'image/webp', 'image/avif'] } },
+      filterOptions: {
+        mimeType: { in: ['image/jpeg', 'image/png', 'image/webp', 'image/avif', 'image/gif'] },
+      },
     },
     imagePreviewField('cover'),
     { name: 'albumPhotos', type: 'ui', admin: { components: { Field: '@/admin/AlbumPhotos' } } },
@@ -86,7 +88,7 @@ export const Albums: CollectionConfig = {
           !cover?.url ||
           !cover.width ||
           !cover.height ||
-          !/^image\/(jpeg|png|webp|avif)$/.test(cover.mimeType || '')
+          !/^image\/(jpeg|png|webp|avif|gif)$/.test(cover.mimeType || '')
         )
           errors.push({ path: 'cover', message: 'Choose a ready image for the album cover.' })
         if (errors.length) throw new ValidationError({ collection: 'albums', req, errors })
