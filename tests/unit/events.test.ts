@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest'
-import { eventCalendarDetails, isPastEvent } from '../../src/serenity/events'
+import { eventCalendarDetails, isPastEvent, sortEvents } from '../../src/serenity/events'
 
 it('keeps an unannounced time separate from all-day and known-time events', () => {
   const event = { kind: 'dated' as const, date: '2026-09-19', timeMode: 'unannounced' as const }
@@ -59,4 +59,27 @@ it('derives the next monthly meeting date and honors cancellation from its autho
       '2026-09-01',
     ).visible,
   ).toBe(false)
+})
+
+it('orders same-day events by their known local time, with unannounced times last', () => {
+  const base = {
+    title: 'Event',
+    category: 'Community' as const,
+    summary: '',
+    order: 100,
+    dateLabel: '',
+    date: '2026-09-19',
+  }
+  const events = [
+    { ...base, id: 'evening', sortTime: '20:00' },
+    { ...base, id: 'unknown' },
+    { ...base, id: 'morning', sortTime: '10:00' },
+    { ...base, id: 'all-day', sortTime: '00:00' },
+  ]
+  expect(sortEvents(events).map((event) => event.id)).toEqual([
+    'all-day',
+    'morning',
+    'evening',
+    'unknown',
+  ])
 })

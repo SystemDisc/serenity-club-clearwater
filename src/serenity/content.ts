@@ -44,6 +44,7 @@ export type Meeting = import('./schedule').Schedule & {
 }
 
 export type EventItem = {
+  sortTime?: string
   date?: string
   endDate?: string
   featured?: boolean
