@@ -2,7 +2,7 @@
 
 Audited September 15, 2026 (America/New_York; some evidence timestamps are September 16 UTC).
 
-**Status: investigation complete; application fixes and production media repair are not yet deployed.** The repair described below was tested on an isolated local copy of production data. This document is the baseline for the reliability work, followed by admin UX improvements.
+**Status: production media hotfix deployed and historical filenames repaired; the remaining reliability implementation is in progress.** The repair described below was tested on an isolated local copy of production data. This document is the baseline for the reliability work, followed by admin UX improvements.
 
 Historical follow-up: [upload timeline and available logs](2026-09-15-upload-timeline.md). Thumbnail corruption began before ISR; the bowling batch was followed immediately by a redeployment of the same commit. Historical runtime logs could not be retrieved.
 
@@ -272,3 +272,11 @@ Sensitive local artifacts are under `/tmp/serenity-audit-20260915` in a restrict
 Non-secret repair and HTTP evidence is preserved in `output/site-audit-2026-09-15/`. The repair manifest is a proposal tied to this snapshot, not permission to apply stale changes blindly. Original/thumbnail files downloaded for the local test are in ignored `public/media`; the inventory of files created by this audit is retained with the local evidence. No remote storage objects were deleted.
 
 The isolated web server and Postgres instance were stopped after testing. The copied database and restricted backup remain available for the repair work. The temporary local API token was removed. The unrelated application on port 3000 was left running.
+
+## Production media repair completed
+
+On September 15 at approximately 8:50 PM EDT, deployment `dpl_EV3vS2VngEFy2XNNC5u6AFA2bMC8` (hotfix commit `e82c891`) became production. Its pinned adapter patch prevents new filename corruption. A fresh dry run validated all 21 affected records and their candidate storage objects, and a restricted per-record backup was written before updates. The repair corrected 21 original filenames and 131 size filenames without replacing or deleting stored files. Public caches were invalidated after completion.
+
+Verification: all 238 original/size URLs referenced by the 44 production Media records returned HTTP 200 (one transient download failure passed on retry). Chrome visibly showed the repaired thumbnail on Gallery Item 20 and thumbnails throughout the existing-media picker. The public gallery used the restored original filename. The production gallery remains at its original 19 published records.
+
+Raw verification results and rollback metadata remain local and ignored. The baseline observations elsewhere in this audit describe the pre-fix state; see the focused implementation commits and `docs/operations/` for current behavior.
