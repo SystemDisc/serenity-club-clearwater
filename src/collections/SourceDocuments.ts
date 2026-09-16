@@ -25,7 +25,18 @@ export const SourceDocuments: CollectionConfig = {
   },
   hooks: {
     beforeChange: [
-      ({ data, req, operation }) => {
+      ({ data, req, operation, originalDoc }) => {
+        // Cloud storage persists the randomized filename after uploading the original.
+        // This server-only metadata write must not permit replacement of its bytes.
+        if (
+          operation === 'update' &&
+          req.context.skipCloudStorage === true &&
+          !req.file &&
+          data.sha256 === originalDoc?.sha256 &&
+          data.filesize === originalDoc?.filesize &&
+          data.mimeType === originalDoc?.mimeType
+        )
+          return data
         if (operation !== 'create')
           throw new APIError(
             'Original documents are retained unchanged. Upload a new version instead.',
