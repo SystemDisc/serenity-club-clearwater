@@ -9,3 +9,6 @@ blob-report
 
 public/media
 output
+tmp
+storage
+.git
