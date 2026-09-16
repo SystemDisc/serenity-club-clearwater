@@ -2,7 +2,7 @@
 
 Audited September 15, 2026 (America/New_York; some evidence timestamps are September 16 UTC).
 
-**Status: production media hotfix deployed and historical filenames repaired; the remaining reliability implementation is in progress.** The repair described below was tested on an isolated local copy of production data. This document is the baseline for the reliability work, followed by admin UX improvements.
+**Status: reliability fixes deployed and production thumbnails repaired.** See [release verification](#reliability-release-verification) for the delivered changes and remaining limits. The findings below preserve the original audit baseline; they do not describe unresolved defects unless the release section says so. Admin UX and batch-gallery design remain a separate follow-up.
 
 Historical follow-up: [upload timeline and available logs](2026-09-15-upload-timeline.md). Thumbnail corruption began before ISR; the bowling batch was followed immediately by a redeployment of the same commit. Historical runtime logs could not be retrieved.
 
@@ -280,3 +280,30 @@ On September 15 at approximately 8:50 PM EDT, deployment `dpl_EV3vS2VngEFy2XNNC5
 Verification: all 238 original/size URLs referenced by the 44 production Media records returned HTTP 200 (one transient download failure passed on retry). Chrome visibly showed the repaired thumbnail on Gallery Item 20 and thumbnails throughout the existing-media picker. The public gallery used the restored original filename. The production gallery remains at its original 19 published records.
 
 Raw verification results and rollback metadata remain local and ignored. The baseline observations elsewhere in this audit describe the pre-fix state; see the focused implementation commits and `docs/operations/` for current behavior.
+
+## Reliability release verification
+
+The complete release became production on September 15 at approximately 9:26 PM EDT: deployment `dpl_Br2i4JKat9ozToca2Syo6Zx1w9Xu`, source commit `a89fad1`. The live domain is `https://www.serenityclubofclearwater.org`. Changes are recorded as focused commits on `codex/platform-reliability`.
+
+Delivered:
+
+- Blob metadata prevention and repair, direct admin thumbnails, and a real-storage regression covering concurrent client/server uploads, duplicate names, replacement, focal points, small images, and deletion cleanup. No original production image was deleted.
+- Post-commit cache invalidation across REST, GraphQL, admin actions, and the optional jobs runner; five-minute recovery intervals; structured publication logs; no demo/empty substitution after database errors; correct empty states and scoped public data reads.
+- Stable gallery pagination, numeric IDs, media alt-text fallback, smaller responsive public images, optimized homepage imagery, canonical URLs, and reserved CMS slugs.
+- Disabled destructive web seeding, authenticated preview and published-only reads, isolated local/test databases, explicit migrations, editor/admin permissions, and preservation of all three existing administrators.
+- Bounded DOCX conversion with a separate secret and exact allowed storage origin; compatible dependency upgrades, peer validation, lockfiles, clean lint/types, and CI.
+- Reusable reporting code, templates, fixtures, and documentation committed. Generated reports, media copies, credentials, database backups, caches, and raw investigation files ignored and retained locally.
+
+Verification:
+
+- Production Gallery Item 20 loads its actual 300-pixel thumbnail. All ten images on the first page of the existing-media picker loaded; all 238 production media URLs had already passed GET verification.
+- Approved temporary Gallery Item 22, “Gallery publishing test,” was created through Chrome using the existing image. Independent Node and curl public clients saw 20 gallery items without a redeploy. After deleting only that test record through admin, both saw the original 19 items. Production logs contain successful create/delete invalidations, and the sampled 50 release log entries contained no errors or HTTP 5xx responses.
+- Production canonical URLs are specific to their pages. The released image optimizer served quality-85 gallery imagery successfully. Chrome showed the public gallery with loaded images and no captured console errors. These are functional/spot checks, not claims about mobile field-performance percentiles.
+- The restored production schema, after migration, matches a fresh migration schema in columns, indexes, and constraints. Production was backed up before its additive migrations, and content counts and administrator roles were checked afterward.
+- 26 unit tests, two integration tests, and all 14 browser tests passed. The browser suite covers independent public clients, publication lifecycle, more than 100 gallery items, authenticated scheduled jobs, navigation, headings, and accessibility regressions. The same clean-database workflow passed in [GitHub Actions](https://github.com/SystemDisc/serenity-club-clearwater/actions/runs/35043979561). Both application and converter dependency audits reported zero vulnerabilities.
+- During a real local database outage longer than the five-minute cache interval, the gallery retained all 19 real items through failed regeneration. Once Postgres was restarted on the correct isolated port, a database-only title change appeared on the second request without rebuilding. The temporary local title was restored. The initial restart omitted the custom port; recovery was assessed only after correcting that test-harness issue.
+- Actual DOCX rendering was run locally and visually inspected; the converter container built and deployed. A full production admin DOCX upload was not part of the live publishing test.
+
+Scheduling is deliberately **disabled by default**: the actual Vercel Hobby plan rejected once-per-minute cron, and there were no pending production jobs. The tested capability remains behind `ENABLE_SCHEDULED_PUBLISHING=true` for a future authenticated runner. Normal immediate publishing is enabled. See [publishing operations](../operations/publishing.md).
+
+The July publishing incident's precise trigger remains unknown because its runtime logs are no longer retained. The verified thumbnail bug predates ISR and is independent of cache regeneration. Long-term log retention, representative mobile performance measurements, multi-region stress tests, alt-text content review, and the requested future admin UX/batch-gallery audit remain future work; no new paid service or hosting-plan upgrade was introduced.
