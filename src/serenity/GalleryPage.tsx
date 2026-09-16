@@ -13,7 +13,7 @@ export async function GalleryPageContent({ page = 1 }: { page?: number }) {
       <PageHeader eyebrow="Gallery" title="Photos and flyers from Serenity Club">
         <p>Clubhouse images, monthly flyers, and community moments.</p>
       </PageHeader>
-      <section className="bg-white px-4 py-10 md:py-12">
+      <section className="bg-white px-4 py-10 text-slate-950 md:py-12">
         <div className="container">
           <SectionHeader eyebrow="Serenity Club media" title="A look inside the clubhouse">
             <p>Get to know our space and see moments from club events.</p>

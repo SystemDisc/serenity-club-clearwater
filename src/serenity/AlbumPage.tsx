@@ -16,7 +16,7 @@ export async function AlbumPageContent({ slug, page = 1 }: { slug: string; page?
         <p>{result.album.description}</p>
         {result.album.date ? <p>{displayDate(result.album.date)}</p> : null}
       </PageHeader>
-      <section className="bg-white px-4 py-10">
+      <section className="bg-white px-4 py-10 text-slate-950">
         <div className="container">
           <Link href="/gallery" className="mb-8 inline-block underline">
             ← All photos and albums

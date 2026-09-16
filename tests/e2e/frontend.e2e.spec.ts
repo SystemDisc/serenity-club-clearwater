@@ -8,6 +8,7 @@ const publicPages = [
   '/gallery',
   '/groups',
   '/meeting-schedule',
+  '/posts',
   '/policies',
   '/reach-out',
   '/shop',
@@ -119,6 +120,18 @@ test.describe('Frontend', () => {
       const results = await new AxeBuilder({ page }).withRules(['heading-order']).analyze()
 
       expect(results.violations, `Heading order violations on ${url}`).toEqual([])
+    }
+  })
+
+  test('gallery and news text stays readable with either system theme', async ({ page }) => {
+    for (const colorScheme of ['light', 'dark'] as const) {
+      await page.emulateMedia({ colorScheme })
+      for (const url of ['/gallery', '/posts']) {
+        await page.goto(url)
+        await expect(page.locator('html')).toHaveAttribute('data-theme', colorScheme)
+        const results = await new AxeBuilder({ page }).withRules(['color-contrast']).analyze()
+        expect(results.violations, `${url} with ${colorScheme} theme`).toEqual([])
+      }
     }
   })
 

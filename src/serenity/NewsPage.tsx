@@ -13,7 +13,7 @@ export async function NewsPageContent({ page = 1 }: { page?: number }) {
       <PageHeader eyebrow="From the clubhouse" title="News & updates">
         <p>Club news, stories, and information for our community.</p>
       </PageHeader>
-      <section className="bg-white px-4 py-10">
+      <section className="bg-white px-4 py-10 text-slate-950">
         <div className="container">
           {result.docs.length ? (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
