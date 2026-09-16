@@ -97,7 +97,9 @@ it('persists per-day details, protects confirmation notes, and rejects ambiguous
     days: '',
     order: 0,
   }
-  expect(meetingsOnDate([publicGroup], new Date('2026-09-15T16:00:00Z'))[0].format).toBeUndefined()
+  const unconfirmed = meetingsOnDate([publicGroup], new Date('2026-09-15T16:00:00Z'))[0]
+  expect(unconfirmed.format).toBe('Book study · Test book')
+  expect(unconfirmed.formatUnconfirmed).toBe(true)
   expect(meetingsOnDate([publicGroup], new Date('2026-09-14T16:00:00Z'))[0].format).toBe(
     'Discussion',
   )
