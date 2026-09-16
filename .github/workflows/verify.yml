@@ -34,6 +34,7 @@ jobs:
       BLOB_READ_WRITE_TOKEN: ''
       RESEND_API_KEY: ''
       DOCX_CONVERTER_URL: ''
+      DOCX_CONVERTER_MODE: local
       NEXT_TELEMETRY_DISABLED: '1'
     steps:
       - uses: actions/checkout@v7
@@ -43,6 +44,7 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm ci --prefix services/docx-converter
+      - run: sudo apt-get update && sudo apt-get install -y libreoffice-writer poppler-utils
       - run: npm run migrate
       - run: npx tsx scripts/seed-test.ts
       - run: npm run lint -- --max-warnings=0

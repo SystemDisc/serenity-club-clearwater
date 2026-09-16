@@ -14,9 +14,14 @@ import { ArrowRight, CalendarDays, HeartHandshake, ShoppingBag } from 'lucide-re
 import { getSerenityData } from '@/serenity/data'
 import { regularMeetingRows } from '@/serenity/publicMeetings'
 import { siteMetadata } from '@/utilities/siteURL'
+import { getMonthlyFlyers } from '@/serenity/flyers'
+import { FlyerCard } from '@/serenity/FlyerCard'
 
 export default async function HomePage() {
-  const data = await getSerenityData(['meetings', 'events', 'products', 'sponsors'])
+  const [data, flyers] = await Promise.all([
+    getSerenityData(['meetings', 'events', 'products', 'sponsors']),
+    getMonthlyFlyers(),
+  ])
   const sortedMeetings = regularMeetingRows(data.meetings)
   const recoveryMeetings = sortedMeetings.filter((meeting) => meeting.fellowship !== 'Club')
   const firstMeeting = recoveryMeetings[0]
@@ -135,6 +140,11 @@ export default async function HomePage() {
             </ButtonLink>
           </div>
           <div className="mt-6 md:mt-8">
+            {flyers.current ? (
+              <div className="mb-8">
+                <FlyerCard flyer={flyers.current} compact />
+              </div>
+            ) : null}
             <EventGrid events={featuredEvents} />
           </div>
         </div>

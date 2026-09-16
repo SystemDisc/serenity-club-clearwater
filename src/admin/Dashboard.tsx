@@ -2,11 +2,14 @@ import { Gutter } from '@payloadcms/ui'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import type { AdminViewServerProps } from 'payload'
+import { localDateKey } from '@/serenity/calendar'
+import { displayMonth } from '@/serenity/flyers'
 
 export default async function Dashboard({ initPageResult }: AdminViewServerProps) {
   const { req } = initPageResult
   if (!req.user) redirect('/admin/login')
-  const [events, meetings, photos] = await Promise.all([
+  const month = localDateKey().slice(0, 7)
+  const [events, meetings, photos, flyers] = await Promise.all([
     req.payload.find({
       collection: 'events',
       req,
@@ -34,12 +37,68 @@ export default async function Dashboard({ initPageResult }: AdminViewServerProps
       limit: 4,
       depth: 1,
     }),
+    req.payload.find({
+      collection: 'monthlyFlyers',
+      req,
+      overrideAccess: false,
+      draft: true,
+      where: { month: { equals: month } },
+      limit: 1,
+      depth: 1,
+    }),
   ])
+  const liveIDs = async (
+    collection: 'events' | 'galleryItems' | 'monthlyFlyers',
+    ids: number[],
+  ) => {
+    if (!ids.length) return new Set<number>()
+    const result = await req.payload.find({
+      collection,
+      req,
+      overrideAccess: false,
+      draft: false,
+      where: { and: [{ id: { in: ids } }, { _status: { equals: 'published' } }] },
+      limit: ids.length,
+      depth: 0,
+      select: { updatedAt: true },
+    })
+    return new Set(result.docs.map((doc) => doc.id))
+  }
+  const [liveEvents, livePhotos, liveFlyers] = await Promise.all([
+    liveIDs(
+      'events',
+      events.docs.map((doc) => doc.id),
+    ),
+    liveIDs(
+      'galleryItems',
+      photos.docs.map((doc) => doc.id),
+    ),
+    liveIDs(
+      'monthlyFlyers',
+      flyers.docs.map((doc) => doc.id),
+    ),
+  ])
+  const flyer = flyers.docs[0]
+  const flyerImage = flyer && typeof flyer.image === 'object' ? flyer.image : null
+  const needsChecking = meetings.docs.filter(
+    (meeting) => !meeting.checkedOn || meeting.sessions?.some((session) => !session.confirmed),
+  ).length
+  const status = (latest: string | null | undefined, live: boolean) =>
+    latest === 'published'
+      ? 'Published on website'
+      : live
+        ? 'Published version on website — draft changes waiting'
+        : 'Draft — not on website'
   const tasks = [
     {
       title: 'Update this month’s flyer',
-      text: 'Review a readable flyer and publish the right month.',
-      href: '/admin/collections/events',
+      text: flyer
+        ? `${displayMonth(month)}: ${status(flyer._status, liveFlyers.has(flyer.id))}.`
+        : `${displayMonth(month)} needs a flyer. Choose an image or a one-page Word document.`,
+      href: flyer
+        ? `/admin/collections/monthlyFlyers/${flyer.id}`
+        : '/admin/collections/monthlyFlyers/create',
+      image: flyerImage?.sizes?.small?.url || flyerImage?.url,
       publicHref: '/events',
       publicLabel: 'View Events page',
     },
@@ -52,7 +111,7 @@ export default async function Dashboard({ initPageResult }: AdminViewServerProps
     },
     {
       title: 'Change a meeting',
-      text: `${meetings.totalDocs} recurring meeting records. Check the days, times, and formats.`,
+      text: `${meetings.totalDocs} groups and club activities. ${needsChecking} need their schedule or format details checked.`,
       href: '/admin/collections/meetings',
       publicHref: '/meeting-schedule',
       publicLabel: 'View meeting schedule',
@@ -69,14 +128,14 @@ export default async function Dashboard({ initPageResult }: AdminViewServerProps
     ...events.docs.map((doc) => ({
       id: `event-${doc.id}`,
       title: doc.title,
-      status: doc._status,
+      status: status(doc._status, liveEvents.has(doc.id)),
       updated: doc.updatedAt,
       href: `/admin/collections/events/${doc.id}`,
     })),
     ...photos.docs.map((doc) => ({
       id: `photo-${doc.id}`,
       title: doc.title,
-      status: doc._status,
+      status: status(doc._status, livePhotos.has(doc.id)),
       updated: doc.updatedAt,
       href: `/admin/collections/galleryItems/${doc.id}`,
     })),
@@ -100,6 +159,22 @@ export default async function Dashboard({ initPageResult }: AdminViewServerProps
               <Link href={task.href}>{task.title}</Link>
             </h2>
             <p>{task.text}</p>
+            {task.image ? (
+              <>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={task.image}
+                  alt="Current monthly flyer preview"
+                  style={{
+                    maxHeight: 220,
+                    maxWidth: '100%',
+                    objectFit: 'contain',
+                    display: 'block',
+                    marginBottom: 16,
+                  }}
+                />
+              </>
+            ) : null}
             <a href={task.publicHref} target="_blank" rel="noreferrer">
               {task.publicLabel} ↗
             </a>
@@ -113,11 +188,7 @@ export default async function Dashboard({ initPageResult }: AdminViewServerProps
             {recent.map((doc) => (
               <li key={doc.id}>
                 <Link href={doc.href}>{doc.title || 'Untitled draft'}</Link>
-                <span>
-                  {doc.status === 'published'
-                    ? 'Published — check for unpublished changes in the editor'
-                    : 'Draft — not on website'}
-                </span>
+                <span>{doc.status}</span>
               </li>
             ))}
           </ul>

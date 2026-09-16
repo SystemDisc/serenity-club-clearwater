@@ -77,6 +77,8 @@ export interface Config {
     sponsors: Sponsor;
     posts: Post;
     media: Media;
+    sourceDocuments: SourceDocument;
+    monthlyFlyers: MonthlyFlyer;
     categories: Category;
     users: User;
     redirects: Redirect;
@@ -106,6 +108,8 @@ export interface Config {
     sponsors: SponsorsSelect<false> | SponsorsSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    sourceDocuments: SourceDocumentsSelect<false> | SourceDocumentsSelect<true>;
+    monthlyFlyers: MonthlyFlyersSelect<false> | MonthlyFlyersSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
@@ -295,6 +299,10 @@ export interface Post {
 export interface Media {
   id: number;
   /**
+   * Original retained separately when this image was made from a Word flyer.
+   */
+  sourceDocument?: (number | null) | SourceDocument;
+  /**
    * Describe meaningful image content for screen readers. Leave blank only for decorative images; gallery titles provide a fallback.
    */
   alt?: string | null;
@@ -384,6 +392,28 @@ export interface Media {
       filename?: string | null;
     };
   };
+}
+/**
+ * Retained originals for flyer versions. Upload a new original when replacing a flyer; previous originals stay available. Files in production Blob storage have public URLs.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "sourceDocuments".
+ */
+export interface SourceDocument {
+  id: number;
+  sha256?: string | null;
+  prefix?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1010,6 +1040,28 @@ export interface Sponsor {
   _status?: ('draft' | 'published') | null;
 }
 /**
+ * One flyer per month. Keep next month as a draft until it is ready. Previous images and original documents remain available through Versions.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "monthlyFlyers".
+ */
+export interface MonthlyFlyer {
+  id: number;
+  month: string;
+  image?: (number | null) | Media;
+  /**
+   * Use the Word flyer control below to retain the original and create a separate image.
+   */
+  sourceDocument?: (number | null) | SourceDocument;
+  /**
+   * Include dates, event names, and available times so people can read the details without the picture.
+   */
+  details: string;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
@@ -1238,6 +1290,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'sourceDocuments';
+        value: number | SourceDocument;
+      } | null)
+    | ({
+        relationTo: 'monthlyFlyers';
+        value: number | MonthlyFlyer;
       } | null)
     | ({
         relationTo: 'categories';
@@ -1634,6 +1694,7 @@ export interface PostsSelect<T extends boolean = true> {
  * via the `definition` "media_select".
  */
 export interface MediaSelect<T extends boolean = true> {
+  sourceDocument?: T;
   alt?: T;
   caption?: T;
   prefix?: T;
@@ -1723,6 +1784,38 @@ export interface MediaSelect<T extends boolean = true> {
               filename?: T;
             };
       };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "sourceDocuments_select".
+ */
+export interface SourceDocumentsSelect<T extends boolean = true> {
+  sha256?: T;
+  prefix?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "monthlyFlyers_select".
+ */
+export interface MonthlyFlyersSelect<T extends boolean = true> {
+  month?: T;
+  image?: T;
+  sourceDocument?: T;
+  details?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

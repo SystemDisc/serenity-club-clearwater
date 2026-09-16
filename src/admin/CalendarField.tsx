@@ -8,7 +8,7 @@ export default function CalendarField({
   path,
   readOnly,
   inputType,
-}: TextFieldClientProps & { inputType: 'date' | 'time' }) {
+}: TextFieldClientProps & { inputType: 'date' | 'time' | 'month' }) {
   const { value, setValue, showError, errorMessage } = useField<string>({ path })
   const busy = useFormProcessing()
   const initializing = useFormInitializing()

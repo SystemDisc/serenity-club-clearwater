@@ -11,6 +11,8 @@ import { Categories } from './collections/Categories'
 import { Events } from './collections/Events'
 import { GalleryItems } from './collections/GalleryItems'
 import { Media } from './collections/Media'
+import { SourceDocuments } from './collections/SourceDocuments'
+import { MonthlyFlyers } from './collections/MonthlyFlyers'
 import { Meetings } from './collections/Meetings'
 import { Pages } from './collections/Pages'
 import { Policies } from './collections/Policies'
@@ -23,7 +25,6 @@ import { ClubSettings } from './ClubSettings/config'
 import { Footer } from './Footer/config'
 import { Header } from './Header/config'
 import { plugins } from './plugins'
-import { docxToImagePlugin } from './plugins/docxToImage'
 import { defaultLexical } from '@/fields/defaultLexical'
 import { generatePublicMediaURL } from './utilities/generatePublicMediaURL'
 import { getServerSideURL } from './utilities/getURL'
@@ -125,6 +126,8 @@ export default buildConfig({
     Sponsors,
     Posts,
     Media,
+    SourceDocuments,
+    MonthlyFlyers,
     Categories,
     Users,
   ],
@@ -145,7 +148,21 @@ export default buildConfig({
       enabled: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
       token: process.env.BLOB_READ_WRITE_TOKEN,
     }),
-    docxToImagePlugin(),
+    vercelBlobStorage({
+      alwaysInsertFields: true,
+      addRandomSuffix: true,
+      clientUploads: false,
+      collections: {
+        sourceDocuments: {
+          generateFileURL: (args) =>
+            process.env.BLOB_READ_WRITE_TOKEN
+              ? generatePublicMediaURL(args)
+              : `/api/sourceDocuments/file/${encodeURIComponent(args.filename)}`,
+        },
+      },
+      enabled: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
+      token: process.env.BLOB_READ_WRITE_TOKEN,
+    }),
     clubAdminPlugin,
   ],
   secret: process.env.PAYLOAD_SECRET,

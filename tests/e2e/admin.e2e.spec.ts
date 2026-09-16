@@ -1,7 +1,15 @@
 import { test, expect, Page } from '@playwright/test'
 import sharp from 'sharp'
 import { login } from '../helpers/login'
-import { seedTestUser, cleanupTestUser, testUser, queuePublication } from '../helpers/seedUser'
+import {
+  seedTestUser,
+  cleanupTestUser,
+  testUser,
+  queuePublication,
+  cleanupFlyerTest,
+} from '../helpers/seedUser'
+import { readFile } from 'node:fs/promises'
+import { createHash } from 'node:crypto'
 import { testServerURL } from '../helpers/environment'
 import { fallbackClubSettings } from '../../src/serenity/content'
 
@@ -295,6 +303,130 @@ test.describe('Admin Panel', () => {
     await expect(page).toHaveURL((url) => url.pathname === '/admin/collections/users')
     const listViewArtifact = page.locator('h1', { hasText: 'Users' }).first()
     await expect(listViewArtifact).toBeVisible()
+  })
+
+  test('retains a Word original through conversion, retry, replacement, and a multi-page failure', async ({
+    request,
+    playwright,
+  }) => {
+    test.setTimeout(180_000)
+    const visitor = await playwright.request.newContext({ baseURL: testServerURL })
+    const auth = await request.post('/api/users/login', { data: testUser })
+    const { token } = await auth.json()
+    const headers = { authorization: `JWT ${token}` }
+    const sourceIDs: number[] = [],
+      imageIDs: number[] = []
+    let flyerID: number | undefined
+    const source = await readFile('tests/fixtures/one-page-flyer.docx')
+    const uploadedSourceIDs = new Set<number>()
+    const trackSource = (response: import('@playwright/test').Response) => {
+      if (
+        response.url().endsWith('/api/sourceDocuments') &&
+        response.request().method() === 'POST' &&
+        response.status() === 201
+      )
+        void response.json().then((body) => {
+          if (typeof body.doc?.id === 'number') uploadedSourceIDs.add(body.doc.id)
+        })
+    }
+    page.on('response', trackSource)
+    try {
+      await page.goto('/admin/collections/monthlyFlyers/create')
+      await page.getByLabel('Month *', { exact: true }).fill('2299-01')
+      await page
+        .getByLabel('Flyer details in text', { exact: false })
+        .fill('Synthetic test flyer. These are test details, not club events.')
+      await page
+        .getByLabel('Choose Word document')
+        .setInputFiles('tests/fixtures/one-page-flyer.docx')
+      await expect(page.getByText('Flyer image ready.', { exact: false })).toBeVisible({
+        timeout: 120_000,
+      })
+      await page.getByRole('button', { name: 'Save Draft', exact: true }).click()
+      await expect(page).toHaveURL(/\/monthlyFlyers\/\d+$/)
+      flyerID = Number(page.url().split('/').pop())
+      const draft = await (
+        await request.get(`/api/monthlyFlyers/${flyerID}?draft=true&depth=0`, { headers })
+      ).json()
+      sourceIDs.push(draft.sourceDocument)
+      imageIDs.push(draft.image)
+      const original = await (
+        await request.get(`/api/sourceDocuments/${draft.sourceDocument}`, { headers })
+      ).json()
+      expect(original.sha256).toBe(createHash('sha256').update(source).digest('hex'))
+      await expect((await request.get(original.url, { headers })).body()).resolves.toEqual(source)
+      expect((await visitor.get(`/api/monthlyFlyers/${flyerID}`)).status()).toBe(404)
+      const repeated = await request.post(`/api/sourceDocuments/${draft.sourceDocument}/convert`, {
+        headers,
+      })
+      expect((await repeated.json()).image.id).toBe(draft.image)
+      expect(
+        (
+          await request.patch(`/api/sourceDocuments/${draft.sourceDocument}`, {
+            headers,
+            data: { sha256: 'changed' },
+          })
+        ).status(),
+      ).toBe(403)
+      await page
+        .getByLabel('Choose Word document')
+        .setInputFiles('tests/fixtures/two-page-flyer.docx')
+      await expect(page.getByRole('alert').filter({ hasText: '2 pages' })).toBeVisible({
+        timeout: 120_000,
+      })
+      await page.getByRole('button', { name: 'Save Draft', exact: true }).click()
+      await expect
+        .poll(
+          async () =>
+            (
+              await (
+                await request.get(`/api/monthlyFlyers/${flyerID}?draft=true&depth=0`, { headers })
+              ).json()
+            ).sourceDocument,
+        )
+        .not.toBe(draft.sourceDocument)
+      const failedDraft = await (
+        await request.get(`/api/monthlyFlyers/${flyerID}?draft=true&depth=0`, { headers })
+      ).json()
+      sourceIDs.push(failedDraft.sourceDocument)
+      expect(failedDraft.image).toBe(draft.image)
+      expect(
+        (await request.get(`/api/sourceDocuments/${failedDraft.sourceDocument}`, { headers })).ok(),
+      ).toBeTruthy()
+      expect(
+        (
+          await request.patch(`/api/monthlyFlyers/${flyerID}`, {
+            headers,
+            data: { _status: 'published' },
+          })
+        ).status(),
+      ).toBe(400)
+      await page
+        .getByLabel('Choose Word document')
+        .setInputFiles('tests/fixtures/one-page-flyer.docx')
+      await expect(page.getByText('Flyer image ready.', { exact: false })).toBeVisible({
+        timeout: 120_000,
+      })
+      await page.getByRole('button', { name: 'Publish changes', exact: true }).click()
+      await expect
+        .poll(async () => (await visitor.get(`/api/monthlyFlyers/${flyerID}`)).status())
+        .toBe(200)
+      const published = await (
+        await request.get(`/api/monthlyFlyers/${flyerID}?depth=0`, { headers })
+      ).json()
+      sourceIDs.push(published.sourceDocument)
+      imageIDs.push(published.image)
+      expect(published.sourceDocument).not.toBe(draft.sourceDocument)
+      await expect((await request.get(original.url, { headers })).body()).resolves.toEqual(source)
+    } finally {
+      page.off('response', trackSource)
+      await visitor.dispose()
+      await cleanupFlyerTest(
+        flyerID,
+        [...new Set(imageIDs)],
+        [...new Set([...sourceIDs, ...uploadedSourceIDs])],
+      )
+    }
   })
 
   test('can navigate to edit view', async () => {

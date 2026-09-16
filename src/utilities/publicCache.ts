@@ -4,6 +4,7 @@ import { revalidatePath, revalidateTag } from 'next/cache'
 export const publicCollections = [
   'meetings',
   'events',
+  'monthlyFlyers',
   'galleryItems',
   'teamMembers',
   'products',
@@ -36,6 +37,7 @@ const pending = (scopes[scopeKey] ??= new AsyncLocalStorage<Pending>())
 const routes: Record<string, string[]> = {
   meetings: ['/', '/meeting-schedule', '/groups'],
   events: ['/', '/events'],
+  monthlyFlyers: ['/', '/events'],
   galleryItems: ['/gallery', '/gallery/page/[page]'],
   teamMembers: ['/about'],
   products: ['/', '/shop', '/shop/[slug]', '/sitemap.xml'],

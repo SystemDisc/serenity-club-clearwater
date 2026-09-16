@@ -1,7 +1,7 @@
 import type { Field, Plugin } from 'payload'
 
 const names: Record<string, [string, string, string]> = {
-  events: ['Event or flyer', 'Events & flyers', 'Everyday tasks'],
+  events: ['Event', 'Events', 'Everyday tasks'],
   meetings: ['Meeting', 'Meetings', 'Everyday tasks'],
   galleryItems: ['Photo', 'Gallery photos', 'Everyday tasks'],
   media: ['Photo or file', 'Photo & file library', 'Website details'],

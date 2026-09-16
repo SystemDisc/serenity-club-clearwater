@@ -1,4 +1,4 @@
-import type { CollectionConfig } from 'payload'
+import { APIError, type CollectionConfig } from 'payload'
 
 import {
   FixedToolbarFeature,
@@ -11,6 +11,7 @@ import { fileURLToPath } from 'url'
 import { anyone } from '../access/anyone'
 import { authenticated } from '../access/authenticated'
 import { adminThumbnail } from '@/utilities/adminThumbnail'
+import { isDocxMimeType } from '@/utilities/docxToImage/mime'
 import {
   revalidatePublicSiteAfterChange,
   revalidatePublicSiteAfterDelete,
@@ -30,6 +31,21 @@ export const Media: CollectionConfig = {
   },
   fields: [
     {
+      name: 'sourceDocument',
+      type: 'relationship',
+      relationTo: 'sourceDocuments',
+      unique: true,
+      admin: {
+        readOnly: true,
+        description: 'Original retained separately when this image was made from a Word flyer.',
+      },
+      access: {
+        create: ({ req }) => !!req.context.sourceConversion,
+        update: () => false,
+        read: ({ req }) => !!req.user,
+      },
+    },
+    {
       name: 'alt',
       type: 'text',
       admin: {
@@ -48,6 +64,18 @@ export const Media: CollectionConfig = {
     },
   ],
   hooks: {
+    beforeChange: [
+      ({ data, req }) => {
+        if (req.file?.name?.toLowerCase().endsWith('.docx') || isDocxMimeType(req.file?.mimetype))
+          throw new APIError(
+            'Use Monthly flyers → Upload Word flyer so the original document is kept safely alongside the image.',
+            400,
+            undefined,
+            true,
+          )
+        return data
+      },
+    ],
     afterChange: [revalidatePublicSiteAfterChange],
     afterDelete: [revalidatePublicSiteAfterDelete],
   },

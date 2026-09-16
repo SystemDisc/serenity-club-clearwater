@@ -32,7 +32,8 @@ export function AdminPage({
 
 export default function Help(props: AdminViewServerProps) {
   const sections = [
-    ['Monthly flyer and event announcements', '/admin/collections/events', '/events'],
+    ['Monthly flyer', '/admin/collections/monthlyFlyers', '/events'],
+    ['Individual event announcements', '/admin/collections/events', '/events'],
     ['Meeting days, times, and details', '/admin/collections/meetings', '/meeting-schedule'],
     ['About-page dues reminder', '/admin/globals/clubSettings#field-logoImage', '/about'],
     ['Contact details, hours, and homepage pictures', '/admin/globals/clubSettings', '/reach-out'],
@@ -116,6 +117,7 @@ export function Tools(props: AdminViewServerProps) {
     sponsors: 'Sponsor listings',
     categories: 'News categories',
     redirects: 'Website redirects',
+    sourceDocuments: 'Retained original Word documents',
   }
   return (
     <AdminPage {...props}>

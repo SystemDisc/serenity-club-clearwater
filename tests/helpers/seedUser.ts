@@ -56,5 +56,32 @@ export async function cleanupTestUser(): Promise<void> {
 export async function queuePublication(id: number, type: 'publish' | 'unpublish') {
   assertTestDatabase()
   const payload = await getPayload({ config })
-  return payload.jobs.queue({ task: 'schedulePublish', input: { type, doc: { relationTo: 'pages', value: id } }, waitUntil: new Date(Date.now() - 1000) })
+  return payload.jobs.queue({
+    task: 'schedulePublish',
+    input: { type, doc: { relationTo: 'pages', value: id } },
+    waitUntil: new Date(Date.now() - 1000),
+  })
+}
+
+export async function cleanupFlyerTest(
+  flyerID: number | undefined,
+  imageIDs: number[],
+  sourceIDs: number[],
+) {
+  assertTestDatabase()
+  const payload = await getPayload({ config })
+  const context = { disableRevalidate: true }
+  if (flyerID) await payload.delete({ collection: 'monthlyFlyers', id: flyerID, context })
+  const linked = sourceIDs.length
+    ? await payload.find({
+        collection: 'media',
+        where: { sourceDocument: { in: sourceIDs } },
+        limit: 0,
+        depth: 0,
+      })
+    : { docs: [] }
+  for (const id of new Set([...imageIDs, ...linked.docs.map((doc) => doc.id)]))
+    await payload.delete({ collection: 'media', id, context })
+  // Test teardown is a trusted maintenance operation, outside the editor's immutable-source API.
+  for (const id of sourceIDs) await payload.delete({ collection: 'sourceDocuments', id, context })
 }
