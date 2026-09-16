@@ -35,7 +35,10 @@ const details = (): Field[] => [
     type: 'checkbox',
     label: 'I checked this format and attendance information with the group',
     defaultValue: false,
-    admin: { description: 'Unconfirmed format and attendance labels are not shown publicly.' },
+    admin: {
+      description:
+        'Existing format details remain visible with a reminder to confirm with the group until checked.',
+    },
   },
 ]
 

@@ -35,6 +35,7 @@ export type Meeting = import('./schedule').Schedule & {
   externalUrl?: string
   fellowship: 'AA' | 'NA' | 'Club'
   format?: string
+  formatUnconfirmed?: boolean
   id?: string | number
   name: string
   order: number

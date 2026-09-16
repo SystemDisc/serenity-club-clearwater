@@ -273,6 +273,11 @@ export function MeetingList({
                 </span>
               ) : null}
             </div>
+            {meeting.format && meeting.formatUnconfirmed ? (
+              <p className="mt-2 text-xs text-slate-600">
+                Format may vary by day. Confirm details with the group.
+              </p>
+            ) : null}
           </div>
           <div className="text-sm text-slate-600 md:text-right">{meeting.room}</div>
         </article>

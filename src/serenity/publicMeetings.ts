@@ -15,15 +15,11 @@ const displaySession = (meeting: Meeting, session: Session, days: string): Meeti
   days,
   time: displayTime(session.time),
   room: session.room || undefined,
-  format: session.confirmed
-    ? [
-        formatLabels[session.format || ''],
-        session.topic,
-        attendanceLabels[session.attendance || ''],
-      ]
-        .filter(Boolean)
-        .join(' · ') || undefined
-    : undefined,
+  format:
+    [formatLabels[session.format || ''], session.topic, attendanceLabels[session.attendance || '']]
+      .filter(Boolean)
+      .join(' · ') || meeting.format,
+  formatUnconfirmed: !session.confirmed,
 })
 
 export function meetingsOnDate(meetings: Meeting[], date = new Date()) {
@@ -36,7 +32,7 @@ export function meetingsOnDate(meetings: Meeting[], date = new Date()) {
             description: [meeting.description, session.note].filter(Boolean).join(' '),
           }))
         : meetingRunsOnDate(meeting, date)
-          ? [{ ...meeting, format: undefined }]
+          ? [{ ...meeting, formatUnconfirmed: true }]
           : [],
     ),
   )
@@ -62,7 +58,7 @@ export function regularMeetingRows(meetings: Meeting[], date = new Date()) {
                   .join(' · '),
               ),
             )
-        : [{ ...meeting, format: undefined }],
+        : [{ ...meeting, formatUnconfirmed: true }],
     ),
   )
 }
