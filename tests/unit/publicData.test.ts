@@ -38,3 +38,11 @@ it('honors intentional empty navigation', async () => {
     footerNavItems: [],
   })
 })
+
+it('retains earlier meeting format descriptions for public fallback labels', async () => {
+  mocks.find.mockResolvedValue({
+    docs: [{ id: 4, name: 'TGIF', format: 'Open discussion and book study' }],
+  })
+  const data = await getSerenityData(['meetings'])
+  expect(data.meetings[0].format).toBe('Open discussion and book study')
+})

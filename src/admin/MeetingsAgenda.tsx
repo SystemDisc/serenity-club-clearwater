@@ -105,9 +105,11 @@ export default function MeetingsAgenda({ meetings }: { meetings: Meeting[] }) {
                           </Link>
                           <p>
                             {session.room || 'Room not specified'} ·
-                            {session.confirmed
-                              ? formatLabels[session.format || ''] || 'Format not specified'
-                              : 'Format needs confirmation'}
+                            {formatLabels[session.format || ''] ||
+                              meeting.format ||
+                              'Format not specified'}
+                            {session.topic ? ` — ${session.topic}` : ''}
+                            {!session.confirmed ? ' · Needs confirmation' : ''}
                             {meeting._status !== 'published' ? ' · Draft changes waiting' : ''}
                           </p>
                           {overlap ? (

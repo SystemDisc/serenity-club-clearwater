@@ -69,3 +69,14 @@ Bring Your Own Coffee (BYOC) meets every morning in the back room.
 Run `scripts/backfill-meeting-schedules.ts` through `scripts/with-env.mjs` against a reviewed environment. Its default is a report; `--apply` copies only missing structured schedules. It refuses unrecognized recurrence text before changing anything and is repeatable without duplicating sessions. Back up production before migrating; review this report against current production records first. Existing records with structured sessions are skipped. The backfill suppresses per-record cache invalidations and must run before the release build (or be followed by the normal authenticated public revalidation operation).
 
 Local checks cover Monday–Saturday, second Wednesday, last/fifth weekdays, leap and year boundaries, different formats by day, multiple sessions, effective dates, DST, cancellations, monthly replacement, and moving one occurrence. Synthetic test assignments are not club schedule facts.
+
+## September 16: user-supplied original schedule
+
+The user supplied [the earlier club schedule](https://eeparties.wixsite.com/serenityclub/meeting-schedule). A direct Chrome review recovered specific weekday formats omitted from the initial conservative migration. `scripts/backfill-meeting-formats.ts` transfers these into editable sessions only when the record still has one untouched, unconfirmed legacy session and no exceptions. It leaves group-confirmation flags and last-checked dates unset.
+
+- TGIF: discussion Sunday/Monday/Wednesday/Friday/Saturday; Big Book Tuesday; 12 Steps & 12 Traditions Thursday.
+- Feelings: 12 Steps & 12 Traditions Monday; As Bill Sees It Tuesday; Big Book stories Wednesday; Big Book first 164 pages Thursday; Living Sober Friday; discussion Saturday.
+- Serenity in Addiction: discussion Sunday/Tuesday/Thursday; It Works: How and Why Monday; beginner Steps 1–3 Wednesday; Basic Text Friday; IP discussion Saturday. Last Sunday celebration replaces the regular Sunday session; last Wednesday speaker replaces the beginner session. First Monday business meeting is an additional 8 p.m. session.
+- Mid-Day: daily discussion. Intergroup Unity: Saturday speaker. Turner Street: Sunday–Friday discussion and Saturday campfire.
+
+These are historical club-published details, not new organizer confirmation. Existing times remain except the explicitly documented additional NA business session. The old source does not specify all attendance restrictions or GOYA/BYOC formats; those remain unchanged. The user explicitly prefers useful previous format tags to no tags, so public views retain available descriptions with a confirmation reminder. Editors can correct each day and mark it checked later.

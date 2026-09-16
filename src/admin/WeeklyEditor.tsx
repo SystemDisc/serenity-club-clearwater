@@ -52,9 +52,9 @@ export default function WeeklyEditor() {
                       <strong>{displayTime(session.time)}</strong>
                       {session.recurrence === 'monthly' ? ` · ${session.ordinal} week` : ''}
                       <br />
-                      {session.confirmed
-                        ? formatLabels[session.format || ''] || 'Format not specified'
-                        : 'Format needs confirmation'}
+                      {formatLabels[session.format || ''] || 'Format not specified'}
+                      {session.topic ? ` — ${session.topic}` : ''}
+                      {!session.confirmed ? ' · Needs confirmation' : ''}
                     </p>
                     {session.recurrence === 'weekly' && session.days.length > 1 ? (
                       <button

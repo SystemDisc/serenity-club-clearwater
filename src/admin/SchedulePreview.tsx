@@ -61,9 +61,8 @@ export default function SchedulePreview() {
             {today.map((session) => (
               <li key={session.key}>
                 {displayTime(session.time)} · {session.room}
-                {session.confirmed
-                  ? ` · ${formatLabels[session.format || ''] || ''}${session.topic ? ` — ${session.topic}` : ''}`
-                  : ' · Format still needs confirmation (not shown publicly)'}
+                {` · ${formatLabels[session.format || ''] || 'Earlier format description'}${session.topic ? ` — ${session.topic}` : ''}`}
+                {!session.confirmed ? ' · Needs confirmation' : ''}
                 {session.note ? ` · ${session.note}` : ''}
               </li>
             ))}

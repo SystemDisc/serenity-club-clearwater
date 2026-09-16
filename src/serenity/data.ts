@@ -264,6 +264,7 @@ export const getSerenityData = cache(
           (doc) => ({
             days: getText(doc.days),
             description: getText(doc.publicNotes) || undefined,
+            format: getText(doc.format) || undefined,
             externalUrl: getText(doc.externalUrl) || undefined,
             fellowship: (getText(doc.fellowship, 'AA') as Meeting['fellowship']) || 'AA',
             sessions: doc.sessions as Meeting['sessions'],
