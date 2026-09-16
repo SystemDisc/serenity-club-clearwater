@@ -5,11 +5,23 @@ import { beforeAll, afterAll, it, expect } from 'vitest'
 import sharp from 'sharp'
 let payload: Payload
 let editor: User
+let administrator: User
 let photoID: number | undefined
 const imageIDs: number[] = []
 const context = { disableRevalidate: true }
 beforeAll(async () => {
   payload = await getPayload({ config })
+  // The first account is intentionally promoted to administrator. Create that
+  // fixture explicitly so a clean CI database tests real editor permissions.
+  administrator = await payload.create({
+    collection: 'users',
+    context,
+    data: {
+      email: `recovery-admin-${crypto.randomUUID()}@example.test`,
+      password: crypto.randomUUID(),
+      role: 'admin',
+    },
+  })
   editor = await payload.create({
     collection: 'users',
     context,
@@ -19,12 +31,14 @@ beforeAll(async () => {
       role: 'editor',
     },
   })
+  expect(editor.role).toBe('editor')
 })
 afterAll(async () => {
   if (photoID)
     await payload.delete({ collection: 'galleryItems', id: photoID, trash: true, context })
   for (const id of imageIDs) await payload.delete({ collection: 'media', id, trash: true, context })
   await payload.delete({ collection: 'users', id: editor.id, context })
+  await payload.delete({ collection: 'users', id: administrator.id, context })
   await payload.destroy()
 })
 it('retains files through trash and restore and guards historical file usage and editor permissions', async () => {
