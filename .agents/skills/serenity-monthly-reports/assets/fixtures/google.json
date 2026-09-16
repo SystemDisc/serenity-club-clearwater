@@ -1,0 +1,400 @@
+{
+  "layout_version": 1,
+  "property": "google",
+  "fixture": true,
+  "as_of": "2026-09-09",
+  "identity_verified": true,
+  "period": {
+    "kind": "previous_month",
+    "start": "2026-08-01",
+    "end": "2026-08-31",
+    "timezone": "Provider timezone not exposed in captured Google view",
+    "displayed_range": "August 1-31, 2026",
+    "fallback_reason": "",
+    "partial_note": ""
+  },
+  "metrics": {
+    "profile_views": 2493,
+    "actions": 236,
+    "calls": 40,
+    "directions": 71,
+    "website_clicks": 125,
+    "bookings": 0,
+    "phone_share": 86.8
+  },
+  "unavailable_metrics": {},
+  "sections": {
+    "actions": {
+      "rows": [
+        [
+          "Website-link clicks",
+          125
+        ],
+        [
+          "Direction requests",
+          71
+        ],
+        [
+          "Call-button taps",
+          40
+        ],
+        [
+          "Bookings",
+          0
+        ]
+      ],
+      "note": ""
+    },
+    "summary": "People took 236 actions from the listing: 125 website clicks, 71 direction requests, and 40 call-button taps. More than half of the recorded actions were website clicks.",
+    "priorities": "Keep the address, phone number, hours, and website link current. Make practical information easy to use on a phone.",
+    "comparison_scope": "These changes compare August 2026 with August 2025, not July 2026.",
+    "comparisons": {
+      "rows": [
+        [
+          "Profile views",
+          2493,
+          "9.2% fewer"
+        ],
+        [
+          "All actions",
+          236,
+          "8.5% fewer"
+        ],
+        [
+          "Website clicks",
+          125,
+          "31.7% fewer"
+        ],
+        [
+          "Directions",
+          71,
+          "144.8% more"
+        ],
+        [
+          "Call taps",
+          40,
+          "13% fewer"
+        ]
+      ],
+      "note": ""
+    },
+    "discovery": {
+      "rows": [
+        [
+          "Google Search on a phone",
+          1889,
+          "75.8%"
+        ],
+        [
+          "Google Search on a computer",
+          305,
+          "12.2%"
+        ],
+        [
+          "Google Maps on a phone",
+          275,
+          "11.0%"
+        ],
+        [
+          "Google Maps on a computer",
+          24,
+          "1.0%"
+        ]
+      ],
+      "note": ""
+    },
+    "monthly_chart": {
+      "labels": [
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug"
+      ],
+      "series": [
+        {
+          "label": "Recorded actions",
+          "values": [
+            281,
+            247,
+            307,
+            247,
+            236
+          ]
+        }
+      ],
+      "note": "August had 11 fewer actions than July, a decrease of 4.5%."
+    },
+    "daily_intro": "August 1 was the busiest day, with 21 recorded actions.",
+    "daily": {
+      "rows": [
+        [
+          "2026-08-01",
+          0,
+          15,
+          6,
+          0,
+          21
+        ],
+        [
+          "2026-08-02",
+          3,
+          5,
+          6,
+          0,
+          14
+        ],
+        [
+          "2026-08-03",
+          3,
+          0,
+          2,
+          0,
+          5
+        ],
+        [
+          "2026-08-04",
+          2,
+          0,
+          2,
+          0,
+          4
+        ],
+        [
+          "2026-08-05",
+          2,
+          2,
+          3,
+          0,
+          7
+        ],
+        [
+          "2026-08-06",
+          2,
+          1,
+          2,
+          0,
+          5
+        ],
+        [
+          "2026-08-07",
+          0,
+          3,
+          6,
+          0,
+          9
+        ],
+        [
+          "2026-08-08",
+          0,
+          0,
+          5,
+          0,
+          5
+        ],
+        [
+          "2026-08-09",
+          1,
+          15,
+          4,
+          0,
+          20
+        ],
+        [
+          "2026-08-10",
+          2,
+          0,
+          4,
+          0,
+          6
+        ],
+        [
+          "2026-08-11",
+          0,
+          0,
+          6,
+          0,
+          6
+        ],
+        [
+          "2026-08-12",
+          0,
+          1,
+          5,
+          0,
+          6
+        ],
+        [
+          "2026-08-13",
+          3,
+          0,
+          2,
+          0,
+          5
+        ],
+        [
+          "2026-08-14",
+          1,
+          2,
+          5,
+          0,
+          8
+        ],
+        [
+          "2026-08-15",
+          5,
+          1,
+          3,
+          0,
+          9
+        ],
+        [
+          "2026-08-16",
+          0,
+          0,
+          7,
+          0,
+          7
+        ],
+        [
+          "2026-08-17",
+          2,
+          2,
+          6,
+          0,
+          10
+        ],
+        [
+          "2026-08-18",
+          0,
+          3,
+          6,
+          0,
+          9
+        ],
+        [
+          "2026-08-19",
+          1,
+          0,
+          2,
+          0,
+          3
+        ],
+        [
+          "2026-08-20",
+          1,
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          "2026-08-21",
+          0,
+          9,
+          4,
+          0,
+          13
+        ],
+        [
+          "2026-08-22",
+          0,
+          4,
+          4,
+          0,
+          8
+        ],
+        [
+          "2026-08-23",
+          0,
+          0,
+          5,
+          0,
+          5
+        ],
+        [
+          "2026-08-24",
+          0,
+          0,
+          5,
+          0,
+          5
+        ],
+        [
+          "2026-08-25",
+          0,
+          0,
+          1,
+          0,
+          1
+        ],
+        [
+          "2026-08-26",
+          2,
+          0,
+          10,
+          0,
+          12
+        ],
+        [
+          "2026-08-27",
+          5,
+          0,
+          4,
+          0,
+          9
+        ],
+        [
+          "2026-08-28",
+          1,
+          0,
+          2,
+          0,
+          3
+        ],
+        [
+          "2026-08-29",
+          2,
+          6,
+          5,
+          0,
+          13
+        ],
+        [
+          "2026-08-30",
+          0,
+          2,
+          3,
+          0,
+          5
+        ],
+        [
+          "2026-08-31",
+          2,
+          0,
+          0,
+          0,
+          2
+        ]
+      ],
+      "note": "Zeros mean no recorded action of that type, not that nobody contacted or visited the club."
+    },
+    "public_snapshot": "The public listing showed 4.7 out of 5 stars from 36 reviews on September 9, 2026. These are historical review totals, not August-only results.",
+    "definitions": "Profile views are views of the club listing in Search or Maps. Call taps do not establish answered calls. Direction requests do not establish arrival. Bookings refer to Google's booking feature, not attendance. Several actions can come from the same person.",
+    "searches": "Google said August search phrases would be available soon. No phrase rankings from another date range were substituted.",
+    "counting_notes": "All 31 daily rows, action totals, and discovery categories reconcile. This report covers August; the separate website report uses a different 30-day period. Do not add their audiences together."
+  },
+  "sources": [
+    {
+      "label": "Google profile performance",
+      "url": "https://www.google.com/local/business/13140341961578389203/promote/performance?from=2026-08&to=2026-08",
+      "captured": "2026-09-09"
+    },
+    {
+      "label": "Google metric explanations",
+      "url": "https://support.google.com/business/answer/9918094?hl=en",
+      "captured": "2026-09-09"
+    }
+  ],
+  "reconciliation_exceptions": {}
+}

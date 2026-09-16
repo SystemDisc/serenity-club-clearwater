@@ -1,0 +1,393 @@
+{
+  "version": 1,
+  "label": "Facebook activity report",
+  "footer": "FACEBOOK ACTIVITY",
+  "metrics": [
+    "views",
+    "viewers",
+    "engagement",
+    "interactions",
+    "reactions",
+    "comments",
+    "shares",
+    "visits",
+    "new_follows",
+    "unfollows",
+    "net_follows",
+    "followers",
+    "link_clicks"
+  ],
+  "checks": [
+    [
+      "daily",
+      1,
+      "views"
+    ],
+    [
+      "daily",
+      3,
+      "interactions"
+    ],
+    [
+      "daily",
+      4,
+      "visits"
+    ],
+    [
+      "daily",
+      5,
+      "link_clicks"
+    ],
+    [
+      "daily",
+      6,
+      "new_follows"
+    ],
+    [
+      "content_types",
+      1,
+      "views"
+    ],
+    [
+      "content_types",
+      3,
+      "interactions"
+    ]
+  ],
+  "pages": [
+    {
+      "title": "Facebook activity report",
+      "subtitle": "Prepared for the board and member-owners of Serenity Club of Clearwater",
+      "blocks": [
+        {
+          "type": "fixed",
+          "text": "{period} | Prepared {prepared}"
+        },
+        {
+          "type": "cards",
+          "items": [
+            {
+              "metric": "views",
+              "label": "Content views",
+              "description": "Times club content was displayed or played. Repeat views count.",
+              "percent": false
+            },
+            {
+              "metric": "viewers",
+              "label": "Viewer accounts",
+              "description": "Estimated accounts that saw the club content.",
+              "percent": false
+            },
+            {
+              "metric": "engagement",
+              "label": "Engagement actions",
+              "description": "Reactions, clicks, comments, shares, and saves on posts.",
+              "percent": false
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "What the period tells us"
+        },
+        {
+          "type": "text",
+          "id": "summary",
+          "style": "body"
+        },
+        {
+          "type": "heading",
+          "text": "Practical priorities for the club"
+        },
+        {
+          "type": "text",
+          "id": "priorities",
+          "style": "body"
+        }
+      ]
+    },
+    {
+      "title": "Monthly results & daily pattern",
+      "subtitle": "Comparison periods are stated explicitly below",
+      "blocks": [
+        {
+          "type": "text",
+          "id": "comparison_scope",
+          "style": "note"
+        },
+        {
+          "type": "table",
+          "id": "comparisons",
+          "columns": [
+            "Measure",
+            "Earlier period",
+            "Current period",
+            "Change"
+          ],
+          "widths": [
+            230,
+            90,
+            90,
+            114
+          ],
+          "padding": 2,
+          "signed_columns": [
+            1,
+            2
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "Daily content views"
+        },
+        {
+          "type": "chart",
+          "id": "daily_chart",
+          "height": 175
+        },
+        {
+          "type": "text",
+          "id": "trend_note",
+          "style": "note"
+        }
+      ]
+    },
+    {
+      "title": "Content & engagement",
+      "subtitle": "What was published, what was viewed, and how people responded",
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Published-content summary"
+        },
+        {
+          "type": "text",
+          "id": "publishing",
+          "style": "body"
+        },
+        {
+          "type": "heading",
+          "text": "Activity by content format"
+        },
+        {
+          "type": "table",
+          "id": "content_types",
+          "columns": [
+            "Format",
+            "Views",
+            "Share",
+            "Interactions"
+          ],
+          "widths": [
+            244,
+            90,
+            90,
+            100
+          ],
+          "padding": 2
+        },
+        {
+          "type": "heading",
+          "text": "Why there are two interaction totals"
+        },
+        {
+          "type": "text",
+          "id": "interactions_note",
+          "style": "body"
+        },
+        {
+          "type": "heading",
+          "text": "Video viewing"
+        },
+        {
+          "type": "text",
+          "id": "video",
+          "style": "body"
+        }
+      ]
+    },
+    {
+      "title": "Featured posts",
+      "subtitle": "Post snapshots | Capture dates and counting scope are stated below",
+      "blocks": [
+        {
+          "type": "text",
+          "id": "posts_scope",
+          "style": "note"
+        },
+        {
+          "type": "table",
+          "id": "posts",
+          "columns": [
+            "Post / date shown",
+            "Views",
+            "Reactions",
+            "Comments",
+            "Shares"
+          ],
+          "widths": [
+            242,
+            72,
+            74,
+            72,
+            64
+          ],
+          "padding": 4
+        },
+        {
+          "type": "heading",
+          "text": "What the club can take from these examples"
+        },
+        {
+          "type": "text",
+          "id": "posts_note",
+          "style": "body"
+        }
+      ]
+    },
+    {
+      "title": "The Page's audience",
+      "subtitle": "Current follower profile | Lifetime estimates, not period-only visitors",
+      "blocks": [
+        {
+          "type": "text",
+          "id": "audience_scope",
+          "style": "body"
+        },
+        {
+          "type": "heading",
+          "text": "Age and gender"
+        },
+        {
+          "type": "table",
+          "id": "age_gender",
+          "columns": [
+            "Age range",
+            "Women",
+            "Men",
+            "All followers"
+          ],
+          "widths": [
+            202,
+            104,
+            104,
+            114
+          ],
+          "padding": 2
+        },
+        {
+          "type": "heading",
+          "text": "Top cities and countries"
+        },
+        {
+          "type": "table",
+          "id": "locations",
+          "columns": [
+            "City",
+            "Share",
+            "Country",
+            "Share"
+          ],
+          "widths": [
+            194,
+            58,
+            194,
+            78
+          ],
+          "padding": 2
+        },
+        {
+          "type": "text",
+          "id": "audience_note",
+          "style": "note"
+        }
+      ]
+    },
+    {
+      "title": "Daily activity",
+      "subtitle": "Complete daily figures | {period}",
+      "blocks": [
+        {
+          "type": "text",
+          "id": "daily_intro",
+          "style": "note"
+        },
+        {
+          "type": "table",
+          "id": "daily",
+          "columns": [
+            "Date",
+            "Views",
+            "Viewers",
+            "Interactions",
+            "Page visits",
+            "Link clicks",
+            "New follows"
+          ],
+          "widths": [
+            72,
+            62,
+            64,
+            91,
+            77,
+            76,
+            82
+          ],
+          "padding": 1
+        }
+      ]
+    },
+    {
+      "title": "Messages, definitions & sources",
+      "subtitle": "How to read this report and what the figures can tell the club",
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Messaging activity"
+        },
+        {
+          "type": "table",
+          "id": "messaging",
+          "columns": [
+            "Measure",
+            "Result"
+          ],
+          "widths": [
+            335,
+            189
+          ],
+          "padding": 2
+        },
+        {
+          "type": "text",
+          "id": "messaging_note",
+          "style": "note"
+        },
+        {
+          "type": "heading",
+          "text": "Keep the measures separate"
+        },
+        {
+          "type": "text",
+          "id": "definitions",
+          "style": "note"
+        },
+        {
+          "type": "heading",
+          "text": "Sources and counting notes"
+        },
+        {
+          "type": "text",
+          "id": "counting_notes",
+          "style": "note"
+        },
+        {
+          "type": "sources"
+        }
+      ]
+    }
+  ],
+  "daily_chart_columns": [
+    1
+  ]
+}

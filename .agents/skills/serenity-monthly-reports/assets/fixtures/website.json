@@ -1,0 +1,651 @@
+{
+  "layout_version": 1,
+  "property": "website",
+  "fixture": true,
+  "as_of": "2026-09-09",
+  "identity_verified": true,
+  "period": {
+    "kind": "rolling_30_days",
+    "start": "2026-08-10",
+    "end": "2026-09-09",
+    "timezone": "Not exposed in the captured dashboard",
+    "displayed_range": "Aug 10, 5pm - Sep 9, 5:59pm",
+    "fallback_reason": "Vercel rejected the previous-month request because this plan only allowed the latest 31 days.",
+    "partial_note": "Both boundary dates cover part of a day, so the 30-day window includes 31 date labels."
+  },
+  "metrics": {
+    "visitors": 316,
+    "pageviews": 684,
+    "bounce_rate": 49
+  },
+  "unavailable_metrics": {},
+  "sections": {
+    "summary": "<b>The home page and meeting schedule were the main destinations.</b> They accounted for 567 of 684 page views. About 78% of recorded visitors used a phone. The dashboard reported 1% more visitors and 10% fewer page views than the preceding 30 days.",
+    "priorities": "Keep meeting times, changes, directions, and contact information current. Check that someone using a phone can quickly find the schedule and address.",
+    "period_note": "Both boundary dates cover part of a day, so the 30-day window includes 31 date labels.",
+    "trend_note": "September 6 was the busiest day, with 51 page views and 25 recorded visitors.",
+    "daily_chart": {
+      "labels": [
+        "Aug 10",
+        "Aug 11",
+        "Aug 12",
+        "Aug 13",
+        "Aug 14",
+        "Aug 15",
+        "Aug 16",
+        "Aug 17",
+        "Aug 18",
+        "Aug 19",
+        "Aug 20",
+        "Aug 21",
+        "Aug 22",
+        "Aug 23",
+        "Aug 24",
+        "Aug 25",
+        "Aug 26",
+        "Aug 27",
+        "Aug 28",
+        "Aug 29",
+        "Aug 30",
+        "Aug 31",
+        "Sep 01",
+        "Sep 02",
+        "Sep 03",
+        "Sep 04",
+        "Sep 05",
+        "Sep 06",
+        "Sep 07",
+        "Sep 08",
+        "Sep 09"
+      ],
+      "series": [
+        {
+          "label": "Page views",
+          "values": [
+            20,
+            18,
+            25,
+            11,
+            18,
+            12,
+            31,
+            28,
+            35,
+            12,
+            9,
+            32,
+            20,
+            19,
+            16,
+            14,
+            39,
+            25,
+            9,
+            15,
+            11,
+            33,
+            29,
+            11,
+            19,
+            32,
+            23,
+            51,
+            27,
+            15,
+            25
+          ]
+        },
+        {
+          "label": "Recorded visitors",
+          "values": [
+            9,
+            9,
+            8,
+            7,
+            9,
+            5,
+            11,
+            16,
+            14,
+            6,
+            7,
+            8,
+            9,
+            10,
+            8,
+            6,
+            16,
+            13,
+            5,
+            8,
+            7,
+            13,
+            9,
+            7,
+            12,
+            14,
+            16,
+            25,
+            14,
+            5,
+            11
+          ]
+        }
+      ],
+      "note": "First and last dates are partial days."
+    },
+    "daily": {
+      "rows": [
+        [
+          "2026-08-10",
+          9,
+          20
+        ],
+        [
+          "2026-08-11",
+          9,
+          18
+        ],
+        [
+          "2026-08-12",
+          8,
+          25
+        ],
+        [
+          "2026-08-13",
+          7,
+          11
+        ],
+        [
+          "2026-08-14",
+          9,
+          18
+        ],
+        [
+          "2026-08-15",
+          5,
+          12
+        ],
+        [
+          "2026-08-16",
+          11,
+          31
+        ],
+        [
+          "2026-08-17",
+          16,
+          28
+        ],
+        [
+          "2026-08-18",
+          14,
+          35
+        ],
+        [
+          "2026-08-19",
+          6,
+          12
+        ],
+        [
+          "2026-08-20",
+          7,
+          9
+        ],
+        [
+          "2026-08-21",
+          8,
+          32
+        ],
+        [
+          "2026-08-22",
+          9,
+          20
+        ],
+        [
+          "2026-08-23",
+          10,
+          19
+        ],
+        [
+          "2026-08-24",
+          8,
+          16
+        ],
+        [
+          "2026-08-25",
+          6,
+          14
+        ],
+        [
+          "2026-08-26",
+          16,
+          39
+        ],
+        [
+          "2026-08-27",
+          13,
+          25
+        ],
+        [
+          "2026-08-28",
+          5,
+          9
+        ],
+        [
+          "2026-08-29",
+          8,
+          15
+        ],
+        [
+          "2026-08-30",
+          7,
+          11
+        ],
+        [
+          "2026-08-31",
+          13,
+          33
+        ],
+        [
+          "2026-09-01",
+          9,
+          29
+        ],
+        [
+          "2026-09-02",
+          7,
+          11
+        ],
+        [
+          "2026-09-03",
+          12,
+          19
+        ],
+        [
+          "2026-09-04",
+          14,
+          32
+        ],
+        [
+          "2026-09-05",
+          16,
+          23
+        ],
+        [
+          "2026-09-06",
+          25,
+          51
+        ],
+        [
+          "2026-09-07",
+          14,
+          27
+        ],
+        [
+          "2026-09-08",
+          5,
+          15
+        ],
+        [
+          "2026-09-09",
+          11,
+          25
+        ]
+      ],
+      "note": "Daily page views reconcile to 684. Daily visitor counts add to 317; the provider reports 316 for the whole period. Use the provider total."
+    },
+    "pages_intro": "The table includes every page address recorded in the period. Views can repeat.",
+    "pages": {
+      "rows": [
+        [
+          "/",
+          264,
+          348,
+          "50.9%"
+        ],
+        [
+          "/meeting-schedule",
+          172,
+          219,
+          "32.0%"
+        ],
+        [
+          "/about",
+          21,
+          28,
+          "4.1%"
+        ],
+        [
+          "/events",
+          19,
+          26,
+          "3.8%"
+        ],
+        [
+          "/groups",
+          10,
+          13,
+          "1.9%"
+        ],
+        [
+          "/shop",
+          10,
+          14,
+          "2.0%"
+        ],
+        [
+          "/gallery",
+          7,
+          7,
+          "1.0%"
+        ],
+        [
+          "/shop/monthly-membership",
+          6,
+          10,
+          "1.5%"
+        ],
+        [
+          "/policies",
+          5,
+          7,
+          "1.0%"
+        ],
+        [
+          "/reach-out",
+          3,
+          3,
+          "0.4%"
+        ],
+        [
+          "/ways-to-give",
+          3,
+          4,
+          "0.6%"
+        ],
+        [
+          "/shop/medallions",
+          2,
+          2,
+          "0.3%"
+        ],
+        [
+          "/contact",
+          1,
+          1,
+          "0.1%"
+        ],
+        [
+          "/contact-us",
+          1,
+          1,
+          "0.1%"
+        ],
+        [
+          "/shop/coffee-mug",
+          1,
+          1,
+          "0.1%"
+        ]
+      ],
+      "note": ""
+    },
+    "pages_notes": "Visitor counts overlap between pages and should not be added. Views of membership, shop, or giving pages do not establish completed transactions.",
+    "referrers": {
+      "rows": [
+        [
+          "google.com",
+          140,
+          168
+        ],
+        [
+          "bing.com",
+          6,
+          6
+        ],
+        [
+          "duckduckgo.com",
+          4,
+          5
+        ],
+        [
+          "facebook.com",
+          4,
+          4
+        ],
+        [
+          "l.facebook.com",
+          2,
+          3
+        ],
+        [
+          "search.yahoo.com",
+          2,
+          2
+        ],
+        [
+          "chatgpt.com",
+          1,
+          2
+        ],
+        [
+          "reddit.com",
+          1,
+          1
+        ]
+      ],
+      "note": ""
+    },
+    "countries": {
+      "rows": [
+        [
+          "United States",
+          296,
+          661
+        ],
+        [
+          "France",
+          5,
+          5
+        ],
+        [
+          "United Kingdom",
+          3,
+          3
+        ],
+        [
+          "India",
+          2,
+          2
+        ],
+        [
+          "Italy",
+          2,
+          3
+        ],
+        [
+          "Netherlands",
+          2,
+          3
+        ],
+        [
+          "Austria",
+          1,
+          1
+        ],
+        [
+          "Australia",
+          1,
+          1
+        ],
+        [
+          "Brazil",
+          1,
+          2
+        ],
+        [
+          "Germany",
+          1,
+          1
+        ],
+        [
+          "South Korea",
+          1,
+          1
+        ],
+        [
+          "Singapore",
+          1,
+          1
+        ]
+      ],
+      "note": ""
+    },
+    "discovery_notes": "Google led the identifiable outside sources. These sources accounted for 191 page views; the source of another 493 views was not listed. Do not label all of those views as direct visits.",
+    "devices_software": {
+      "rows": [
+        [
+          "Mobile",
+          247,
+          536,
+          "iOS",
+          152,
+          316
+        ],
+        [
+          "Desktop",
+          66,
+          134,
+          "Android",
+          98,
+          234
+        ],
+        [
+          "Tablet",
+          3,
+          14,
+          "Windows",
+          47,
+          91
+        ],
+        [
+          "",
+          "",
+          "",
+          "Mac",
+          12,
+          34
+        ],
+        [
+          "",
+          "",
+          "",
+          "GNU/Linux",
+          6,
+          6
+        ],
+        [
+          "",
+          "",
+          "",
+          "Chrome OS",
+          1,
+          3
+        ]
+      ],
+      "note": ""
+    },
+    "browsers": {
+      "rows": [
+        [
+          "Mobile Safari",
+          91,
+          185
+        ],
+        [
+          "Chrome Mobile",
+          86,
+          209
+        ],
+        [
+          "Chrome",
+          45,
+          96
+        ],
+        [
+          "Chrome Mobile iOS",
+          36,
+          78
+        ],
+        [
+          "Google Search App",
+          18,
+          40
+        ],
+        [
+          "Microsoft Edge",
+          14,
+          22
+        ],
+        [
+          "Firefox Mobile",
+          5,
+          14
+        ],
+        [
+          "Firefox Mobile iOS",
+          4,
+          8
+        ],
+        [
+          "Safari",
+          4,
+          10
+        ],
+        [
+          "Samsung Browser",
+          4,
+          5
+        ],
+        [
+          "Facebook",
+          3,
+          5
+        ],
+        [
+          "Firefox",
+          3,
+          7
+        ],
+        [
+          "Chrome Webview",
+          1,
+          1
+        ],
+        [
+          "DuckDuckGo Privacy Browser",
+          1,
+          2
+        ],
+        [
+          "Opera",
+          1,
+          2
+        ]
+      ],
+      "note": ""
+    },
+    "device_notes": "Most recorded visitors used a phone. Keep essential information easy to read on common mobile browsers.",
+    "definitions": "Recorded visitors are the provider's count, not a verified count of different people. A person may be counted again on another day. Page views count each recorded view. One-page visits are visits that ended after viewing one page.",
+    "coverage": "Website activity does not confirm meeting attendance, new memberships, purchases, or donations. The Google and Facebook reports cover different surfaces and may include the same people.",
+    "counting_notes": "Daily page views reconcile to 684. Daily visitor counts add to 317; the provider reports 316 for the whole period. Use the provider total. Daily values in this historical reference were reconstructed from the rendered chart; prefer exact exports in future reports."
+  },
+  "sources": [
+    {
+      "label": "Website dashboard",
+      "url": "https://vercel.com/zorn-co/serenity-club-clearwater/analytics?period=30d",
+      "captured": "2026-09-09"
+    }
+  ],
+  "reconciliation_exceptions": {}
+}

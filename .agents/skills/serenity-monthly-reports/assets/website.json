@@ -1,0 +1,301 @@
+{
+  "version": 1,
+  "label": "Website activity report",
+  "footer": "WEBSITE ACTIVITY",
+  "metrics": [
+    "visitors",
+    "pageviews",
+    "bounce_rate"
+  ],
+  "checks": [
+    [
+      "daily",
+      2,
+      "pageviews"
+    ],
+    [
+      "pages",
+      2,
+      "pageviews"
+    ]
+  ],
+  "pages": [
+    {
+      "title": "Website activity report",
+      "subtitle": "Prepared for the board and member-owners of Serenity Club of Clearwater",
+      "blocks": [
+        {
+          "type": "fixed",
+          "text": "{period} | Prepared {prepared}"
+        },
+        {
+          "type": "cards",
+          "items": [
+            {
+              "metric": "visitors",
+              "label": "Recorded visitors",
+              "description": "The website visitor count. Returning people may be counted again on another day.",
+              "percent": false
+            },
+            {
+              "metric": "pageviews",
+              "label": "Pages viewed",
+              "description": "Times website pages were viewed, including repeats.",
+              "percent": false
+            },
+            {
+              "metric": "bounce_rate",
+              "label": "One-page visits",
+              "description": "Share of visits that ended after viewing one page.",
+              "percent": true
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "What this tells us"
+        },
+        {
+          "type": "text",
+          "id": "summary",
+          "style": "body"
+        },
+        {
+          "type": "heading",
+          "text": "Practical priorities for the club"
+        },
+        {
+          "type": "text",
+          "id": "priorities",
+          "style": "body"
+        },
+        {
+          "type": "text",
+          "id": "period_note",
+          "style": "note"
+        }
+      ]
+    },
+    {
+      "title": "Activity over the period",
+      "subtitle": "Daily website activity | {period}",
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Daily pattern"
+        },
+        {
+          "type": "text",
+          "id": "trend_note",
+          "style": "body"
+        },
+        {
+          "type": "chart",
+          "id": "daily_chart",
+          "height": 155
+        },
+        {
+          "type": "heading",
+          "text": "Daily figures"
+        },
+        {
+          "type": "table",
+          "id": "daily",
+          "columns": [
+            "Date",
+            "Visitors",
+            "Views"
+          ],
+          "widths": [
+            120,
+            65,
+            67
+          ],
+          "padding": 1,
+          "split_columns": 2
+        }
+      ]
+    },
+    {
+      "title": "What people looked at",
+      "subtitle": "Every recorded page address, with repeat views included",
+      "blocks": [
+        {
+          "type": "text",
+          "id": "pages_intro",
+          "style": "body"
+        },
+        {
+          "type": "table",
+          "id": "pages",
+          "columns": [
+            "Page / address",
+            "Visitors",
+            "Views",
+            "Share"
+          ],
+          "widths": [
+            284,
+            65,
+            75,
+            100
+          ],
+          "padding": 3
+        },
+        {
+          "type": "heading",
+          "text": "How to read these counts"
+        },
+        {
+          "type": "text",
+          "id": "pages_notes",
+          "style": "note"
+        }
+      ]
+    },
+    {
+      "title": "How visitors found the site",
+      "subtitle": "Identifiable outside links and visitor countries",
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Outside websites"
+        },
+        {
+          "type": "table",
+          "id": "referrers",
+          "columns": [
+            "Outside source",
+            "Visitors",
+            "Views"
+          ],
+          "widths": [
+            360,
+            82,
+            82
+          ],
+          "padding": 2
+        },
+        {
+          "type": "heading",
+          "text": "Visitor countries"
+        },
+        {
+          "type": "table",
+          "id": "countries",
+          "columns": [
+            "Country",
+            "Visitors",
+            "Views"
+          ],
+          "widths": [
+            360,
+            82,
+            82
+          ],
+          "padding": 2
+        },
+        {
+          "type": "text",
+          "id": "discovery_notes",
+          "style": "note"
+        }
+      ]
+    },
+    {
+      "title": "Phones, computers & apps",
+      "subtitle": "How people opened the website",
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Devices and device software"
+        },
+        {
+          "type": "table",
+          "id": "devices_software",
+          "columns": [
+            "Device / software",
+            "Visitors",
+            "Views",
+            "Device / software",
+            "Visitors",
+            "Views"
+          ],
+          "widths": [
+            150,
+            51,
+            51,
+            150,
+            61,
+            61
+          ],
+          "padding": 2
+        },
+        {
+          "type": "heading",
+          "text": "Browsers and apps"
+        },
+        {
+          "type": "table",
+          "id": "browsers",
+          "columns": [
+            "Browser or app",
+            "Visitors",
+            "Views"
+          ],
+          "widths": [
+            360,
+            82,
+            82
+          ],
+          "padding": 2
+        },
+        {
+          "type": "text",
+          "id": "device_notes",
+          "style": "note"
+        }
+      ]
+    },
+    {
+      "title": "Reading the website report",
+      "subtitle": "Plain-language definitions and reporting limits",
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "How the website counts activity"
+        },
+        {
+          "type": "text",
+          "id": "definitions",
+          "style": "body"
+        },
+        {
+          "type": "heading",
+          "text": "What is and is not measured"
+        },
+        {
+          "type": "text",
+          "id": "coverage",
+          "style": "body"
+        },
+        {
+          "type": "heading",
+          "text": "Sources and counting notes"
+        },
+        {
+          "type": "text",
+          "id": "counting_notes",
+          "style": "note"
+        },
+        {
+          "type": "sources"
+        }
+      ]
+    }
+  ],
+  "daily_chart_columns": [
+    2,
+    1
+  ]
+}

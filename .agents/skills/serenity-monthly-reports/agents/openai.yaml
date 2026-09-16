@@ -1,0 +1,4 @@
+interface:
+  display_name: "Serenity Monthly Reports"
+  short_description: "Three consistent, print-ready club analytics reports"
+  default_prompt: "Use $serenity-monthly-reports to generate the website, Google Business Profile, and Facebook PDFs for last month, falling back to the past 30 days through today only where necessary."
