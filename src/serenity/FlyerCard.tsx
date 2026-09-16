@@ -1,7 +1,7 @@
-import Image from 'next/image'
+import { ArrowRight } from 'lucide-react'
 import type { MonthlyFlyer } from '@/payload-types'
 import { displayMonth } from './flyers'
-import { SerenityImage } from './ui'
+import { ButtonLink, SerenityImage } from './ui'
 
 export function FlyerCard({
   flyer,
@@ -16,30 +16,46 @@ export function FlyerCard({
   const month = displayMonth(flyer.month)
 
   if (compact) {
-    if (!image?.url) return null
     return (
-      <figure className="mx-auto max-w-lg">
-        <a
-          className="block rounded-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-emerald-900"
-          href={image.url}
-          target="_blank"
-          rel="noreferrer"
-        >
-          <Image
-            src={image.url}
-            alt={`${month} events flyer`}
-            width={image.width || 1200}
-            height={image.height || 1600}
-            className="h-auto w-full rounded-lg"
-            sizes="(min-width: 544px) 512px, calc(100vw - 32px)"
-            quality={85}
-            loading={priority ? 'eager' : 'lazy'}
-          />
-          <span className="mt-3 block text-center font-semibold text-emerald-900 underline">
-            Open full-size flyer ↗
-          </span>
-        </a>
-      </figure>
+      <article className="overflow-hidden rounded-lg border border-slate-200 bg-white">
+        {image?.url ? (
+          <a
+            aria-label={`Open full-size ${month} events flyer`}
+            className="block bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-emerald-900"
+            href={image.url}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <SerenityImage
+              src={image.url}
+              alt={`${month} events flyer`}
+              priority={priority}
+              className="aspect-[4/3] w-full object-contain"
+              sizes="(min-width: 768px) 33vw, 100vw"
+            />
+          </a>
+        ) : null}
+        <div className="p-5">
+          <p className="text-sm font-semibold uppercase tracking-[0.12em] text-emerald-900">
+            Monthly flyer
+          </p>
+          <h3 className="mt-2 text-xl font-semibold text-slate-950">{month} at the club</h3>
+          <ButtonLink className="mt-5" href="/events" variant="secondary">
+            Read this month’s events
+            <ArrowRight aria-hidden="true" />
+          </ButtonLink>
+          {image?.url ? (
+            <a
+              className="mt-3 block w-fit py-2 text-sm font-semibold text-emerald-900 underline"
+              href={image.url}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Open full-size flyer ↗
+            </a>
+          ) : null}
+        </div>
+      </article>
     )
   }
   return (

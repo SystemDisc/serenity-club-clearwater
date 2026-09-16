@@ -29,7 +29,7 @@ export default async function HomePage() {
   const lastMeeting = recoveryMeetings[recoveryMeetings.length - 1]
   const featuredEvents = data.events
     .filter((event) => event.featured !== false && !isPastEvent(event))
-    .slice(0, 3)
+    .slice(0, flyers.current ? 2 : 3)
   const featuredProducts = data.products.slice(0, 4)
 
   return (
@@ -143,12 +143,9 @@ export default async function HomePage() {
             </ButtonLink>
           </div>
           <div className="mt-6 md:mt-8">
-            {flyers.current ? (
-              <div className="mb-8">
-                <FlyerCard flyer={flyers.current} compact />
-              </div>
-            ) : null}
-            <EventGrid events={featuredEvents} />
+            <EventGrid events={featuredEvents}>
+              {flyers.current ? <FlyerCard flyer={flyers.current} compact /> : null}
+            </EventGrid>
           </div>
         </div>
       </section>

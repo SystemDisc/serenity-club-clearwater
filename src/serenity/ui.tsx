@@ -287,9 +287,11 @@ export function MeetingList({
 }
 
 export function EventGrid({
+  children,
   events,
   headingLevel = 'h3',
 }: {
+  children?: React.ReactNode
   events: EventItem[]
   headingLevel?: 'h2' | 'h3'
 }) {
@@ -297,6 +299,7 @@ export function EventGrid({
 
   return (
     <div className="grid gap-5 md:grid-cols-3">
+      {children}
       {events.map((event) => (
         <article
           className="overflow-hidden rounded-lg border border-slate-200 bg-white"
