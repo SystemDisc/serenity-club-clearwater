@@ -474,7 +474,8 @@
     flex: 1;
   }
   .doc-controls {
-    position: static;
+    position: relative;
+    top: auto;
   }
 }
 .club-password-help {
