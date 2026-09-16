@@ -1237,6 +1237,43 @@ test.describe('Admin Panel', () => {
     }
   })
 
+  test('keeps the desktop sidebar open during navigation and closes the phone overlay', async () => {
+    await page.setViewportSize({ width: 1280, height: 800 })
+    await page.goto('/admin')
+    const open = page
+      .getByRole('button', { name: 'Open Menu', exact: true })
+      .filter({ visible: true })
+    const close = page
+      .getByRole('button', { name: 'Close Menu', exact: true })
+      .filter({ visible: true })
+    if (await open.isVisible()) await open.click()
+    await expect(close).toBeVisible()
+    await page
+      .locator('.club-nav-links')
+      .getByRole('link', { name: 'Change a meeting', exact: true })
+      .click()
+    await expect(page.getByRole('heading', { name: 'Change a meeting', exact: true })).toBeVisible()
+    await expect(close).toBeVisible()
+    await page.locator('#nav-events').click()
+    await expect(page.getByRole('heading', { name: 'Events', exact: true })).toBeVisible()
+    await expect(close).toBeVisible()
+    await close.click()
+    await expect(open).toBeVisible()
+    await open.click()
+    await expect(close).toBeVisible()
+    try {
+      await page.setViewportSize({ width: 320, height: 740 })
+      await expect(open).toBeVisible()
+      await open.click()
+      await page.locator('.club-nav-links').getByRole('link', { name: 'Home', exact: true }).click()
+      await expect(page.getByRole('heading', { name: 'Manage the website' })).toBeVisible()
+      await expect(open).toBeVisible()
+      await expect(close).toHaveCount(0)
+    } finally {
+      await page.setViewportSize({ width: 1280, height: 720 })
+    }
+  })
+
   test('keeps task navigation usable at phone width and protects custom admin pages', async ({
     browser,
   }) => {
