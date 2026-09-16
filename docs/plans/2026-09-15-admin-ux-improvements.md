@@ -418,3 +418,11 @@ The final [GitHub verification run](https://github.com/SystemDisc/serenity-club-
 The authorized email updates are live: the monthly Word flyer, movie, bake sale, painting event, past BBQ, and September bowling notice. All 17 July bowling photos now form one published album. The dues reminder uses the current month automatically. The user-supplied previous website provided day-specific TGIF, Feelings, Serenity in Addiction, Mid-Day, Unity, and Turner Street details; the source-backed import keeps confirmation status unset. Public and admin previews retain useful tags instead of hiding them. No original photo or document was replaced during organization. See the release record for record IDs and verification limits.
 
 Final application verification for `094f93a` passed in [GitHub CI](https://github.com/SystemDisc/serenity-club-clearwater/actions/runs/35135399382): 54 unit, 15 integration, and 30 browser tests, plus lint, types, and production build. Same-day activities now sort by announced time; unknown times remain explicit. See the release record for deployed evidence and remaining volunteer/device checks.
+
+### Implemented follow-up: album collages and optional photo covers
+
+- Default new albums to a collage of up to four published photos, maintaining the album's order and adapting for one, two, or three images.
+- Let volunteers select any published album photo, including photos after the first page, with an immediate visual preview and a one-click return to the automatic collage.
+- Preserve existing chosen covers; validate membership on publication and fall back safely if the chosen photo later leaves the album or becomes private.
+- Keep covers responsive, lazy-loaded, and optimized; reuse existing image derivatives instead of generating duplicate media. Show the published photo count and a clear View album prompt.
+- Verify draft exclusion, reordered collages, selected-cover fallback, bulk-upload defaults/reset, save/reload/publication, and a 320-pixel editor. Local checks passed: 54 unit tests, eight related integration tests, four album/bulk browser scenarios, lint, type checks, and a production build. Production application is recorded in the release log.
