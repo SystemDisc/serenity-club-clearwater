@@ -1,9 +1,9 @@
+import { mapLinks } from './siteCopy'
 import {
   ArrowRight,
   CalendarDays,
   Clock,
   HeartHandshake,
-  ImageIcon,
   Mail,
   MapPin,
   Phone,
@@ -15,10 +15,8 @@ import Link from 'next/link'
 import React from 'react'
 
 import {
-  SERENITY_GOOGLE_MAPS_PLACE_URL,
   type ClubSettings,
   type EventItem,
-  type GalleryItem,
   type Meeting,
   type Policy,
   type Product,
@@ -53,7 +51,7 @@ export function SerenityImage({
       fetchPriority={priority ? 'high' : undefined}
       height={900}
       loading={priority ? 'eager' : 'lazy'}
-      quality={90}
+      quality={85}
       sizes={sizes}
       src={src}
       width={1200}
@@ -186,7 +184,11 @@ export function HomeHero({ settings }: { settings: ClubSettings }) {
         {settings.heroImageUrl ? (
           <div className="relative z-10 order-first aspect-[4/3] w-full min-w-0 max-w-full overflow-visible lg:order-last">
             <div className="absolute inset-x-0 bottom-0 top-[11.2%] overflow-visible rounded-lg border border-slate-200 bg-white">
-              <img
+              <Image
+                width={1200}
+                height={900}
+                quality={85}
+                sizes="(min-width: 1024px) 42vw, 100vw"
                 alt="Serenity Club building sign at 631 Turner Street"
                 className="absolute inset-x-0 top-[-12.62%] z-10 h-[112.62%] w-full max-w-full object-contain object-top"
                 fetchPriority="high"
@@ -221,7 +223,7 @@ export function ContactBand({ settings }: { settings: ClubSettings }) {
         </a>
         <a
           className="flex min-h-11 min-w-0 items-center gap-3 rounded-md hover:text-emerald-900 sm:col-span-2 lg:col-span-1"
-          href={SERENITY_GOOGLE_MAPS_PLACE_URL}
+          href={mapLinks(settings.address, settings.cityStateZip).place}
           rel="noreferrer"
           target="_blank"
         >
@@ -247,7 +249,7 @@ export function MeetingList({
       {meetings.map((meeting) => (
         <article
           className="grid gap-4 rounded-lg border border-slate-200 bg-white p-4 md:grid-cols-[9rem_1fr_8rem]"
-          key={`${meeting.name}-${meeting.time}-${meeting.days}`}
+          key={`${meeting.id || meeting.name}-${meeting.time}-${meeting.days}`}
         >
           <div>
             <p className="flex items-center gap-2 text-sm font-semibold text-emerald-900">
@@ -293,7 +295,7 @@ export function EventGrid({
       {events.map((event) => (
         <article
           className="overflow-hidden rounded-lg border border-slate-200 bg-white"
-          key={event.title}
+          key={event.id || event.title}
         >
           {event.imageUrl ? (
             <a
@@ -323,6 +325,9 @@ export function EventGrid({
               {event.timeLabel ? ` | ${event.timeLabel}` : ''}
             </p>
             <p className="mt-3 text-sm leading-6 text-slate-700">{event.summary}</p>
+            {event.location ? (
+              <p className="mt-3 text-sm text-slate-700">Location: {event.location}</p>
+            ) : null}
             {event.url ? (
               <ButtonLink className="mt-5" href={event.url} variant="secondary">
                 Details
@@ -336,48 +341,7 @@ export function EventGrid({
   )
 }
 
-export function GalleryGrid({ items }: { items: GalleryItem[] }) {
-  return (
-    <div className="grid gap-5 md:grid-cols-3">
-      {items.map((item) => (
-        <figure
-          className="overflow-hidden rounded-lg border border-slate-200 bg-white"
-          key={`${item.title}-${item.imageUrl || item.id}`}
-        >
-          {item.imageUrl ? (
-            <a
-              aria-label={`Open original image for ${item.title}`}
-              className="block bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-emerald-900"
-              href={item.imageUrl}
-              rel="noreferrer"
-              target="_blank"
-            >
-              <SerenityImage
-                alt={item.imageAlt || item.title}
-                className="aspect-[4/3] w-full object-contain"
-                sizes="(min-width: 768px) 33vw, 100vw"
-                src={item.imageUrl}
-              />
-            </a>
-          ) : (
-            <div className="flex aspect-[4/3] items-center justify-center bg-slate-100 text-slate-500">
-              <ImageIcon aria-hidden="true" className="size-10" />
-            </div>
-          )}
-          <figcaption className="p-5">
-            <p className="text-sm font-semibold uppercase tracking-[0.12em] text-emerald-900">
-              {item.category}
-            </p>
-            <h2 className="mt-2 text-xl font-semibold text-slate-950">{item.title}</h2>
-            {item.description ? (
-              <p className="mt-3 text-sm leading-6 text-slate-700">{item.description}</p>
-            ) : null}
-          </figcaption>
-        </figure>
-      ))}
-    </div>
-  )
-}
+export { GalleryViewer as GalleryGrid } from './GalleryViewer'
 
 export function ProductGrid({ products }: { products: Product[] }) {
   return (

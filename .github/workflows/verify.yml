@@ -1,0 +1,56 @@
+name: Verify
+on:
+  pull_request:
+  push:
+    branches: [main, 'codex/**']
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:18.4
+        env:
+          POSTGRES_USER: serenity
+          POSTGRES_PASSWORD: local-only
+          POSTGRES_DB: serenity_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgres://serenity:local-only@127.0.0.1:5432/serenity_test
+      PAYLOAD_SECRET: ci-only-disposable-test-secret
+      PREVIEW_SECRET: ci-only-preview-secret
+      CRON_SECRET: ci-only-cron-secret
+      NEXT_PUBLIC_SERVER_URL: http://127.0.0.1:3100
+      TEST_SERVER_URL: http://127.0.0.1:3100
+      PAYLOAD_DB_PUSH: 'false'
+      ENABLE_SCHEDULED_PUBLISHING: 'true'
+      BLOB_READ_WRITE_TOKEN: ''
+      RESEND_API_KEY: ''
+      DOCX_CONVERTER_URL: ''
+      DOCX_CONVERTER_MODE: local
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm ci --prefix services/docx-converter
+      - run: sudo apt-get update && sudo apt-get install -y libreoffice-writer poppler-utils
+      - run: npm run migrate
+      - run: npx tsx scripts/seed-test.ts
+      - run: npm run lint -- --max-warnings=0
+      - run: npx tsc --noEmit
+      - run: npm run test:unit
+      - run: npm run test:int
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e -- --reporter=line

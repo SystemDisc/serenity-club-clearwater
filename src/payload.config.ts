@@ -1,3 +1,5 @@
+import { editorWorkflowPlugin } from '@/admin/editorWorkflow'
+import { isAdmin } from './access/users'
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { resendAdapter } from '@payloadcms/email-resend'
 import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
@@ -6,10 +8,14 @@ import path from 'path'
 import { buildConfig, PayloadRequest } from 'payload'
 import { fileURLToPath } from 'url'
 
+import { PhotoBatches, PhotoBatchItems } from './collections/PhotoBatches'
+import { Albums } from './collections/Albums'
 import { Categories } from './collections/Categories'
 import { Events } from './collections/Events'
 import { GalleryItems } from './collections/GalleryItems'
 import { Media } from './collections/Media'
+import { SourceDocuments } from './collections/SourceDocuments'
+import { MonthlyFlyers } from './collections/MonthlyFlyers'
 import { Meetings } from './collections/Meetings'
 import { Pages } from './collections/Pages'
 import { Policies } from './collections/Policies'
@@ -18,19 +24,23 @@ import { Products } from './collections/Products'
 import { Sponsors } from './collections/Sponsors'
 import { TeamMembers } from './collections/TeamMembers'
 import { Users } from './collections/Users'
+import { DuesReminder } from './DuesReminder/config'
 import { ClubSettings } from './ClubSettings/config'
 import { Footer } from './Footer/config'
 import { Header } from './Header/config'
+import { recoveryPlugin } from './plugins/recovery'
 import { plugins } from './plugins'
-import { docxToImagePlugin } from './plugins/docxToImage'
 import { defaultLexical } from '@/fields/defaultLexical'
 import { generatePublicMediaURL } from './utilities/generatePublicMediaURL'
 import { getServerSideURL } from './utilities/getURL'
+import { assertDatabaseSafety, isLocalDatabase } from './utilities/databaseSafety'
+import { clubAdminPlugin } from './admin/config'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 const getDatabaseURL = () => {
+  assertDatabaseSafety()
   const databaseURL = process.env.DATABASE_URL || ''
 
   if (!databaseURL) return ''
@@ -63,14 +73,27 @@ const getEmailAdapter = () => {
 }
 
 export default buildConfig({
+  i18n: {
+    translations: {
+      en: {
+        version: { versions: 'Previous versions', compareVersions: 'Compare previous versions' },
+      },
+    },
+  },
   admin: {
     components: {
-      // The `BeforeLogin` component renders a message that you see while logging into your admin panel.
-      // Feel free to delete this at any time. Simply remove the line below.
       beforeLogin: ['@/components/BeforeLogin'],
-      // The `BeforeDashboard` component renders the 'welcome' block that you see after logging into your admin panel.
-      // Feel free to delete this at any time. Simply remove the line below.
-      beforeDashboard: ['@/components/BeforeDashboard'],
+      Nav: '@/admin/Navigation',
+      beforeNavLinks: ['@/admin/NavLinks'],
+      views: {
+        dashboard: { Component: '@/admin/Dashboard' },
+        forgot: { Component: '@/admin/PasswordHelp', path: '/forgot' },
+        meetings: { Component: '@/admin/MeetingsWeek', path: '/meetings' },
+        photos: { Component: '@/admin/Photos', path: '/photos' },
+        organizePhotos: { Component: '@/admin/GalleryOrganizer', path: '/organize-photos' },
+        help: { Component: '@/admin/Help', path: '/help' },
+        tools: { Component: '@/admin/Help#Tools', path: '/tools' },
+      },
     },
     importMap: {
       baseDir: path.resolve(dirname),
@@ -103,6 +126,7 @@ export default buildConfig({
   editor: defaultLexical,
   email: getEmailAdapter(),
   db: postgresAdapter({
+    push: process.env.PAYLOAD_DB_PUSH === 'true' && isLocalDatabase(process.env.DATABASE_URL),
     pool: {
       connectionString: getDatabaseURL(),
     },
@@ -112,20 +136,27 @@ export default buildConfig({
     Meetings,
     Events,
     GalleryItems,
+    Albums,
+    PhotoBatches,
+    PhotoBatchItems,
     TeamMembers,
     Products,
     Policies,
     Sponsors,
     Posts,
     Media,
+    SourceDocuments,
+    MonthlyFlyers,
     Categories,
     Users,
   ],
   cors: [getServerSideURL()].filter(Boolean),
-  globals: [ClubSettings, Header, Footer],
+  globals: [ClubSettings, DuesReminder, Header, Footer],
+  folders: { browseByFolder: false },
   plugins: [
     ...plugins,
     vercelBlobStorage({
+      alwaysInsertFields: true,
       addRandomSuffix: true,
       collections: {
         media: {
@@ -136,18 +167,38 @@ export default buildConfig({
       enabled: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
       token: process.env.BLOB_READ_WRITE_TOKEN,
     }),
-    docxToImagePlugin(),
+    vercelBlobStorage({
+      alwaysInsertFields: true,
+      addRandomSuffix: true,
+      clientUploads: false,
+      collections: {
+        sourceDocuments: {
+          generateFileURL: (args) =>
+            process.env.BLOB_READ_WRITE_TOKEN
+              ? generatePublicMediaURL(args)
+              : `/api/sourceDocuments/file/${encodeURIComponent(args.filename)}`,
+        },
+      },
+      enabled: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
+      token: process.env.BLOB_READ_WRITE_TOKEN,
+    }),
+    clubAdminPlugin,
+    editorWorkflowPlugin,
+    recoveryPlugin,
   ],
   secret: process.env.PAYLOAD_SECRET,
   sharp,
   typescript: {
+    // The optional scheduled-publishing task must be included consistently.
+    // Generate explicitly with npm run generate:types, regardless of the runtime flag.
+    autoGenerate: false,
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
   jobs: {
     access: {
       run: ({ req }: { req: PayloadRequest }): boolean => {
-        // Allow logged in users to execute this endpoint (default)
-        if (req.user) return true
+        // Administrators and the authenticated scheduled runner can execute jobs.
+        if (isAdmin(req.user)) return true
 
         const secret = process.env.CRON_SECRET
         if (!secret) return false

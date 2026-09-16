@@ -3,7 +3,7 @@ import { PageHeader, PolicyList } from '@/serenity/ui'
 import { getSerenityData } from '@/serenity/data'
 
 export default async function PoliciesPage() {
-  const data = await getSerenityData()
+  const data = await getSerenityData(['policies'])
 
   return (
     <main>
@@ -24,5 +24,6 @@ export default async function PoliciesPage() {
 }
 
 export const metadata = {
+  alternates: { canonical: '/policies' },
   title: 'Policies | Serenity Club of Clearwater',
 }

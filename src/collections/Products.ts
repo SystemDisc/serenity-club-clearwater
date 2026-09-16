@@ -1,8 +1,6 @@
-import type {
-  CollectionAfterChangeHook,
-  CollectionAfterDeleteHook,
-  CollectionConfig,
-} from 'payload'
+import { validateWebsiteURL } from '@/utilities/validateWebsiteURL'
+import { slugField, type CollectionConfig } from 'payload'
+import { isAdmin } from '@/access/users'
 
 import { authenticated } from '@/access/authenticated'
 import { authenticatedOrPublished } from '@/access/authenticatedOrPublished'
@@ -10,45 +8,6 @@ import {
   revalidatePublicSiteAfterChange,
   revalidatePublicSiteAfterDelete,
 } from '@/hooks/revalidatePublicSite'
-import type { Product } from '@/payload-types'
-import { revalidatePath, revalidateTag } from 'next/cache'
-
-const revalidateProduct: CollectionAfterChangeHook<Product> = ({
-  doc,
-  previousDoc,
-  req: { context, payload },
-}) => {
-  if (!context.disableRevalidate) {
-    if (doc._status === 'published') {
-      const path = `/shop/${doc.slug}`
-
-      payload.logger.info(`Revalidating product at path: ${path}`)
-
-      revalidatePath(path)
-      revalidateTag('products-sitemap', 'max')
-    }
-
-    if (previousDoc?._status === 'published' && doc._status !== 'published') {
-      const oldPath = `/shop/${previousDoc.slug}`
-
-      payload.logger.info(`Revalidating old product at path: ${oldPath}`)
-
-      revalidatePath(oldPath)
-      revalidateTag('products-sitemap', 'max')
-    }
-  }
-
-  return doc
-}
-
-const revalidateDelete: CollectionAfterDeleteHook<Product> = ({ doc, req: { context } }) => {
-  if (!context.disableRevalidate) {
-    revalidatePath(`/shop/${doc?.slug}`)
-    revalidateTag('products-sitemap', 'max')
-  }
-
-  return doc
-}
 
 export const Products: CollectionConfig = {
   slug: 'products',
@@ -69,20 +28,50 @@ export const Products: CollectionConfig = {
   },
   fields: [
     { name: 'title', type: 'text', required: true },
-    { name: 'slug', type: 'text', required: true, unique: true, index: true },
+    slugField({ fieldToUse: 'title' }),
     { name: 'price', type: 'text', required: true },
     { name: 'description', type: 'textarea', required: true },
     { name: 'badge', type: 'text' },
     { name: 'image', type: 'upload', relationTo: 'media' },
-    { name: 'externalImageUrl', type: 'text', label: 'External Image URL' },
-    { name: 'imageAlt', type: 'text', label: 'Image Alt Text' },
-    { name: 'checkoutUrl', type: 'text', label: 'Square or Stripe Checkout URL' },
-    { name: 'fulfillmentNote', type: 'textarea', required: true },
-    { name: 'order', type: 'number', defaultValue: 100, admin: { position: 'sidebar' } },
+    {
+      name: 'externalImageUrl',
+      type: 'text',
+      label: 'External picture address (advanced)',
+      admin: { description: 'Usually leave blank and choose a library photo above.' },
+    },
+    { name: 'imageAlt', type: 'text', label: 'Description for people who cannot see the picture' },
+    {
+      name: 'checkoutUrl',
+      validate: validateWebsiteURL,
+      type: 'text',
+      label: 'Buy online destination',
+      access: { create: ({ req }) => isAdmin(req.user), update: ({ req }) => isAdmin(req.user) },
+      admin: {
+        description:
+          'Manager setting: verify the payment account. A displayed price does not change the price charged by this destination.',
+      },
+    },
+    {
+      name: 'fulfillmentNote',
+      type: 'textarea',
+      label: 'How to buy or collect this item',
+      required: true,
+    },
+    {
+      name: 'order',
+      type: 'number',
+      label: 'Display position',
+      defaultValue: 100,
+      admin: {
+        position: 'sidebar',
+        description:
+          'Lower numbers appear first. Leave gaps, such as 10, 20, 30, to fit new entries between them.',
+      },
+    },
   ],
   hooks: {
-    afterChange: [revalidateProduct, revalidatePublicSiteAfterChange],
-    afterDelete: [revalidateDelete, revalidatePublicSiteAfterDelete],
+    afterChange: [revalidatePublicSiteAfterChange],
+    afterDelete: [revalidatePublicSiteAfterDelete],
   },
   versions: {
     drafts: true,

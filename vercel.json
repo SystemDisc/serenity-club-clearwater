@@ -18,7 +18,11 @@
       2048,
       3840
     ],
-    "qualities": [100, 90],
+    "qualities": [
+      85,
+      90,
+      100
+    ],
     "localPatterns": [
       {
         "pathname": "^(?:\\/api\\/media\\/file(?:\\/(?!\\.{1,2}(?:\\/|$))(?:(?:(?!(?:^|\\/)\\.{1,2}(?:\\/|$)).)*?)|$))$"
@@ -47,7 +51,9 @@
     ],
     "domains": [],
     "minimumCacheTTL": 14400,
-    "formats": ["image/webp"],
+    "formats": [
+      "image/webp"
+    ],
     "dangerouslyAllowSVG": false,
     "contentSecurityPolicy": "script-src 'none'; frame-src 'none'; sandbox;",
     "contentDispositionType": "attachment"

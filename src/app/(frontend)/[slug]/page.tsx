@@ -17,31 +17,27 @@ import { hasUsableDatabaseUrl } from '@/serenity/data'
 export async function generateStaticParams() {
   if (!hasUsableDatabaseUrl()) return []
 
-  try {
-    const payload = await getPayload({ config: configPromise })
-    const pages = await payload.find({
-      collection: 'pages',
-      draft: false,
-      limit: 1000,
-      overrideAccess: false,
-      pagination: false,
-      select: {
-        slug: true,
-      },
+  const payload = await getPayload({ config: configPromise })
+  const pages = await payload.find({
+    collection: 'pages',
+    draft: false,
+    limit: 1000,
+    overrideAccess: false,
+    pagination: false,
+    select: {
+      slug: true,
+    },
+  })
+
+  const params = pages.docs
+    ?.filter((doc) => {
+      return doc.slug !== 'home'
+    })
+    .map(({ slug }) => {
+      return { slug }
     })
 
-    const params = pages.docs
-      ?.filter((doc) => {
-        return doc.slug !== 'home'
-      })
-      .map(({ slug }) => {
-        return { slug }
-      })
-
-    return params
-  } catch (_error) {
-    return []
-  }
+  return params
 }
 
 type Args = {
@@ -104,30 +100,23 @@ const queryPageBySlug = cache(async ({ slug }: { slug: string }) => {
     }
   }
 
-  try {
-    const payload = await getPayload({ config: configPromise })
+  const payload = await getPayload({ config: configPromise })
 
-    const result = await payload.find({
-      collection: 'pages',
-      draft,
-      limit: 1,
-      pagination: false,
-      overrideAccess: draft,
-      where: {
-        slug: {
-          equals: slug,
-        },
+  const result = await payload.find({
+    collection: 'pages',
+    draft,
+    limit: 1,
+    pagination: false,
+    overrideAccess: draft,
+    where: {
+      slug: {
+        equals: slug,
       },
-    })
+    },
+  })
 
-    return {
-      canQueryRedirects: true,
-      page: (result.docs?.[0] || null) as RequiredDataFromCollectionSlug<'pages'> | null,
-    }
-  } catch (_error) {
-    return {
-      canQueryRedirects: false,
-      page: null,
-    }
+  return {
+    canQueryRedirects: true,
+    page: (result.docs?.[0] || null) as RequiredDataFromCollectionSlug<'pages'> | null,
   }
 })

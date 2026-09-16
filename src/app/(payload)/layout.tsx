@@ -8,6 +8,7 @@ import React from 'react'
 
 import { importMap } from './admin/importMap.js'
 import './custom.scss'
+import { withPublicMutation } from '@/utilities/publicCache'
 
 type Args = {
   children: React.ReactNode
@@ -15,11 +16,13 @@ type Args = {
 
 const serverFunction: ServerFunctionClient = async function (args) {
   'use server'
-  return handleServerFunctions({
-    ...args,
-    config,
-    importMap,
-  })
+  return withPublicMutation(() =>
+    handleServerFunctions({
+      ...args,
+      config,
+      importMap,
+    }),
+  )
 }
 
 const Layout = ({ children }: Args) => (

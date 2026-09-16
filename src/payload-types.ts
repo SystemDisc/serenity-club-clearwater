@@ -71,12 +71,17 @@ export interface Config {
     meetings: Meeting;
     events: Event;
     galleryItems: GalleryItem;
+    albums: Album;
+    photoBatches: PhotoBatch;
+    photoBatchItems: PhotoBatchItem;
     teamMembers: TeamMember;
     products: Product;
     policies: Policy;
     sponsors: Sponsor;
     posts: Post;
     media: Media;
+    sourceDocuments: SourceDocument;
+    monthlyFlyers: MonthlyFlyer;
     categories: Category;
     users: User;
     redirects: Redirect;
@@ -100,12 +105,17 @@ export interface Config {
     meetings: MeetingsSelect<false> | MeetingsSelect<true>;
     events: EventsSelect<false> | EventsSelect<true>;
     galleryItems: GalleryItemsSelect<false> | GalleryItemsSelect<true>;
+    albums: AlbumsSelect<false> | AlbumsSelect<true>;
+    photoBatches: PhotoBatchesSelect<false> | PhotoBatchesSelect<true>;
+    photoBatchItems: PhotoBatchItemsSelect<false> | PhotoBatchItemsSelect<true>;
     teamMembers: TeamMembersSelect<false> | TeamMembersSelect<true>;
     products: ProductsSelect<false> | ProductsSelect<true>;
     policies: PoliciesSelect<false> | PoliciesSelect<true>;
     sponsors: SponsorsSelect<false> | SponsorsSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    sourceDocuments: SourceDocumentsSelect<false> | SourceDocumentsSelect<true>;
+    monthlyFlyers: MonthlyFlyersSelect<false> | MonthlyFlyersSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
@@ -125,11 +135,13 @@ export interface Config {
   fallbackLocale: null;
   globals: {
     clubSettings: ClubSetting;
+    duesReminder: DuesReminder;
     header: Header;
     footer: Footer;
   };
   globalsSelect: {
     clubSettings: ClubSettingsSelect<false> | ClubSettingsSelect<true>;
+    duesReminder: DuesReminderSelect<false> | DuesReminderSelect<true>;
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
   };
@@ -234,16 +246,30 @@ export interface Page {
   slug: string;
   updatedAt: string;
   createdAt: string;
+  deletedAt?: string | null;
   _status?: ('draft' | 'published') | null;
 }
 /**
+ * Write an update, preview it on a phone or computer, then publish. Save your first draft, then later edits autosave. A publication date is a display date; it does not schedule publication.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "posts".
  */
 export interface Post {
   id: number;
   title: string;
+  /**
+   * Shown in the news list and above the article.
+   */
+  excerpt?: string | null;
+  /**
+   * For example: Serenity Club. Leave empty to publish without a personal byline.
+   */
+  byline?: string | null;
   heroImage?: (number | null) | Media;
+  /**
+   * Use the toolbar for headings, lists, links, quotes, and Add photo. Paste text from Word or Google Docs, then check the preview.
+   */
   content: {
     root: {
       type: string;
@@ -284,14 +310,26 @@ export interface Post {
   slug: string;
   updatedAt: string;
   createdAt: string;
+  deletedAt?: string | null;
   _status?: ('draft' | 'published') | null;
 }
 /**
+ * Shared public files. Uploading here stores a file; publish a gallery photo or event to show it on those pages.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".
  */
 export interface Media {
   id: number;
+  contentHash?: string | null;
+  uploadKey?: string | null;
+  /**
+   * Original retained separately when this image was made from a Word flyer.
+   */
+  sourceDocument?: (number | null) | SourceDocument;
+  /**
+   * Describe meaningful image content for screen readers. Leave blank only for decorative images; gallery titles provide a fallback.
+   */
   alt?: string | null;
   caption?: {
     root: {
@@ -308,9 +346,11 @@ export interface Media {
     };
     [k: string]: unknown;
   } | null;
+  prefix?: string | null;
   folder?: (number | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
+  deletedAt?: string | null;
   url?: string | null;
   thumbnailURL?: string | null;
   filename?: string | null;
@@ -380,6 +420,28 @@ export interface Media {
   };
 }
 /**
+ * Retained originals for flyer versions. Upload a new original when replacing a flyer; previous originals stay available. Files in production Blob storage have public URLs.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "sourceDocuments".
+ */
+export interface SourceDocument {
+  id: number;
+  sha256?: string | null;
+  prefix?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-folders".
  */
@@ -435,6 +497,10 @@ export interface Category {
  */
 export interface User {
   id: number;
+  /**
+   * Editors manage content. Administrators also manage user accounts.
+   */
+  role: 'admin' | 'editor';
   name?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -559,6 +625,8 @@ export interface ContentBlock {
  */
 export interface MediaBlock {
   media: number | Media;
+  caption?: string | null;
+  alt?: string | null;
   id?: string | null;
   blockName?: string | null;
   blockType: 'mediaBlock';
@@ -740,9 +808,6 @@ export interface Form {
       )[]
     | null;
   submitButtonLabel?: string | null;
-  /**
-   * Choose whether to display an on-page message or redirect to a different page after they submit the form.
-   */
   confirmationType?: ('message' | 'redirect') | null;
   confirmationMessage?: {
     root: {
@@ -762,9 +827,6 @@ export interface Form {
   redirect?: {
     url: string;
   };
-  /**
-   * Send custom emails when the form submits. Use comma separated lists to send the same email to multiple recipients. To reference a value from this form, wrap that field's name with double curly brackets, i.e. {{firstName}}. You can use a wildcard {{*}} to output all data and {{*:table}} to format it as an HTML table in the email.
-   */
   emails?:
     | {
         emailTo?: string | null;
@@ -773,9 +835,6 @@ export interface Form {
         replyTo?: string | null;
         emailFrom?: string | null;
         subject: string;
-        /**
-         * Enter the message that should be sent in this email.
-         */
         message?: {
           root: {
             type: string;
@@ -798,6 +857,8 @@ export interface Form {
   createdAt: string;
 }
 /**
+ * Change one group here. Set the days that share details, then add sessions for days that differ. Preview the next dates before publishing.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "meetings".
  */
@@ -805,8 +866,94 @@ export interface Meeting {
   id: number;
   name: string;
   fellowship: 'AA' | 'NA' | 'Club';
-  time: string;
-  days: string;
+  /**
+   * Only add confirmed information. These notes appear with this group wherever its schedule is shown.
+   */
+  publicNotes?: string | null;
+  /**
+   * Select all days that share the same time and format. Add another session for days with different details. Times are local to Clearwater.
+   */
+  sessions?:
+    | {
+        key: string;
+        label?: string | null;
+        recurrence: 'weekly' | 'monthly';
+        days: ('Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday')[];
+        ordinal?: ('first' | 'second' | 'third' | 'fourth' | 'fifth' | 'last') | null;
+        /**
+         * Leave empty for an additional monthly session.
+         */
+        replaces?: string | null;
+        time: string;
+        room?: string | null;
+        format?:
+          | (
+              | 'unknown'
+              | 'discussion'
+              | 'book'
+              | 'literature'
+              | 'speaker'
+              | 'beginner'
+              | 'celebration'
+              | 'business'
+              | 'other'
+            )
+          | null;
+        topic?: string | null;
+        /**
+         * Attendance is separate from discussion or study format. Confirm with the group.
+         */
+        attendance?: ('unknown' | 'everyone' | 'recovery' | 'women' | 'men' | 'members') | null;
+        /**
+         * Unconfirmed format and attendance labels are not shown publicly.
+         */
+        confirmed?: boolean | null;
+        from?: string | null;
+        until?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  exceptions?:
+    | {
+        session: string;
+        date: string;
+        action: 'cancel' | 'change';
+        movedTo?: string | null;
+        time?: string | null;
+        room?: string | null;
+        format?:
+          | (
+              | 'unknown'
+              | 'discussion'
+              | 'book'
+              | 'literature'
+              | 'speaker'
+              | 'beginner'
+              | 'celebration'
+              | 'business'
+              | 'other'
+            )
+          | null;
+        topic?: string | null;
+        /**
+         * Attendance is separate from discussion or study format. Confirm with the group.
+         */
+        attendance?: ('unknown' | 'everyone' | 'recovery' | 'women' | 'men' | 'members') | null;
+        /**
+         * Unconfirmed format and attendance labels are not shown publicly.
+         */
+        confirmed?: boolean | null;
+        note?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  checkedOn?: string | null;
+  /**
+   * Group contact or responsible role. This is never included in the public schedule.
+   */
+  checkedBy?: string | null;
+  time?: string | null;
+  days?: string | null;
   room?: string | null;
   format?: string | null;
   description?: string | null;
@@ -814,26 +961,70 @@ export interface Meeting {
   order?: number | null;
   updatedAt: string;
   createdAt: string;
+  deletedAt?: string | null;
   _status?: ('draft' | 'published') | null;
 }
 /**
+ * For one activity, choose its date and details here. Use Monthly flyers for the whole month. Recurring club meetings can use their existing meeting schedule.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "events".
  */
 export interface Event {
   id: number;
   title: string;
-  dateLabel: string;
+  kind: 'dated' | 'meeting' | 'legacy';
+  date?: string | null;
+  endDate?: string | null;
+  timeMode?: ('known' | 'allDay' | 'unannounced') | null;
+  startTime?: string | null;
+  endTime?: string | null;
+  location?: string | null;
+  /**
+   * Dates and times come from this meeting. Correct them in Meetings so all public pages agree.
+   */
+  meeting?: (number | null) | Meeting;
+  dateLabel?: string | null;
   timeLabel?: string | null;
+  archived?: boolean | null;
+  featured?: boolean | null;
   category?: ('Fundraiser' | 'Meeting' | 'Service' | 'Community') | null;
-  summary: string;
+  /**
+   * Required before publishing. You can finish this after saving a draft.
+   */
+  summary?: string | null;
   image?: (number | null) | Media;
   externalImageUrl?: string | null;
   imageAlt?: string | null;
   url?: string | null;
+  sourceFlyer?: (number | null) | MonthlyFlyer;
   order?: number | null;
   updatedAt: string;
   createdAt: string;
+  deletedAt?: string | null;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * One flyer per month. Keep next month as a draft until it is ready. Previous images and original documents remain available through Versions.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "monthlyFlyers".
+ */
+export interface MonthlyFlyer {
+  id: number;
+  month: string;
+  image?: (number | null) | Media;
+  /**
+   * Use the Word flyer control below to retain the original and create a separate image.
+   */
+  sourceDocument?: (number | null) | SourceDocument;
+  /**
+   * Include dates, event names, and available times so people can read the details without the picture.
+   */
+  details?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  deletedAt?: string | null;
   _status?: ('draft' | 'published') | null;
 }
 /**
@@ -842,16 +1033,94 @@ export interface Event {
  */
 export interface GalleryItem {
   id: number;
+  importKey?: string | null;
+  takenOn?: string | null;
   title: string;
   category?: ('Clubhouse' | 'Event' | 'People' | 'Flyer' | 'Community') | null;
   description?: string | null;
+  /**
+   * An album photo is visible only while both this photo and its album are published. Clear this field to move the photo to the main gallery.
+   */
+  album?: (number | null) | Album;
   image?: (number | null) | Media;
   externalImageUrl?: string | null;
   imageAlt?: string | null;
   order?: number | null;
   updatedAt: string;
   createdAt: string;
+  deletedAt?: string | null;
   _status?: ('draft' | 'published') | null;
+}
+/**
+ * Create an album draft, add its photos, and choose a cover. Publishing shows the album and its published photos in Gallery. Unpublishing hides the whole album.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "albums".
+ */
+export interface Album {
+  id: number;
+  title: string;
+  date?: string | null;
+  description?: string | null;
+  cover?: (number | null) | Media;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+  deletedAt?: string | null;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "photoBatches".
+ */
+export interface PhotoBatch {
+  id: number;
+  title: string;
+  date?: string | null;
+  album?: (number | null) | Album;
+  albumRevision?: string | null;
+  cover?: (number | null) | Media;
+  createdBy?: (number | null) | User;
+  revision: number;
+  state: 'reviewing' | 'published';
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "photoBatchItems".
+ */
+export interface PhotoBatchItem {
+  id: number;
+  batch: number | PhotoBatch;
+  key: string;
+  fingerprint: string;
+  filename: string;
+  title: string;
+  caption?: string | null;
+  alt?: string | null;
+  position: number;
+  status: 'pending' | 'ready' | 'error' | 'excluded' | 'published';
+  error?: string | null;
+  receipt?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  media?: (number | null) | Media;
+  photoRevision?: string | null;
+  photo?: (number | null) | GalleryItem;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -863,11 +1132,18 @@ export interface TeamMember {
   role: string;
   bio: string;
   image?: (number | null) | Media;
+  /**
+   * Usually leave blank and choose a library photo above.
+   */
   externalImageUrl?: string | null;
   imageAlt?: string | null;
+  /**
+   * Lower numbers appear first. Leave gaps, such as 10, 20, 30, to fit new entries between them.
+   */
   order?: number | null;
   updatedAt: string;
   createdAt: string;
+  deletedAt?: string | null;
   _status?: ('draft' | 'published') | null;
 }
 /**
@@ -877,18 +1153,32 @@ export interface TeamMember {
 export interface Product {
   id: number;
   title: string;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
   slug: string;
   price: string;
   description: string;
   badge?: string | null;
   image?: (number | null) | Media;
+  /**
+   * Usually leave blank and choose a library photo above.
+   */
   externalImageUrl?: string | null;
   imageAlt?: string | null;
+  /**
+   * Manager setting: verify the payment account. A displayed price does not change the price charged by this destination.
+   */
   checkoutUrl?: string | null;
   fulfillmentNote: string;
+  /**
+   * Lower numbers appear first. Leave gaps, such as 10, 20, 30, to fit new entries between them.
+   */
   order?: number | null;
   updatedAt: string;
   createdAt: string;
+  deletedAt?: string | null;
   _status?: ('draft' | 'published') | null;
 }
 /**
@@ -899,9 +1189,13 @@ export interface Policy {
   id: number;
   title: string;
   body: string;
+  /**
+   * Lower numbers appear first. Leave gaps, such as 10, 20, 30, to fit new entries between them.
+   */
   order?: number | null;
   updatedAt: string;
   createdAt: string;
+  deletedAt?: string | null;
   _status?: ('draft' | 'published') | null;
 }
 /**
@@ -913,11 +1207,18 @@ export interface Sponsor {
   name: string;
   url?: string | null;
   image?: (number | null) | Media;
+  /**
+   * Usually leave blank and choose a library photo above.
+   */
   externalImageUrl?: string | null;
   imageAlt?: string | null;
+  /**
+   * Lower numbers appear first. Leave gaps, such as 10, 20, 30, to fit new entries between them.
+   */
   order?: number | null;
   updatedAt: string;
   createdAt: string;
+  deletedAt?: string | null;
   _status?: ('draft' | 'published') | null;
 }
 /**
@@ -927,7 +1228,7 @@ export interface Sponsor {
 export interface Redirect {
   id: number;
   /**
-   * You will need to rebuild the website when changing this field.
+   * Redirect changes update the public website after saving.
    */
   from: string;
   to?: {
@@ -1127,6 +1428,18 @@ export interface PayloadLockedDocument {
         value: number | GalleryItem;
       } | null)
     | ({
+        relationTo: 'albums';
+        value: number | Album;
+      } | null)
+    | ({
+        relationTo: 'photoBatches';
+        value: number | PhotoBatch;
+      } | null)
+    | ({
+        relationTo: 'photoBatchItems';
+        value: number | PhotoBatchItem;
+      } | null)
+    | ({
         relationTo: 'teamMembers';
         value: number | TeamMember;
       } | null)
@@ -1149,6 +1462,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'sourceDocuments';
+        value: number | SourceDocument;
+      } | null)
+    | ({
+        relationTo: 'monthlyFlyers';
+        value: number | MonthlyFlyer;
       } | null)
     | ({
         relationTo: 'categories';
@@ -1269,6 +1590,7 @@ export interface PagesSelect<T extends boolean = true> {
   slug?: T;
   updatedAt?: T;
   createdAt?: T;
+  deletedAt?: T;
   _status?: T;
 }
 /**
@@ -1327,6 +1649,8 @@ export interface ContentBlockSelect<T extends boolean = true> {
  */
 export interface MediaBlockSelect<T extends boolean = true> {
   media?: T;
+  caption?: T;
+  alt?: T;
   id?: T;
   blockName?: T;
 }
@@ -1362,6 +1686,44 @@ export interface FormBlockSelect<T extends boolean = true> {
 export interface MeetingsSelect<T extends boolean = true> {
   name?: T;
   fellowship?: T;
+  publicNotes?: T;
+  sessions?:
+    | T
+    | {
+        key?: T;
+        label?: T;
+        recurrence?: T;
+        days?: T;
+        ordinal?: T;
+        replaces?: T;
+        time?: T;
+        room?: T;
+        format?: T;
+        topic?: T;
+        attendance?: T;
+        confirmed?: T;
+        from?: T;
+        until?: T;
+        id?: T;
+      };
+  exceptions?:
+    | T
+    | {
+        session?: T;
+        date?: T;
+        action?: T;
+        movedTo?: T;
+        time?: T;
+        room?: T;
+        format?: T;
+        topic?: T;
+        attendance?: T;
+        confirmed?: T;
+        note?: T;
+        id?: T;
+      };
+  checkedOn?: T;
+  checkedBy?: T;
   time?: T;
   days?: T;
   room?: T;
@@ -1371,6 +1733,7 @@ export interface MeetingsSelect<T extends boolean = true> {
   order?: T;
   updatedAt?: T;
   createdAt?: T;
+  deletedAt?: T;
   _status?: T;
 }
 /**
@@ -1379,17 +1742,29 @@ export interface MeetingsSelect<T extends boolean = true> {
  */
 export interface EventsSelect<T extends boolean = true> {
   title?: T;
+  kind?: T;
+  date?: T;
+  endDate?: T;
+  timeMode?: T;
+  startTime?: T;
+  endTime?: T;
+  location?: T;
+  meeting?: T;
   dateLabel?: T;
   timeLabel?: T;
+  archived?: T;
+  featured?: T;
   category?: T;
   summary?: T;
   image?: T;
   externalImageUrl?: T;
   imageAlt?: T;
   url?: T;
+  sourceFlyer?: T;
   order?: T;
   updatedAt?: T;
   createdAt?: T;
+  deletedAt?: T;
   _status?: T;
 }
 /**
@@ -1397,16 +1772,75 @@ export interface EventsSelect<T extends boolean = true> {
  * via the `definition` "galleryItems_select".
  */
 export interface GalleryItemsSelect<T extends boolean = true> {
+  importKey?: T;
+  takenOn?: T;
   title?: T;
   category?: T;
   description?: T;
+  album?: T;
   image?: T;
   externalImageUrl?: T;
   imageAlt?: T;
   order?: T;
   updatedAt?: T;
   createdAt?: T;
+  deletedAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "albums_select".
+ */
+export interface AlbumsSelect<T extends boolean = true> {
+  title?: T;
+  date?: T;
+  description?: T;
+  cover?: T;
+  generateSlug?: T;
+  slug?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  deletedAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "photoBatches_select".
+ */
+export interface PhotoBatchesSelect<T extends boolean = true> {
+  title?: T;
+  date?: T;
+  album?: T;
+  albumRevision?: T;
+  cover?: T;
+  createdBy?: T;
+  revision?: T;
+  state?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "photoBatchItems_select".
+ */
+export interface PhotoBatchItemsSelect<T extends boolean = true> {
+  batch?: T;
+  key?: T;
+  fingerprint?: T;
+  filename?: T;
+  title?: T;
+  caption?: T;
+  alt?: T;
+  position?: T;
+  status?: T;
+  error?: T;
+  receipt?: T;
+  media?: T;
+  photoRevision?: T;
+  photo?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1422,6 +1856,7 @@ export interface TeamMembersSelect<T extends boolean = true> {
   order?: T;
   updatedAt?: T;
   createdAt?: T;
+  deletedAt?: T;
   _status?: T;
 }
 /**
@@ -1430,6 +1865,7 @@ export interface TeamMembersSelect<T extends boolean = true> {
  */
 export interface ProductsSelect<T extends boolean = true> {
   title?: T;
+  generateSlug?: T;
   slug?: T;
   price?: T;
   description?: T;
@@ -1442,6 +1878,7 @@ export interface ProductsSelect<T extends boolean = true> {
   order?: T;
   updatedAt?: T;
   createdAt?: T;
+  deletedAt?: T;
   _status?: T;
 }
 /**
@@ -1454,6 +1891,7 @@ export interface PoliciesSelect<T extends boolean = true> {
   order?: T;
   updatedAt?: T;
   createdAt?: T;
+  deletedAt?: T;
   _status?: T;
 }
 /**
@@ -1469,6 +1907,7 @@ export interface SponsorsSelect<T extends boolean = true> {
   order?: T;
   updatedAt?: T;
   createdAt?: T;
+  deletedAt?: T;
   _status?: T;
 }
 /**
@@ -1477,6 +1916,8 @@ export interface SponsorsSelect<T extends boolean = true> {
  */
 export interface PostsSelect<T extends boolean = true> {
   title?: T;
+  excerpt?: T;
+  byline?: T;
   heroImage?: T;
   content?: T;
   relatedPosts?: T;
@@ -1500,6 +1941,7 @@ export interface PostsSelect<T extends boolean = true> {
   slug?: T;
   updatedAt?: T;
   createdAt?: T;
+  deletedAt?: T;
   _status?: T;
 }
 /**
@@ -1507,11 +1949,16 @@ export interface PostsSelect<T extends boolean = true> {
  * via the `definition` "media_select".
  */
 export interface MediaSelect<T extends boolean = true> {
+  contentHash?: T;
+  uploadKey?: T;
+  sourceDocument?: T;
   alt?: T;
   caption?: T;
+  prefix?: T;
   folder?: T;
   updatedAt?: T;
   createdAt?: T;
+  deletedAt?: T;
   url?: T;
   thumbnailURL?: T;
   filename?: T;
@@ -1598,6 +2045,39 @@ export interface MediaSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "sourceDocuments_select".
+ */
+export interface SourceDocumentsSelect<T extends boolean = true> {
+  sha256?: T;
+  prefix?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "monthlyFlyers_select".
+ */
+export interface MonthlyFlyersSelect<T extends boolean = true> {
+  month?: T;
+  image?: T;
+  sourceDocument?: T;
+  details?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  deletedAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "categories_select".
  */
 export interface CategoriesSelect<T extends boolean = true> {
@@ -1621,6 +2101,7 @@ export interface CategoriesSelect<T extends boolean = true> {
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
+  role?: T;
   name?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -1915,33 +2396,88 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   createdAt?: T;
 }
 /**
+ * Saving updates the public website immediately. A manager can restore earlier saved settings from Previous versions. Donation and social links are managed by a website manager.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "clubSettings".
  */
 export interface ClubSetting {
   id: number;
-  name: string;
-  legalName?: string | null;
-  tagline?: string | null;
-  summary?: string | null;
   address?: string | null;
   cityStateZip?: string | null;
   phone?: string | null;
   email?: string | null;
   hours?: string | null;
-  donationUrl?: string | null;
-  facebookUrl?: string | null;
-  instagramUrl?: string | null;
+  name: string;
+  legalName?: string | null;
+  tagline?: string | null;
+  summary?: string | null;
   heroImage?: (number | null) | Media;
   heroImageUrl?: string | null;
+  aboutHistory?: string | null;
+  aboutWelcome?: string | null;
+  aboutStewardship?: string | null;
+  /**
+   * Use Membership dues reminder for the current message. This earlier poster is kept for reference and only appears when that editor chooses the earlier uploaded poster.
+   */
+  logoImage?: (number | null) | Media;
+  /**
+   * Advanced: used only when no reminder image is selected above.
+   */
+  logoImageUrl?: string | null;
+  groupIntroduction?: string | null;
+  facilityInformation?: string | null;
+  smallRoomInformation?: string | null;
+  /**
+   * Shown on Groups & facilities.
+   */
   roomImage?: (number | null) | Media;
   roomImageUrl?: string | null;
-  logoImage?: (number | null) | Media;
-  logoImageUrl?: string | null;
+  sponsorshipInformation?: string | null;
+  sponsorshipContact?: string | null;
+  donatedItemsInformation?: string | null;
+  officeVolunteerInformation?: string | null;
+  coffeeVolunteerInformation?: string | null;
+  /**
+   * Changes all Donate buttons. Verify the account and destination before saving; this does not change shop checkout links.
+   */
+  donationUrl?: string | null;
+  facebookUrl?: string | null;
+  /**
+   * Shown in the site footer when filled in.
+   */
+  instagramUrl?: string | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
 /**
+ * The reminder on About. Save a draft, check this month and next month, then publish. The earlier uploaded poster is retained in Website details.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "duesReminder".
+ */
+export interface DuesReminder {
+  id: number;
+  mode: 'automatic' | 'chosen' | 'off' | 'legacy';
+  month?: string | null;
+  message?: string | null;
+  /**
+   * Uses the existing membership information page. This does not change prices or payment links.
+   */
+  showMembershipLink?: boolean | null;
+  artworkKind?: ('none' | 'decoration' | 'monthly') | null;
+  artwork?: (number | null) | Media;
+  /**
+   * Automatic reminders hide month-specific artwork after that month ends.
+   */
+  artworkMonth?: string | null;
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * Saving changes links across the website immediately. Empty menus show no links. Restore an earlier saved menu from Previous versions.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "header".
  */
@@ -1997,13 +2533,15 @@ export interface Header {
   createdAt?: string | null;
 }
 /**
+ * Saving changes links across the website immediately. Empty menus show no links. Restore an earlier saved menu from Previous versions.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "footer".
  */
 export interface Footer {
   id: number;
   /**
-   * Shown in the footer. If empty, the footer uses the header navigation items.
+   * Links shown at the bottom of every page. Leave empty to show no footer menu links. Saving changes the public website immediately.
    */
   navItems?:
     | {
@@ -2033,24 +2571,52 @@ export interface Footer {
  * via the `definition` "clubSettings_select".
  */
 export interface ClubSettingsSelect<T extends boolean = true> {
-  name?: T;
-  legalName?: T;
-  tagline?: T;
-  summary?: T;
   address?: T;
   cityStateZip?: T;
   phone?: T;
   email?: T;
   hours?: T;
+  name?: T;
+  legalName?: T;
+  tagline?: T;
+  summary?: T;
+  heroImage?: T;
+  heroImageUrl?: T;
+  aboutHistory?: T;
+  aboutWelcome?: T;
+  aboutStewardship?: T;
+  logoImage?: T;
+  logoImageUrl?: T;
+  groupIntroduction?: T;
+  facilityInformation?: T;
+  smallRoomInformation?: T;
+  roomImage?: T;
+  roomImageUrl?: T;
+  sponsorshipInformation?: T;
+  sponsorshipContact?: T;
+  donatedItemsInformation?: T;
+  officeVolunteerInformation?: T;
+  coffeeVolunteerInformation?: T;
   donationUrl?: T;
   facebookUrl?: T;
   instagramUrl?: T;
-  heroImage?: T;
-  heroImageUrl?: T;
-  roomImage?: T;
-  roomImageUrl?: T;
-  logoImage?: T;
-  logoImageUrl?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "duesReminder_select".
+ */
+export interface DuesReminderSelect<T extends boolean = true> {
+  mode?: T;
+  month?: T;
+  message?: T;
+  showMembershipLink?: T;
+  artworkKind?: T;
+  artwork?: T;
+  artworkMonth?: T;
+  _status?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
@@ -2146,42 +2712,6 @@ export interface TaskSchedulePublish {
     user?: (number | null) | User;
   };
   output?: unknown;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "BannerBlock".
- */
-export interface BannerBlock {
-  style: 'info' | 'warning' | 'error' | 'success';
-  content: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'banner';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "CodeBlock".
- */
-export interface CodeBlock {
-  language?: ('typescript' | 'javascript' | 'css') | null;
-  code: string;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'code';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

@@ -1,3 +1,5 @@
+import { richTextSummary } from '@/serenity/news'
+import { documentPath } from './pagePaths'
 import type { Metadata } from 'next'
 
 import type { Media, Page, Post, Config } from '../payload-types'
@@ -21,27 +23,28 @@ const getDocTitle = (doc: Partial<Page> | Partial<Post> | null) => {
   return doc?.meta?.title || doc?.title || siteMetadata.title
 }
 
-const getDocPath = (doc: Partial<Page> | Partial<Post> | null) => {
-  const slug = Array.isArray(doc?.slug) ? doc?.slug.join('/') : doc?.slug
-
-  if (!slug || slug === 'home') return '/'
-
-  return `/${slug}`
-}
-
 export const generateMeta = async (args: {
   doc: Partial<Page> | Partial<Post> | null
+  collection?: 'pages' | 'posts'
 }): Promise<Metadata> => {
-  const { doc } = args
+  const { doc, collection = 'pages' } = args
+  const canonical = documentPath(doc?.slug, collection)
 
-  const ogImage = getImageURL(doc?.meta?.image)
+  const ogImage = getImageURL(
+    doc?.meta?.image || (doc && 'heroImage' in doc ? doc.heroImage : undefined),
+  )
   const title = getDocTitle(doc)
-  const description = doc?.meta?.description || siteMetadata.description
+  const description =
+    doc?.meta?.description ||
+    (doc && 'excerpt' in doc ? doc.excerpt : '') ||
+    (doc && 'content' in doc ? richTextSummary(doc.content) : '') ||
+    siteMetadata.description
 
   const titleWithSiteName = title === siteMetadata.title ? title : `${title} | ${siteMetadata.name}`
 
   return {
     description,
+    alternates: { canonical },
     openGraph: mergeOpenGraph({
       description,
       images: ogImage
@@ -55,7 +58,7 @@ export const generateMeta = async (args: {
           ]
         : undefined,
       title: titleWithSiteName,
-      url: getAbsoluteSiteURL(getDocPath(doc)),
+      url: getAbsoluteSiteURL(canonical),
     }),
     title: titleWithSiteName,
   }

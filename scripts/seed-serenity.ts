@@ -1,6 +1,7 @@
 import dotenv from 'dotenv'
 import { getPayload, type Payload } from 'payload'
 
+import { legacySchedule } from '../src/serenity/legacySchedule'
 import {
   fallbackClubSettings,
   fallbackEvents,
@@ -33,13 +34,7 @@ const ensureDatabaseUrl = () => {
 }
 
 type SerenityCollection =
-  | 'events'
-  | 'galleryItems'
-  | 'meetings'
-  | 'policies'
-  | 'products'
-  | 'sponsors'
-  | 'teamMembers'
+  'events' | 'galleryItems' | 'meetings' | 'policies' | 'products' | 'sponsors' | 'teamMembers'
 
 const legacyLookupValues: Partial<Record<SerenityCollection, Record<string, string[]>>> = {
   events: {
@@ -183,7 +178,7 @@ async function seedSerenity() {
   for (const meeting of fallbackMeetings) {
     await upsertCollectionDoc({
       collection: 'meetings',
-      data: meeting,
+      data: { ...meeting, sessions: legacySchedule(meeting) },
       field: 'name',
       payload,
       value: meeting.name,
@@ -193,7 +188,7 @@ async function seedSerenity() {
   for (const event of fallbackEvents) {
     await upsertCollectionDoc({
       collection: 'events',
-      data: event,
+      data: { ...event, kind: 'legacy', featured: true },
       field: 'title',
       payload,
       value: event.title,

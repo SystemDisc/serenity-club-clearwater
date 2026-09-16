@@ -1,3 +1,4 @@
+import { reservedPageSlugs } from '@/utilities/pagePaths'
 import type { MetadataRoute } from 'next'
 
 import configPromise from '@payload-config'
@@ -7,7 +8,7 @@ import { getPayload } from 'payload'
 import { hasUsableDatabaseUrl } from '@/serenity/data'
 import { getCanonicalSiteURL } from '@/utilities/siteURL'
 
-export const revalidate = false
+export const revalidate = 300
 
 type SitemapEntry = MetadataRoute.Sitemap[number]
 
@@ -25,10 +26,9 @@ const publicRoutes: Array<{
   { path: '/ways-to-give', changeFrequency: 'monthly', priority: 0.7 },
   { path: '/policies', changeFrequency: 'monthly', priority: 0.6 },
   { path: '/groups', changeFrequency: 'weekly', priority: 0.7 },
+  { path: '/posts', changeFrequency: 'weekly', priority: 0.7 },
   { path: '/gallery', changeFrequency: 'weekly', priority: 0.7 },
 ]
-
-const reservedSlugs = new Set(['admin', 'api', 'next', 'portfolio', 'posts', 'resend', 'search'])
 
 const normalizeSlug = (slug: string) => slug.trim().replace(/^\/+|\/+$/g, '')
 
@@ -54,85 +54,114 @@ const getCmsEntries = unstable_cache(
   async (siteUrl: string): Promise<SitemapEntry[]> => {
     if (!hasUsableDatabaseUrl()) return []
 
-    try {
-      const payload = await getPayload({ config: configPromise })
+    const payload = await getPayload({ config: configPromise })
 
-      const [pages, products] = await Promise.all([
-        payload.find({
-          collection: 'pages',
-          depth: 0,
-          draft: false,
-          limit: 1000,
-          overrideAccess: false,
-          pagination: false,
-          select: {
-            slug: true,
-            updatedAt: true,
+    const [pages, products, posts, albums] = await Promise.all([
+      payload.find({
+        collection: 'pages',
+        depth: 0,
+        draft: false,
+        limit: 0,
+        overrideAccess: false,
+        pagination: false,
+        select: {
+          slug: true,
+          updatedAt: true,
+        },
+        where: {
+          _status: {
+            equals: 'published',
           },
-          where: {
-            _status: {
-              equals: 'published',
-            },
+        },
+      }),
+      payload.find({
+        collection: 'products',
+        depth: 0,
+        draft: false,
+        limit: 0,
+        overrideAccess: false,
+        pagination: false,
+        select: {
+          slug: true,
+          updatedAt: true,
+        },
+        where: {
+          _status: {
+            equals: 'published',
           },
-        }),
-        payload.find({
-          collection: 'products',
-          depth: 0,
-          draft: false,
-          limit: 1000,
-          overrideAccess: false,
-          pagination: false,
-          select: {
-            slug: true,
-            updatedAt: true,
-          },
-          where: {
-            _status: {
-              equals: 'published',
-            },
-          },
-        }),
-      ])
+        },
+      }),
+      payload.find({
+        collection: 'posts',
+        depth: 0,
+        draft: false,
+        limit: 0,
+        pagination: false,
+        overrideAccess: false,
+        select: { slug: true, updatedAt: true },
+      }),
+      payload.find({
+        collection: 'albums',
+        depth: 0,
+        draft: false,
+        limit: 0,
+        pagination: false,
+        overrideAccess: false,
+        select: { slug: true, updatedAt: true },
+      }),
+    ])
 
-      const pageEntries = pages.docs.flatMap((page): SitemapEntry[] => {
-        const slug = normalizeSlug(page.slug || '')
+    const pageEntries = pages.docs.flatMap((page): SitemapEntry[] => {
+      const slug = normalizeSlug(page.slug || '')
 
-        if (!slug || reservedSlugs.has(slug)) return []
+      if (!slug || reservedPageSlugs.has(slug)) return []
 
-        return [
-          {
-            url: slug === 'home' ? `${siteUrl}/` : `${siteUrl}/${slug}`,
-            lastModified: getLastModified(page.updatedAt),
-            changeFrequency: 'weekly',
-            priority: slug === 'home' ? 1 : 0.7,
-          },
-        ]
-      })
+      return [
+        {
+          url: slug === 'home' ? `${siteUrl}/` : `${siteUrl}/${slug}`,
+          lastModified: getLastModified(page.updatedAt),
+          changeFrequency: 'weekly',
+          priority: slug === 'home' ? 1 : 0.7,
+        },
+      ]
+    })
 
-      const productEntries = products.docs.flatMap((product): SitemapEntry[] => {
-        const slug = normalizeSlug(product.slug || '')
+    const productEntries = products.docs.flatMap((product): SitemapEntry[] => {
+      const slug = normalizeSlug(product.slug || '')
 
-        if (!slug) return []
+      if (!slug) return []
 
-        return [
-          {
-            url: `${siteUrl}/shop/${slug}`,
-            lastModified: getLastModified(product.updatedAt),
-            changeFrequency: 'weekly',
-            priority: 0.6,
-          },
-        ]
-      })
+      return [
+        {
+          url: `${siteUrl}/shop/${slug}`,
+          lastModified: getLastModified(product.updatedAt),
+          changeFrequency: 'weekly',
+          priority: 0.6,
+        },
+      ]
+    })
 
-      return [...pageEntries, ...productEntries]
-    } catch (_error) {
-      return []
-    }
+    return [
+      ...posts.docs.map((post): SitemapEntry => ({
+        url: `${siteUrl}/posts/${post.slug}`,
+        lastModified: getLastModified(post.updatedAt),
+        changeFrequency: 'monthly',
+        priority: 0.6,
+      })),
+      ...pageEntries,
+      ...productEntries,
+      ...albums.docs.map((album): SitemapEntry => ({
+        url: `${siteUrl}/gallery/albums/${album.slug}`,
+        lastModified: getLastModified(album.updatedAt),
+        changeFrequency: 'weekly',
+        priority: 0.6,
+      })),
+    ]
   },
   ['public-sitemap'],
   {
-    revalidate: false,
-    tags: ['pages-sitemap', 'products-sitemap'],
+    revalidate: 300,
+    tags: ['posts-sitemap', 'pages-sitemap', 'products-sitemap', 'albums-sitemap'],
   },
 )
 

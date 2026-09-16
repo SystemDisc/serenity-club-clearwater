@@ -1,22 +1,22 @@
+import { imagePreviewField } from '@/admin/config'
 import type { CollectionConfig } from 'payload'
 
 import {
   BlocksFeature,
+  BlockquoteFeature,
+  OrderedListFeature,
+  UnorderedListFeature,
   FixedToolbarFeature,
   HeadingFeature,
   HorizontalRuleFeature,
-  InlineToolbarFeature,
   lexicalEditor,
 } from '@payloadcms/richtext-lexical'
 
 import { authenticated } from '../../access/authenticated'
 import { authenticatedOrPublished } from '../../access/authenticatedOrPublished'
-import { Banner } from '../../blocks/Banner/config'
-import { Code } from '../../blocks/Code/config'
 import { MediaBlock } from '../../blocks/MediaBlock/config'
 import { generatePreviewPath } from '../../utilities/generatePreviewPath'
 import { populateAuthors } from './hooks/populateAuthors'
-import { revalidateDelete, revalidatePost } from './hooks/revalidatePost'
 import {
   revalidatePublicSiteAfterChange,
   revalidatePublicSiteAfterDelete,
@@ -33,6 +33,7 @@ import { slugField } from 'payload'
 
 export const Posts: CollectionConfig<'posts'> = {
   slug: 'posts',
+  labels: { singular: 'News update', plural: 'News & updates' },
   access: {
     create: authenticated,
     delete: authenticated,
@@ -52,7 +53,11 @@ export const Posts: CollectionConfig<'posts'> = {
     },
   },
   admin: {
-    defaultColumns: ['title', 'slug', 'updatedAt'],
+    defaultColumns: ['title', '_status', 'publishedAt', 'updatedAt'],
+    group: 'Everyday tasks',
+    hideAPIURL: true,
+    description:
+      'Write an update, preview it on a phone or computer, then publish. Save your first draft, then later edits autosave. A publication date is a display date; it does not schedule publication.',
     livePreview: {
       url: ({ data, req }) =>
         generatePreviewPath({
@@ -76,15 +81,32 @@ export const Posts: CollectionConfig<'posts'> = {
       required: true,
     },
     {
+      name: 'excerpt',
+      type: 'textarea',
+      label: 'Short introduction (optional)',
+      admin: { description: 'Shown in the news list and above the article.' },
+    },
+    {
+      name: 'byline',
+      type: 'text',
+      label: 'Published by (optional)',
+      admin: {
+        description:
+          'For example: Serenity Club. Leave empty to publish without a personal byline.',
+      },
+    },
+    {
       type: 'tabs',
       tabs: [
         {
           fields: [
             {
               name: 'heroImage',
+              label: 'Cover photo (optional)',
               type: 'upload',
               relationTo: 'media',
             },
+            imagePreviewField('heroImage'),
             {
               name: 'content',
               type: 'richText',
@@ -92,15 +114,26 @@ export const Posts: CollectionConfig<'posts'> = {
                 features: ({ rootFeatures }) => {
                   return [
                     ...rootFeatures,
-                    HeadingFeature({ enabledHeadingSizes: ['h1', 'h2', 'h3', 'h4'] }),
-                    BlocksFeature({ blocks: [Banner, Code, MediaBlock] }),
-                    FixedToolbarFeature(),
-                    InlineToolbarFeature(),
+                    HeadingFeature({ enabledHeadingSizes: ['h2', 'h3'] }),
+                    UnorderedListFeature(),
+                    OrderedListFeature(),
+                    BlockquoteFeature(),
+                    BlocksFeature({ blocks: [MediaBlock] }),
+                    FixedToolbarFeature({
+                      customGroups: {
+                        format: { type: 'dropdown' },
+                        features: { type: 'dropdown' },
+                      },
+                    }),
                     HorizontalRuleFeature(),
                   ]
                 },
               }),
-              label: false,
+              label: 'Article body',
+              admin: {
+                description:
+                  'Use the toolbar for headings, lists, links, quotes, and Add photo. Paste text from Word or Google Docs, then check the preview.',
+              },
               required: true,
             },
           ],
@@ -134,11 +167,11 @@ export const Posts: CollectionConfig<'posts'> = {
               relationTo: 'categories',
             },
           ],
-          label: 'Meta',
+          label: 'Related updates & categories (optional)',
         },
         {
           name: 'meta',
-          label: 'SEO',
+          label: 'Search & sharing (optional)',
           fields: [
             OverviewField({
               titlePath: 'meta.title',
@@ -188,7 +221,10 @@ export const Posts: CollectionConfig<'posts'> = {
     {
       name: 'authors',
       type: 'relationship',
+      label: 'Earlier author selection',
       admin: {
+        condition: (data) => !!data.authors?.length,
+        readOnly: true,
         position: 'sidebar',
       },
       hasMany: true,
@@ -221,16 +257,18 @@ export const Posts: CollectionConfig<'posts'> = {
     slugField(),
   ],
   hooks: {
-    afterChange: [revalidatePost, revalidatePublicSiteAfterChange],
+    afterChange: [revalidatePublicSiteAfterChange],
     afterRead: [populateAuthors],
-    afterDelete: [revalidateDelete, revalidatePublicSiteAfterDelete],
+    afterDelete: [revalidatePublicSiteAfterDelete],
   },
   versions: {
     drafts: {
+      validate: true,
       autosave: {
-        interval: 100, // We set this interval for optimal live preview
+        interval: 2000,
+        showSaveDraftButton: true,
       },
-      schedulePublish: true,
+      schedulePublish: process.env.ENABLE_SCHEDULED_PUBLISHING === 'true',
     },
     maxPerDoc: 50,
   },

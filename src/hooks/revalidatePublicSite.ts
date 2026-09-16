@@ -4,7 +4,7 @@ import type {
   GlobalAfterChangeHook,
 } from 'payload'
 
-import { revalidatePath } from 'next/cache'
+import { queuePublicChange } from '@/utilities/publicCache'
 
 const getStatus = (doc: unknown) => {
   if (!doc || typeof doc !== 'object' || !('_status' in doc)) return undefined
@@ -19,18 +19,23 @@ const affectsPublishedContent = (doc: unknown, previousDoc: unknown) => {
   return status === undefined || status === 'published' || previousStatus === 'published'
 }
 
-const revalidatePublicSite = (payload: { logger: { info: (message: string) => void } }) => {
-  payload.logger.info('Revalidating public site')
-  revalidatePath('/', 'layout')
-}
-
 export const revalidatePublicSiteAfterChange: CollectionAfterChangeHook = ({
   doc,
   previousDoc,
-  req: { context, payload },
+  operation,
+  collection,
+  req: { context },
 }) => {
   if (!context.disableRevalidate && affectsPublishedContent(doc, previousDoc)) {
-    revalidatePublicSite(payload)
+    queuePublicChange({
+      collection: collection.slug,
+      operation,
+      status: typeof doc._status === 'string' ? doc._status : undefined,
+      previousStatus: previousDoc?._status,
+      id: doc.id,
+      slug: doc.slug,
+      previousSlug: previousDoc?.slug,
+    })
   }
 
   return doc
@@ -38,10 +43,16 @@ export const revalidatePublicSiteAfterChange: CollectionAfterChangeHook = ({
 
 export const revalidatePublicSiteAfterDelete: CollectionAfterDeleteHook = ({
   doc,
-  req: { context, payload },
+  collection,
+  req: { context },
 }) => {
   if (!context.disableRevalidate) {
-    revalidatePublicSite(payload)
+    queuePublicChange({
+      collection: collection.slug,
+      operation: 'delete',
+      id: doc.id,
+      slug: doc.slug,
+    })
   }
 
   return doc
@@ -49,10 +60,11 @@ export const revalidatePublicSiteAfterDelete: CollectionAfterDeleteHook = ({
 
 export const revalidatePublicSiteAfterGlobalChange: GlobalAfterChangeHook = ({
   doc,
-  req: { context, payload },
+  global,
+  req: { context },
 }) => {
   if (!context.disableRevalidate) {
-    revalidatePublicSite(payload)
+    queuePublicChange({ collection: global.slug })
   }
 
   return doc

@@ -4,8 +4,10 @@ const BeforeLogin: React.FC = () => {
   return (
     <div>
       <p>
-        <b>Welcome to your dashboard!</b>
-        {' This is where site admins will log in to manage your website.'}
+        <b>Manage the Serenity Club website</b>
+        {
+          ' Sign in to update events, meetings, photos, and club information. Use Forgot password if you need a reset email.'
+        }
       </p>
     </div>
   )

@@ -1,0 +1,247 @@
+{
+  "version": 1,
+  "label": "Google listing report",
+  "footer": "GOOGLE LISTING",
+  "metrics": [
+    "profile_views",
+    "actions",
+    "calls",
+    "directions",
+    "website_clicks",
+    "bookings",
+    "phone_share"
+  ],
+  "checks": [
+    [
+      "daily",
+      1,
+      "calls"
+    ],
+    [
+      "daily",
+      2,
+      "directions"
+    ],
+    [
+      "daily",
+      3,
+      "website_clicks"
+    ],
+    [
+      "daily",
+      4,
+      "bookings"
+    ],
+    [
+      "daily",
+      5,
+      "actions"
+    ],
+    [
+      "discovery",
+      1,
+      "profile_views"
+    ]
+  ],
+  "pages": [
+    {
+      "title": "Google listing report",
+      "subtitle": "Prepared for the board and member-owners of Serenity Club of Clearwater",
+      "blocks": [
+        {
+          "type": "fixed",
+          "text": "{period} | Prepared {prepared}"
+        },
+        {
+          "type": "cards",
+          "items": [
+            {
+              "metric": "profile_views",
+              "label": "Profile views",
+              "description": "Views of the club information in Google Search and Maps.",
+              "percent": false
+            },
+            {
+              "metric": "actions",
+              "label": "Actions taken",
+              "description": "Website clicks, direction requests, call taps, and bookings.",
+              "percent": false
+            },
+            {
+              "metric": "phone_share",
+              "label": "Views on phones",
+              "description": "Share of profile views on a mobile phone.",
+              "percent": true
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "What people did from the listing"
+        },
+        {
+          "type": "table",
+          "id": "actions",
+          "columns": [
+            "Action",
+            "Count"
+          ],
+          "widths": [
+            400,
+            124
+          ],
+          "padding": 2
+        },
+        {
+          "type": "heading",
+          "text": "What this means for the club"
+        },
+        {
+          "type": "text",
+          "id": "summary",
+          "style": "body"
+        },
+        {
+          "type": "text",
+          "id": "priorities",
+          "style": "body"
+        }
+      ]
+    },
+    {
+      "title": "Visibility & changes over time",
+      "subtitle": "Where the listing was seen and how activity changed",
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Comparison with an earlier period"
+        },
+        {
+          "type": "text",
+          "id": "comparison_scope",
+          "style": "note"
+        },
+        {
+          "type": "table",
+          "id": "comparisons",
+          "columns": [
+            "Measure",
+            "Current result",
+            "Change"
+          ],
+          "widths": [
+            264,
+            110,
+            150
+          ],
+          "padding": 2
+        },
+        {
+          "type": "heading",
+          "text": "Where people saw the listing"
+        },
+        {
+          "type": "table",
+          "id": "discovery",
+          "columns": [
+            "Service and device",
+            "Views",
+            "Share"
+          ],
+          "widths": [
+            320,
+            90,
+            114
+          ],
+          "padding": 2
+        },
+        {
+          "type": "heading",
+          "text": "Monthly actions"
+        },
+        {
+          "type": "chart",
+          "id": "monthly_chart",
+          "height": 150
+        }
+      ]
+    },
+    {
+      "title": "Daily actions",
+      "subtitle": "Calls, directions, website clicks, and bookings | {period}",
+      "blocks": [
+        {
+          "type": "text",
+          "id": "daily_intro",
+          "style": "note"
+        },
+        {
+          "type": "table",
+          "id": "daily",
+          "columns": [
+            "Date",
+            "Call taps",
+            "Directions",
+            "Website clicks",
+            "Bookings",
+            "Actions"
+          ],
+          "widths": [
+            89,
+            75,
+            90,
+            110,
+            75,
+            85
+          ],
+          "padding": 1
+        }
+      ]
+    },
+    {
+      "title": "Reading the Google report",
+      "subtitle": "Plain-language definitions, unavailable information, and sources",
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Current public listing"
+        },
+        {
+          "type": "text",
+          "id": "public_snapshot",
+          "style": "body"
+        },
+        {
+          "type": "heading",
+          "text": "How to read these measures"
+        },
+        {
+          "type": "text",
+          "id": "definitions",
+          "style": "body"
+        },
+        {
+          "type": "heading",
+          "text": "Search phrases and reporting coverage"
+        },
+        {
+          "type": "text",
+          "id": "searches",
+          "style": "body"
+        },
+        {
+          "type": "heading",
+          "text": "Sources and counting notes"
+        },
+        {
+          "type": "text",
+          "id": "counting_notes",
+          "style": "note"
+        },
+        {
+          "type": "sources"
+        }
+      ]
+    }
+  ]
+}

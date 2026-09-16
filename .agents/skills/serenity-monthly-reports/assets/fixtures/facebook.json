@@ -1,0 +1,706 @@
+{
+  "layout_version": 1,
+  "property": "facebook",
+  "fixture": true,
+  "as_of": "2026-09-09",
+  "identity_verified": true,
+  "period": {
+    "kind": "previous_month",
+    "start": "2026-08-01",
+    "end": "2026-08-31",
+    "timezone": "America/Los_Angeles (Pacific Time)",
+    "displayed_range": "August 1-31, 2026",
+    "fallback_reason": "",
+    "partial_note": ""
+  },
+  "metrics": {
+    "views": 7580,
+    "viewers": 1514,
+    "engagement": 868,
+    "interactions": 433,
+    "reactions": 333,
+    "comments": 73,
+    "shares": 27,
+    "visits": 533,
+    "new_follows": 14,
+    "unfollows": 5,
+    "net_follows": 9,
+    "followers": 1411,
+    "link_clicks": 2
+  },
+  "unavailable_metrics": {},
+  "sections": {
+    "summary": "<b>Visibility declined, while Page visits increased.</b> Views were 48.6% lower than July, engagement was 51.4% lower, and Page visits rose 7.7% to 533. About 31% of views came from non-followers. All 7,580 views were unpaid. Fourteen follows minus five unfollows produced a net gain of nine.",
+    "priorities": "Use clear photos and practical event details. Review the decline alongside the posting calendar: the published-content summary listed 33 items, down 23.3%. The figures alone do not establish why views fell.",
+    "comparison_scope": "August 1-31, 2026 compared with July 1-31, 2026. Both are complete 31-day months.",
+    "comparisons": {
+      "rows": [
+        [
+          "Content views",
+          14754,
+          7580,
+          "48.6% fewer"
+        ],
+        [
+          "Public interactions",
+          861,
+          433,
+          "49.7% fewer"
+        ],
+        [
+          "Page visits",
+          495,
+          533,
+          "7.7% more"
+        ],
+        [
+          "Link clicks",
+          1,
+          2,
+          "100.0% more"
+        ],
+        [
+          "New follows",
+          18,
+          14,
+          "22.2% fewer"
+        ],
+        [
+          "Viewer accounts",
+          "Not reproduced",
+          1514,
+          "56.5% fewer"
+        ],
+        [
+          "Engagement actions",
+          "Not reproduced",
+          868,
+          "51.4% fewer"
+        ]
+      ],
+      "note": ""
+    },
+    "daily_chart": {
+      "labels": [
+        "Aug 1",
+        "Aug 2",
+        "Aug 3",
+        "Aug 4",
+        "Aug 5",
+        "Aug 6",
+        "Aug 7",
+        "Aug 8",
+        "Aug 9",
+        "Aug 10",
+        "Aug 11",
+        "Aug 12",
+        "Aug 13",
+        "Aug 14",
+        "Aug 15",
+        "Aug 16",
+        "Aug 17",
+        "Aug 18",
+        "Aug 19",
+        "Aug 20",
+        "Aug 21",
+        "Aug 22",
+        "Aug 23",
+        "Aug 24",
+        "Aug 25",
+        "Aug 26",
+        "Aug 27",
+        "Aug 28",
+        "Aug 29",
+        "Aug 30",
+        "Aug 31"
+      ],
+      "series": [
+        {
+          "label": "Content views",
+          "values": [
+            164,
+            140,
+            246,
+            129,
+            351,
+            216,
+            183,
+            412,
+            456,
+            232,
+            224,
+            164,
+            95,
+            13,
+            1169,
+            664,
+            150,
+            146,
+            47,
+            112,
+            194,
+            234,
+            289,
+            253,
+            31,
+            20,
+            11,
+            124,
+            109,
+            55,
+            947
+          ]
+        }
+      ],
+      "note": ""
+    },
+    "trend_note": "August 15 was the busiest day, with 1,169 content views.",
+    "publishing": "Facebook listed 26 photo items, 3 text items, 3 stories, and 1 reel: 33 total, down 23.3% from July. This summary is based on up to 200 items. Older posts can also receive views.",
+    "content_types": {
+      "rows": [
+        [
+          "Single photo",
+          4547,
+          "60.0%",
+          286
+        ],
+        [
+          "Multiple photos",
+          1477,
+          "19.5%",
+          43
+        ],
+        [
+          "Text",
+          730,
+          "9.6%",
+          29
+        ],
+        [
+          "Links",
+          649,
+          "8.6%",
+          66
+        ],
+        [
+          "Reels",
+          117,
+          "1.5%",
+          1
+        ],
+        [
+          "Stories",
+          null,
+          "-",
+          3
+        ],
+        [
+          "Other",
+          60,
+          "0.8%",
+          5
+        ]
+      ],
+      "note": "Story views are not separately shown. Photo formats accounted for 79.5% of views."
+    },
+    "interactions_note": "333 reactions + 73 comments + 27 shares = 433 interactions. The broader 868 engagement total also includes clicks and saves. Those additional actions are not broken out here.",
+    "video": "39 three-second views, 0 one-minute views, and 7 minutes 7 seconds of total watch time. Three-second views rose 5.4%; watch time fell 25.8%.",
+    "posts_scope": "Post snapshots captured September 9, 2026. Facebook showed these posts with August selected, but their individual counts may include later activity. Do not treat them as August-only contributions.",
+    "posts": {
+      "rows": [
+        [
+          "Bake sale fundraiser\nAug 15, 2:21 p.m.",
+          1435,
+          35,
+          1,
+          3
+        ],
+        [
+          "Birthday celebration\nAug 31, 4:19 p.m.",
+          1110,
+          36,
+          17,
+          0
+        ],
+        [
+          "Birthday celebration\nAug 31, 4:26 p.m.",
+          404,
+          17,
+          2,
+          0
+        ],
+        [
+          "Pancake breakfast invitation\nAug 9, 9:54 a.m.",
+          401,
+          9,
+          6,
+          2
+        ],
+        [
+          "Movie night thank-you\nAug 21, 7:36 p.m.",
+          294,
+          16,
+          1,
+          0
+        ],
+        [
+          "Bowling night announcement\nAug 23, 5:40 p.m.",
+          291,
+          7,
+          0,
+          0
+        ],
+        [
+          "Post with no caption shown\nAug 15, 9:19 a.m.",
+          259,
+          26,
+          5,
+          0
+        ],
+        [
+          "Pancake breakfast reminder\nAug 8, 9:14 a.m.",
+          251,
+          11,
+          1,
+          2
+        ]
+      ],
+      "note": ""
+    },
+    "posts_note": "Fundraising, invitations, reminders, and celebrations appear in the list. Online interest does not establish attendance, fundraising income, or membership growth.",
+    "audience_scope": "1,411 followers. The lifetime audience view covered August 9, 2023 through September 8, 2026 and was captured September 9. It showed 61.3% women and 38.7% men.",
+    "age_gender": {
+      "rows": [
+        [
+          "18-24",
+          "0.1%",
+          "0.1%",
+          "0.2%"
+        ],
+        [
+          "25-34",
+          "3.6%",
+          "2.1%",
+          "5.7%"
+        ],
+        [
+          "35-44",
+          "13.9%",
+          "8.3%",
+          "22.2%"
+        ],
+        [
+          "45-54",
+          "14.9%",
+          "7.4%",
+          "22.3%"
+        ],
+        [
+          "55-64",
+          "16.1%",
+          "10.9%",
+          "27%"
+        ],
+        [
+          "65 and older",
+          "12.7%",
+          "9.9%",
+          "22.6%"
+        ]
+      ],
+      "note": ""
+    },
+    "locations": {
+      "rows": [
+        [
+          "Clearwater, FL",
+          "19.8%",
+          "United States",
+          "97.4%"
+        ],
+        [
+          "Largo, FL",
+          "7.4%",
+          "Canada",
+          "0.4%"
+        ],
+        [
+          "Saint Petersburg, FL",
+          "6.3%",
+          "India",
+          "0.2%"
+        ],
+        [
+          "Dunedin, FL",
+          "3.8%",
+          "Philippines",
+          "0.2%"
+        ],
+        [
+          "Palm Harbor, FL",
+          "3.1%",
+          "United Kingdom",
+          "0.2%"
+        ],
+        [
+          "Pinellas Park, FL",
+          "2.3%",
+          "Australia",
+          "0.1%"
+        ],
+        [
+          "Tampa, FL",
+          "1.6%",
+          "Bangladesh",
+          "0.1%"
+        ],
+        [
+          "Safety Harbor, FL",
+          "1.3%",
+          "Mexico",
+          "0.1%"
+        ],
+        [
+          "Seminole, FL",
+          "1%",
+          "Pakistan",
+          "0.1%"
+        ],
+        [
+          "Tarpon Springs, FL",
+          "0.9%",
+          "Turkey",
+          "0.1%"
+        ]
+      ],
+      "note": ""
+    },
+    "audience_note": "Percentages are estimated shares of the follower audience. The top location lists do not add to 100%. These figures use Meta Business Suite consistently; its location percentages differ from the Professional dashboard.",
+    "daily_intro": "Interactions means reactions, comments, and shares. New follows excludes unfollows. Dates use Facebook's Pacific Time setting.",
+    "daily": {
+      "rows": [
+        [
+          "2026-08-01",
+          164,
+          38,
+          12,
+          21,
+          0,
+          0
+        ],
+        [
+          "2026-08-02",
+          140,
+          59,
+          14,
+          26,
+          0,
+          0
+        ],
+        [
+          "2026-08-03",
+          246,
+          64,
+          7,
+          12,
+          1,
+          0
+        ],
+        [
+          "2026-08-04",
+          129,
+          63,
+          9,
+          12,
+          0,
+          1
+        ],
+        [
+          "2026-08-05",
+          351,
+          112,
+          21,
+          22,
+          0,
+          0
+        ],
+        [
+          "2026-08-06",
+          216,
+          96,
+          16,
+          5,
+          0,
+          0
+        ],
+        [
+          "2026-08-07",
+          183,
+          82,
+          8,
+          12,
+          0,
+          2
+        ],
+        [
+          "2026-08-08",
+          412,
+          118,
+          25,
+          18,
+          1,
+          2
+        ],
+        [
+          "2026-08-09",
+          456,
+          217,
+          33,
+          36,
+          0,
+          2
+        ],
+        [
+          "2026-08-10",
+          232,
+          105,
+          11,
+          13,
+          0,
+          0
+        ],
+        [
+          "2026-08-11",
+          224,
+          95,
+          15,
+          6,
+          0,
+          1
+        ],
+        [
+          "2026-08-12",
+          164,
+          73,
+          11,
+          13,
+          0,
+          0
+        ],
+        [
+          "2026-08-13",
+          95,
+          25,
+          5,
+          14,
+          0,
+          1
+        ],
+        [
+          "2026-08-14",
+          13,
+          9,
+          1,
+          12,
+          0,
+          0
+        ],
+        [
+          "2026-08-15",
+          1169,
+          538,
+          68,
+          67,
+          0,
+          3
+        ],
+        [
+          "2026-08-16",
+          664,
+          366,
+          29,
+          51,
+          0,
+          1
+        ],
+        [
+          "2026-08-17",
+          150,
+          70,
+          13,
+          12,
+          0,
+          0
+        ],
+        [
+          "2026-08-18",
+          146,
+          41,
+          8,
+          18,
+          0,
+          0
+        ],
+        [
+          "2026-08-19",
+          47,
+          21,
+          1,
+          3,
+          0,
+          0
+        ],
+        [
+          "2026-08-20",
+          112,
+          45,
+          4,
+          15,
+          0,
+          0
+        ],
+        [
+          "2026-08-21",
+          194,
+          84,
+          12,
+          15,
+          0,
+          0
+        ],
+        [
+          "2026-08-22",
+          234,
+          113,
+          13,
+          6,
+          0,
+          0
+        ],
+        [
+          "2026-08-23",
+          289,
+          125,
+          7,
+          23,
+          0,
+          0
+        ],
+        [
+          "2026-08-24",
+          253,
+          67,
+          1,
+          19,
+          0,
+          0
+        ],
+        [
+          "2026-08-25",
+          31,
+          11,
+          2,
+          7,
+          0,
+          0
+        ],
+        [
+          "2026-08-26",
+          20,
+          13,
+          1,
+          4,
+          0,
+          0
+        ],
+        [
+          "2026-08-27",
+          11,
+          7,
+          1,
+          1,
+          0,
+          0
+        ],
+        [
+          "2026-08-28",
+          124,
+          35,
+          7,
+          9,
+          0,
+          0
+        ],
+        [
+          "2026-08-29",
+          109,
+          49,
+          8,
+          22,
+          0,
+          0
+        ],
+        [
+          "2026-08-30",
+          55,
+          28,
+          4,
+          6,
+          0,
+          0
+        ],
+        [
+          "2026-08-31",
+          947,
+          348,
+          66,
+          33,
+          0,
+          1
+        ]
+      ],
+      "note": "Daily viewers overlap and must not be summed as the monthly audience. The other columns reconcile. Five unfollows reduced 14 follows to a net gain of nine."
+    },
+    "messaging": {
+      "rows": [
+        [
+          "Conversations started",
+          2
+        ],
+        [
+          "Contacts / new / returning",
+          "2 / 2 / 0"
+        ],
+        [
+          "New contacts: unpaid / paid",
+          "100% / 0%"
+        ],
+        [
+          "Orders / leads",
+          "0 / 0"
+        ],
+        [
+          "Response rate / response time",
+          "Not available"
+        ]
+      ],
+      "note": ""
+    },
+    "messaging_note": "Conversations begin with a first message or after seven inactive days. Facebook recorded two, down 33.3% from July. Missing response metrics do not mean messages went unanswered.",
+    "definitions": "Views count displays or plays, including repeats. Viewers are estimated accounts. Facebook visits and link clicks do not establish visits to the clubhouse. Follows are different from club memberships. Audiences can overlap with Google and the website.",
+    "counting_notes": "Daily and content totals were checked. Use 1,514 for the period's estimated viewers; daily viewers add to 3,117 because accounts can appear on multiple days. Audience profiles and post snapshots are labeled separately from monthly totals."
+  },
+  "sources": [
+    {
+      "label": "Facebook Professional dashboard",
+      "url": "https://www.facebook.com/professional_dashboard/",
+      "captured": "2026-09-09"
+    },
+    {
+      "label": "Meta Business Suite",
+      "url": "https://business.facebook.com/latest/insights/results?asset_id=126418430745401",
+      "captured": "2026-09-09"
+    }
+  ],
+  "reconciliation_exceptions": {}
+}

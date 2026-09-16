@@ -1,1 +1,4 @@
 * text=auto eol=lf
+
+# PDF references are binary assets, not text sources.
+*.pdf binary

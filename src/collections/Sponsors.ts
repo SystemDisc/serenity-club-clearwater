@@ -28,9 +28,24 @@ export const Sponsors: CollectionConfig = {
     { name: 'name', type: 'text', required: true },
     { name: 'url', type: 'text', label: 'Sponsor URL' },
     { name: 'image', type: 'upload', relationTo: 'media' },
-    { name: 'externalImageUrl', type: 'text', label: 'External Image URL' },
-    { name: 'imageAlt', type: 'text', label: 'Image Alt Text' },
-    { name: 'order', type: 'number', defaultValue: 100, admin: { position: 'sidebar' } },
+    {
+      name: 'externalImageUrl',
+      type: 'text',
+      label: 'External picture address (advanced)',
+      admin: { description: 'Usually leave blank and choose a library photo above.' },
+    },
+    { name: 'imageAlt', type: 'text', label: 'Description for people who cannot see the picture' },
+    {
+      name: 'order',
+      type: 'number',
+      label: 'Display position',
+      defaultValue: 100,
+      admin: {
+        position: 'sidebar',
+        description:
+          'Lower numbers appear first. Leave gaps, such as 10, 20, 30, to fit new entries between them.',
+      },
+    },
   ],
   hooks: {
     afterChange: [revalidatePublicSiteAfterChange],

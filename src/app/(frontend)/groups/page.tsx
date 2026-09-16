@@ -4,25 +4,19 @@ import { CalendarDays, Mail, Users } from 'lucide-react'
 import { getSerenityData } from '@/serenity/data'
 
 export default async function GroupsPage() {
-  const data = await getSerenityData()
+  const data = await getSerenityData([])
 
   return (
     <main>
       <PageHeader eyebrow="Groups" title="Meeting groups and service committees">
-        <p>
-          Serenity Club hosts recovery meetings and club service work in a practical, central
-          clubhouse space.
-        </p>
+        <p>{data.settings.groupIntroduction}</p>
       </PageHeader>
 
       <section className="bg-white px-4 py-10 md:py-12">
         <div className="container grid gap-10 lg:grid-cols-[1fr_0.9fr] lg:items-center">
           <div>
             <SectionHeader eyebrow="Use the space" title="Coordinate meeting and event needs">
-              <p>
-                Groups can reach out about meeting room use, schedule questions, special events, and
-                service opportunities.
-              </p>
+              <p>{data.settings.facilityInformation}</p>
             </SectionHeader>
             <div className="grid gap-4 md:grid-cols-3">
               <article className="rounded-lg border border-slate-200 bg-white p-5">
@@ -69,5 +63,6 @@ export default async function GroupsPage() {
 }
 
 export const metadata = {
+  alternates: { canonical: '/groups' },
   title: 'Groups | Serenity Club of Clearwater',
 }

@@ -28,25 +28,22 @@ export const ArchiveBlock: React.FC<
 
     const fetchedPosts = await payload.find({
       collection: 'posts',
+      overrideAccess: false,
+      draft: false,
       depth: 1,
       limit,
-      ...(flattenedCategories && flattenedCategories.length > 0
-        ? {
-            where: {
-              categories: {
-                in: flattenedCategories,
-              },
-            },
-          }
-        : {}),
+      where: {
+        _status: { equals: 'published' },
+        ...(flattenedCategories?.length ? { categories: { in: flattenedCategories } } : {}),
+      },
     })
 
     posts = fetchedPosts.docs
   } else {
     if (selectedDocs?.length) {
       const filteredSelectedPosts = selectedDocs.map((post) => {
-        if (typeof post.value === 'object') return post.value
-      }) as Post[]
+        if (typeof post.value === 'object' && post.value._status === 'published') return post.value
+      }).filter((post): post is Post => Boolean(post))
 
       posts = filteredSelectedPosts
     }

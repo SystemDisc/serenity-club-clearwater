@@ -21,6 +21,8 @@ type Props = MediaBlockProps & {
 export const MediaBlock: React.FC<Props> = (props) => {
   const {
     captionClassName,
+    caption: localCaption,
+    alt,
     className,
     enableGutter = true,
     imgClassName,
@@ -46,21 +48,26 @@ export const MediaBlock: React.FC<Props> = (props) => {
         <Media
           imgClassName={cn('border border-border rounded-[0.8rem]', imgClassName)}
           resource={media}
+          alt={alt || undefined}
           src={staticImage}
         />
       )}
-      {caption && (
-        <div
-          className={cn(
-            'mt-6',
-            {
-              container: !disableInnerContainer,
-            },
-            captionClassName,
-          )}
-        >
-          <RichText data={caption} enableGutter={false} />
-        </div>
+      {localCaption ? (
+        <p className={cn('mt-3 text-base leading-7', captionClassName)}>{localCaption}</p>
+      ) : (
+        caption && (
+          <div
+            className={cn(
+              'mt-6',
+              {
+                container: !disableInnerContainer,
+              },
+              captionClassName,
+            )}
+          >
+            <RichText data={caption} enableGutter={false} />
+          </div>
+        )
       )}
     </div>
   )

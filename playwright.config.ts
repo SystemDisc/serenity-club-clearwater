@@ -4,7 +4,7 @@ import { defineConfig, devices } from '@playwright/test'
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
  */
-import 'dotenv/config'
+import { testServerURL } from './tests/helpers/environment'
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -22,7 +22,7 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
-    baseURL: 'http://localhost:3000',
+    baseURL: testServerURL,
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
@@ -34,8 +34,8 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'npm run dev',
-    reuseExistingServer: true,
-    url: 'http://localhost:3000',
+    command: `npm run start -- --hostname 127.0.0.1 --port ${new URL(testServerURL).port}`,
+    reuseExistingServer: false,
+    url: testServerURL,
   },
 })

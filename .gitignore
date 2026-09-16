@@ -5,13 +5,16 @@ node_modules
 .env
 .env.*
 !.env.example
+!.env.test.example
 *.log
 .next
 next-env.d.ts
+*.tsbuildinfo
 .vercel
 
 # Payload default media upload directory
 public/media/
+/storage/
 
 public/robots.txt
 public/sitemap*.xml
@@ -23,3 +26,9 @@ node_modules/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# Generated reports, raw source exports, and local audit evidence
+/output/
+/tmp/
+__pycache__/
+*.pyc

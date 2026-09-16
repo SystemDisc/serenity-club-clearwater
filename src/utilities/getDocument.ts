@@ -1,21 +1,21 @@
-import type { Config } from 'src/payload-types'
-
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import { unstable_cache } from 'next/cache'
 
-type Collection = keyof Config['collections']
+type Collection = 'pages' | 'posts'
 
-async function getDocument(collection: Collection, slug: string, depth = 0) {
+async function getDocument(collection: Collection, id: number | string, depth = 0) {
   const payload = await getPayload({ config: configPromise })
 
   const page = await payload.find({
     collection,
     depth,
+    overrideAccess: false,
+    draft: false,
+    limit: 1,
     where: {
-      slug: {
-        equals: slug,
-      },
+      id: { equals: id },
+      _status: { equals: 'published' },
     },
   })
 
@@ -23,9 +23,10 @@ async function getDocument(collection: Collection, slug: string, depth = 0) {
 }
 
 /**
- * Returns a unstable_cache function mapped with the cache tag for the slug
+ * Resolve redirect relationships by their ID while respecting published access.
  */
-export const getCachedDocument = (collection: Collection, slug: string) =>
-  unstable_cache(async () => getDocument(collection, slug), [collection, slug], {
-    tags: [`${collection}_${slug}`],
+export const getCachedDocument = (collection: Collection, id: number | string) =>
+  unstable_cache(async () => getDocument(collection, id), [collection, String(id)], {
+    revalidate: 300,
+    tags: [`public-${collection}`, 'public-media'],
   })

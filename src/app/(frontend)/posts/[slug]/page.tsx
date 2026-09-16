@@ -4,7 +4,7 @@ import { RelatedPosts } from '@/blocks/RelatedPosts/Component'
 import { PayloadRedirects } from '@/components/PayloadRedirects'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
-import { draftMode } from 'next/headers'
+import { draftMode, headers } from 'next/headers'
 import { notFound } from 'next/navigation'
 import React, { cache } from 'react'
 import RichText from '@/components/RichText'
@@ -13,34 +13,29 @@ import type { Post } from '@/payload-types'
 
 import { PostHero } from '@/heros/PostHero'
 import { generateMeta } from '@/utilities/generateMeta'
-import PageClient from './page.client'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
 import { hasUsableDatabaseUrl } from '@/serenity/data'
 
 export async function generateStaticParams() {
   if (!hasUsableDatabaseUrl()) return []
 
-  try {
-    const payload = await getPayload({ config: configPromise })
-    const posts = await payload.find({
-      collection: 'posts',
-      draft: false,
-      limit: 1000,
-      overrideAccess: false,
-      pagination: false,
-      select: {
-        slug: true,
-      },
-    })
+  const payload = await getPayload({ config: configPromise })
+  const posts = await payload.find({
+    collection: 'posts',
+    draft: false,
+    limit: 1000,
+    overrideAccess: false,
+    pagination: false,
+    select: {
+      slug: true,
+    },
+  })
 
-    const params = posts.docs.map(({ slug }) => {
-      return { slug }
-    })
+  const params = posts.docs.map(({ slug }) => {
+    return { slug }
+  })
 
-    return params
-  } catch (_error) {
-    return []
-  }
+  return params
 }
 
 type Args = {
@@ -65,9 +60,7 @@ export default async function Post({ params: paramsPromise }: Args) {
   }
 
   return (
-    <article className="pt-16 pb-16">
-      <PageClient />
-
+    <article className="bg-white pb-12 text-slate-950">
       {/* Allows redirects for valid pages too */}
       <PayloadRedirects disableNotFound url={url} />
 
@@ -77,11 +70,15 @@ export default async function Post({ params: paramsPromise }: Args) {
 
       <div className="flex flex-col items-center gap-4 pt-8">
         <div className="container">
-          <RichText className="max-w-[48rem] mx-auto" data={post.content} enableGutter={false} />
+          <RichText
+            className="news-article max-w-[48rem] mx-auto"
+            data={post.content}
+            enableGutter={false}
+          />
           {post.relatedPosts && post.relatedPosts.length > 0 && (
             <RelatedPosts
               className="mt-12 max-w-[52rem] lg:grid lg:grid-cols-subgrid col-start-1 col-span-3 grid-rows-[2fr]"
-              docs={post.relatedPosts.filter((post) => typeof post === 'object')}
+              docs={post.relatedPosts.filter((post) => !!post && typeof post === 'object')}
             />
           )}
         </div>
@@ -96,13 +93,13 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
   const decodedSlug = decodeURIComponent(slug)
   const postResult = await queryPostBySlug({ slug: decodedSlug })
 
-  const metadata = await generateMeta({ doc: postResult.post })
+  const metadata = await generateMeta({ doc: postResult.post, collection: 'posts' })
 
   return {
     ...metadata,
     robots: {
-      follow: false,
-      index: false,
+      follow: !(await draftMode()).isEnabled,
+      index: !(await draftMode()).isEnabled,
     },
   }
 }
@@ -117,30 +114,26 @@ const queryPostBySlug = cache(async ({ slug }: { slug: string }) => {
     }
   }
 
-  try {
-    const payload = await getPayload({ config: configPromise })
+  const payload = await getPayload({ config: configPromise })
 
-    const result = await payload.find({
-      collection: 'posts',
-      draft,
-      limit: 1,
-      overrideAccess: draft,
-      pagination: false,
-      where: {
-        slug: {
-          equals: slug,
-        },
+  const user = draft ? (await payload.auth({ headers: await headers() })).user : null
+  if (draft && !user) notFound()
+  const result = await payload.find({
+    collection: 'posts',
+    user,
+    draft,
+    limit: 1,
+    overrideAccess: false,
+    pagination: false,
+    where: {
+      slug: {
+        equals: slug,
       },
-    })
+    },
+  })
 
-    return {
-      canQueryRedirects: true,
-      post: (result.docs?.[0] || null) as Post | null,
-    }
-  } catch (_error) {
-    return {
-      canQueryRedirects: false,
-      post: null,
-    }
+  return {
+    canQueryRedirects: true,
+    post: (result.docs?.[0] || null) as Post | null,
   }
 })

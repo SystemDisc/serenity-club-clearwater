@@ -1,4 +1,5 @@
-export type ClubSettings = {
+import { siteCopyDefaults, type SiteCopy } from './siteCopy'
+export type ClubSettings = SiteCopy & {
   address: string
   cityStateZip: string
   donationUrl: string
@@ -28,7 +29,7 @@ export type SiteNavigation = {
   secondaryNavItems: NavItem[]
 }
 
-export type Meeting = {
+export type Meeting = import('./schedule').Schedule & {
   days: string
   description?: string
   externalUrl?: string
@@ -42,6 +43,12 @@ export type Meeting = {
 }
 
 export type EventItem = {
+  date?: string
+  endDate?: string
+  featured?: boolean
+  visible?: boolean
+  archived?: boolean
+  location?: string
   category: 'Fundraiser' | 'Meeting' | 'Service' | 'Community'
   dateLabel: string
   id?: string | number
@@ -122,6 +129,7 @@ export const SERENITY_GOOGLE_MAPS_EMBED_URL =
   'https://maps.google.com/maps?cid=2964191645503102868&output=embed'
 
 export const fallbackClubSettings: ClubSettings = {
+  ...siteCopyDefaults,
   name: 'Serenity Club of Clearwater',
   legalName: 'Serenity Club of Clearwater, Inc.',
   tagline: 'A safe, supportive, and empowering home for Clearwater recovery.',
@@ -151,6 +159,7 @@ export const fallbackPrimaryNavItems: NavItem[] = [
 ]
 
 export const fallbackSecondaryNavItems: NavItem[] = [
+  { href: '/posts', label: 'News & updates' },
   { href: '/ways-to-give', label: 'Ways to Give' },
   { href: '/policies', label: 'Policies' },
   { href: '/groups', label: 'Groups' },

@@ -1,31 +1,7 @@
 import { ContactBand, MeetingList, PageHeader, SectionHeader } from '@/serenity/ui'
 
 import { getSerenityData } from '@/serenity/data'
-import type { Meeting } from '@/serenity/content'
-import { sortedMeetingsByTime } from '@/serenity/meetings'
-
-const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
-
-const groupNotes = [
-  {
-    title: 'AA group formats',
-    items: [
-      'Feelings Group rotates book study and discussion formats Monday through Saturday.',
-      'TGIF meets at noon daily, with Big Book study on Tuesday and 12 Steps and 12 Traditions on Thursday.',
-      'Mid-Day meets daily at 3pm for open discussion.',
-      'Turner Street meets nightly, with the Saturday campfire meeting.',
-      'Women With Freedom is a closed women-only meeting on Wednesday mornings.',
-    ],
-  },
-  {
-    title: 'NA group formats',
-    items: [
-      'Serenity in Addiction rotates open discussion, literature study, beginner, speaker, celebration, and IP discussion formats.',
-      'Serenity in Addiction holds its business meeting the first Monday of the month at 8pm.',
-      'The Noon Group meets Sundays at noon in the back room.',
-    ],
-  },
-]
+import { meetingsOnDate, regularMeetingRows } from '@/serenity/publicMeetings'
 
 const amenities = [
   {
@@ -46,31 +22,18 @@ const amenities = [
   },
 ]
 
-function meetingRunsToday(meeting: Meeting, today: string) {
-  const days = meeting.days.toLowerCase()
-  const todayName = today.toLowerCase()
-
-  if (days.includes('daily')) return true
-  if (days.includes(todayName)) return true
-
-  if (days.includes('monday through friday')) {
-    return weekdays.includes(today)
-  }
-
-  return false
-}
-
 export default async function MeetingSchedulePage() {
-  const data = await getSerenityData()
-  const sortedMeetings = sortedMeetingsByTime(data.meetings)
+  const data = await getSerenityData(['meetings'])
+  const sortedMeetings = regularMeetingRows(data.meetings)
   const aaMeetings = sortedMeetings.filter((meeting) => meeting.fellowship === 'AA')
   const naMeetings = sortedMeetings.filter((meeting) => meeting.fellowship === 'NA')
   const clubMeetings = sortedMeetings.filter((meeting) => meeting.fellowship === 'Club')
+  const now = new Date()
   const today = new Intl.DateTimeFormat('en-US', {
     timeZone: 'America/New_York',
     weekday: 'long',
-  }).format(new Date())
-  const todayMeetings = sortedMeetings.filter((meeting) => meetingRunsToday(meeting, today))
+  }).format(now)
+  const todayMeetings = meetingsOnDate(data.meetings, now)
 
   return (
     <main>
@@ -86,9 +49,21 @@ export default async function MeetingSchedulePage() {
         <div className="container">
           <div className="grid gap-3 md:grid-cols-3">
             {[
-              { count: aaMeetings.length, href: '#aa', label: 'AA meetings' },
-              { count: naMeetings.length, href: '#na', label: 'NA meetings' },
-              { count: clubMeetings.length, href: '#club', label: 'Club service' },
+              {
+                count: data.meetings.filter((meeting) => meeting.fellowship === 'AA').length,
+                href: '#aa',
+                label: 'AA groups',
+              },
+              {
+                count: data.meetings.filter((meeting) => meeting.fellowship === 'NA').length,
+                href: '#na',
+                label: 'NA groups',
+              },
+              {
+                count: data.meetings.filter((meeting) => meeting.fellowship === 'Club').length,
+                href: '#club',
+                label: 'Club activities',
+              },
             ].map((item) => (
               <a
                 className="rounded-lg border border-slate-200 bg-[#fbfaf7] p-4 transition hover:border-emerald-700 hover:bg-white"
@@ -135,38 +110,6 @@ export default async function MeetingSchedulePage() {
         </div>
       </section>
 
-      <section className="bg-[#fbfaf7] px-4 py-10 md:py-12">
-        <div className="container">
-          <SectionHeader eyebrow="Group details" title="Meeting formats and group notes">
-            <p>
-              These notes mirror the group-level details from the club schedule and help visitors
-              choose the right room, day, and format.
-            </p>
-          </SectionHeader>
-          <div className="grid gap-5 lg:grid-cols-2">
-            {groupNotes.map((group) => (
-              <article
-                className="rounded-lg border border-slate-200 bg-white p-5"
-                key={group.title}
-              >
-                <h2 className="text-xl font-semibold text-slate-950">{group.title}</h2>
-                <ul className="mt-4 grid gap-3 text-sm leading-6 text-slate-700">
-                  {group.items.map((item) => (
-                    <li className="flex gap-3" key={item}>
-                      <span
-                        aria-hidden="true"
-                        className="mt-2 size-1.5 shrink-0 rounded-full bg-emerald-800"
-                      />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
       <section className="bg-white px-4 py-10 md:py-12">
         <div className="container">
           <SectionHeader eyebrow="Around the club" title="Between meetings">
@@ -193,5 +136,6 @@ export default async function MeetingSchedulePage() {
 }
 
 export const metadata = {
+  alternates: { canonical: '/meeting-schedule' },
   title: 'Meeting Schedule | Serenity Club of Clearwater',
 }

@@ -3,7 +3,7 @@ import { PageHeader, ProductGrid, SectionHeader } from '@/serenity/ui'
 import { getSerenityData } from '@/serenity/data'
 
 export default async function ShopPage() {
-  const data = await getSerenityData()
+  const data = await getSerenityData(['products'])
 
   return (
     <main>
@@ -27,5 +27,6 @@ export default async function ShopPage() {
 }
 
 export const metadata = {
+  alternates: { canonical: '/shop' },
   title: 'Shop | Serenity Club of Clearwater',
 }

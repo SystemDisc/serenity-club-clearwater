@@ -12,16 +12,24 @@ import {
 import { ArrowRight, CalendarDays, HeartHandshake, ShoppingBag } from 'lucide-react'
 
 import { getSerenityData } from '@/serenity/data'
-import { sortedMeetingsByTime } from '@/serenity/meetings'
+import { regularMeetingRows } from '@/serenity/publicMeetings'
 import { siteMetadata } from '@/utilities/siteURL'
+import { getMonthlyFlyers } from '@/serenity/flyers'
+import { FlyerCard } from '@/serenity/FlyerCard'
+import { isPastEvent } from '@/serenity/events'
 
 export default async function HomePage() {
-  const data = await getSerenityData()
-  const sortedMeetings = sortedMeetingsByTime(data.meetings)
+  const [data, flyers] = await Promise.all([
+    getSerenityData(['meetings', 'events', 'products', 'sponsors']),
+    getMonthlyFlyers(),
+  ])
+  const sortedMeetings = regularMeetingRows(data.meetings)
   const recoveryMeetings = sortedMeetings.filter((meeting) => meeting.fellowship !== 'Club')
   const firstMeeting = recoveryMeetings[0]
   const lastMeeting = recoveryMeetings[recoveryMeetings.length - 1]
-  const featuredEvents = data.events.slice(0, 3)
+  const featuredEvents = data.events
+    .filter((event) => event.featured !== false && !isPastEvent(event))
+    .slice(0, 3)
   const featuredProducts = data.products.slice(0, 4)
 
   return (
@@ -82,7 +90,7 @@ export default async function HomePage() {
                   Complete schedule
                 </p>
                 <h3 className="mt-3 text-2xl font-semibold text-slate-950">
-                  {data.meetings.length} meetings
+                  {data.meetings.length} groups & club activities
                 </h3>
                 <p className="mt-2 text-sm leading-6 text-slate-700">
                   See the complete AA, NA, and club service schedule before visiting.
@@ -135,6 +143,11 @@ export default async function HomePage() {
             </ButtonLink>
           </div>
           <div className="mt-6 md:mt-8">
+            {flyers.current ? (
+              <div className="mb-8">
+                <FlyerCard flyer={flyers.current} compact />
+              </div>
+            ) : null}
             <EventGrid events={featuredEvents} />
           </div>
         </div>
@@ -172,6 +185,7 @@ export default async function HomePage() {
 }
 
 export const metadata = {
+  alternates: { canonical: '/' },
   description: siteMetadata.description,
   title: siteMetadata.title,
 }
