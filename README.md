@@ -51,8 +51,8 @@ npm run build
 For a local production build, explicitly load the local environment:
 
 ```bash
-node --env-file=.env.development.local node_modules/next/dist/bin/next build
-node --env-file=.env.development.local node_modules/next/dist/bin/next start
+node scripts/with-env.mjs .env.development.local npm run build
+node scripts/with-env.mjs .env.development.local npm run start
 ```
 
 Remote database connections outside Vercel fail closed. Reviewed maintenance
@@ -69,7 +69,7 @@ reuse another application's server. Override `TEST_SERVER_URL` for another port.
 
 ```bash
 npm run test:unit
-node --env-file=.env.test.local node_modules/next/dist/bin/next build
+node scripts/with-env.mjs .env.test.local npm run build
 npm run test:int
 npm run test:e2e
 ```
