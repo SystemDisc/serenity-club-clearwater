@@ -4,7 +4,7 @@ import { HeartHandshake } from 'lucide-react'
 import { getSerenityData } from '@/serenity/data'
 
 export default async function EventsPage() {
-  const data = await getSerenityData()
+  const data = await getSerenityData(['events'])
 
   return (
     <main>

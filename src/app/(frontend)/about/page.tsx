@@ -3,7 +3,7 @@ import { PageHeader, SectionHeader, SerenityImage, TeamGrid } from '@/serenity/u
 import { getSerenityData } from '@/serenity/data'
 
 export default async function AboutPage() {
-  const data = await getSerenityData()
+  const data = await getSerenityData(['teamMembers'])
 
   return (
     <main>

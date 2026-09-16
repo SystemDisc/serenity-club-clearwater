@@ -61,7 +61,7 @@ function meetingRunsToday(meeting: Meeting, today: string) {
 }
 
 export default async function MeetingSchedulePage() {
-  const data = await getSerenityData()
+  const data = await getSerenityData(['meetings'])
   const sortedMeetings = sortedMeetingsByTime(data.meetings)
   const aaMeetings = sortedMeetings.filter((meeting) => meeting.fellowship === 'AA')
   const naMeetings = sortedMeetings.filter((meeting) => meeting.fellowship === 'NA')

@@ -22,7 +22,7 @@ const donationMethods = [
 ]
 
 export default async function WaysToGivePage() {
-  const data = await getSerenityData()
+  const data = await getSerenityData([])
 
   return (
     <main>

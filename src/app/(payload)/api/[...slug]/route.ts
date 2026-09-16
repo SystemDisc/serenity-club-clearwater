@@ -1,5 +1,5 @@
-/* THIS FILE WAS GENERATED AUTOMATICALLY BY PAYLOAD. */
-/* DO NOT MODIFY IT BECAUSE IT COULD BE REWRITTEN AT ANY TIME. */
+import { withPublicRevalidation } from '@/utilities/publicCache'
+// Keep the mutation wrapper when regenerating Payload route scaffolding.
 import config from '@payload-config'
 import '@payloadcms/next/css'
 import {
@@ -11,10 +11,10 @@ import {
   REST_PUT,
 } from '@payloadcms/next/routes'
 
-export const GET = REST_GET(config)
-export const POST = REST_POST(config)
-export const DELETE = REST_DELETE(config)
-export const PATCH = REST_PATCH(config)
+export const GET = withPublicRevalidation(REST_GET(config))
+export const POST = withPublicRevalidation(REST_POST(config))
+export const DELETE = withPublicRevalidation(REST_DELETE(config))
+export const PATCH = withPublicRevalidation(REST_PATCH(config))
 
-export const PUT = REST_PUT(config)
+export const PUT = withPublicRevalidation(REST_PUT(config))
 export const OPTIONS = REST_OPTIONS(config)

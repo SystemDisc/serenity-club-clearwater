@@ -1,6 +1,6 @@
 import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
-import './tests/helpers/environment'
+import './tests/helpers/environment.ts'
 
 export default defineConfig({
   plugins: [react()],

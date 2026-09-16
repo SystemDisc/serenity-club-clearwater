@@ -1,8 +1,9 @@
 import { config } from 'dotenv'
-import { assertTestDatabase } from '../../src/utilities/databaseSafety'
+import { assertTestDatabase } from '../../src/utilities/databaseSafety.ts'
 
 config({ path: '.env.test.local' })
 // Explicitly override Next's .env.local discovery for the child server.
+process.env.VERCEL = ''
 process.env.BLOB_READ_WRITE_TOKEN = ''
 process.env.RESEND_API_KEY = ''
 process.env.DOCX_CONVERTER_URL = ''

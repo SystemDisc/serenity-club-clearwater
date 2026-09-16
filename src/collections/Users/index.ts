@@ -1,6 +1,10 @@
 import type { CollectionConfig } from 'payload'
 
 import { authenticated } from '../../access/authenticated'
+import {
+  revalidatePublicSiteAfterChange,
+  revalidatePublicSiteAfterDelete,
+} from '@/hooks/revalidatePublicSite'
 
 export const Users: CollectionConfig = {
   slug: 'users',
@@ -14,6 +18,10 @@ export const Users: CollectionConfig = {
   admin: {
     defaultColumns: ['name', 'email'],
     useAsTitle: 'name',
+  },
+  hooks: {
+    afterChange: [revalidatePublicSiteAfterChange],
+    afterDelete: [revalidatePublicSiteAfterDelete],
   },
   auth: true,
   fields: [

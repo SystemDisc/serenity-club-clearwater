@@ -4,16 +4,17 @@ import { redirectsPlugin } from '@payloadcms/plugin-redirects'
 import { seoPlugin } from '@payloadcms/plugin-seo'
 import { searchPlugin } from '@payloadcms/plugin-search'
 import { Plugin } from 'payload'
-import {
-  revalidateRedirects,
-  revalidateRedirectsAfterDelete,
-} from '@/hooks/revalidateRedirects'
+import { revalidateRedirects, revalidateRedirectsAfterDelete } from '@/hooks/revalidateRedirects'
 import { GenerateTitle, GenerateURL } from '@payloadcms/plugin-seo/types'
 import { FixedToolbarFeature, HeadingFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
 import { searchFields } from '@/search/fieldOverrides'
 import { beforeSyncWithSearch } from '@/search/beforeSync'
 
 import { Page, Post } from '@/payload-types'
+import {
+  revalidatePublicSiteAfterChange,
+  revalidatePublicSiteAfterDelete,
+} from '@/hooks/revalidatePublicSite'
 import { getServerSideURL } from '@/utilities/getURL'
 
 const generateTitle: GenerateTitle<Post | Page> = ({ doc }) => {
@@ -37,7 +38,7 @@ export const plugins: Plugin[] = [
             return {
               ...field,
               admin: {
-                description: 'You will need to rebuild the website when changing this field.',
+                description: 'Redirect changes update the public website after saving.',
               },
             }
           }
@@ -63,6 +64,10 @@ export const plugins: Plugin[] = [
       payment: false,
     },
     formOverrides: {
+      hooks: {
+        afterChange: [revalidatePublicSiteAfterChange],
+        afterDelete: [revalidatePublicSiteAfterDelete],
+      },
       fields: ({ defaultFields }) => {
         return defaultFields.map((field) => {
           if ('name' in field && field.name === 'confirmationMessage') {

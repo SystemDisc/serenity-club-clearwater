@@ -11,7 +11,7 @@ type Args = {
 }
 
 export async function generateStaticParams() {
-  const data = await getSerenityData()
+  const data = await getSerenityData(['products'])
 
   return data.products.filter((product) => product.slug).map((product) => ({ slug: product.slug }))
 }
@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: Args) {
 
 export default async function ProductPage({ params }: Args) {
   const { slug } = await params
-  const [product, data] = await Promise.all([getProductBySlug(slug), getSerenityData()])
+  const [product, data] = await Promise.all([getProductBySlug(slug), getSerenityData(['products'])])
 
   if (!product) notFound()
 

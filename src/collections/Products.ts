@@ -1,8 +1,4 @@
-import type {
-  CollectionAfterChangeHook,
-  CollectionAfterDeleteHook,
-  CollectionConfig,
-} from 'payload'
+import type { CollectionConfig } from 'payload'
 
 import { authenticated } from '@/access/authenticated'
 import { authenticatedOrPublished } from '@/access/authenticatedOrPublished'
@@ -10,45 +6,6 @@ import {
   revalidatePublicSiteAfterChange,
   revalidatePublicSiteAfterDelete,
 } from '@/hooks/revalidatePublicSite'
-import type { Product } from '@/payload-types'
-import { revalidatePath, revalidateTag } from 'next/cache'
-
-const revalidateProduct: CollectionAfterChangeHook<Product> = ({
-  doc,
-  previousDoc,
-  req: { context, payload },
-}) => {
-  if (!context.disableRevalidate) {
-    if (doc._status === 'published') {
-      const path = `/shop/${doc.slug}`
-
-      payload.logger.info(`Revalidating product at path: ${path}`)
-
-      revalidatePath(path)
-      revalidateTag('products-sitemap', 'max')
-    }
-
-    if (previousDoc?._status === 'published' && doc._status !== 'published') {
-      const oldPath = `/shop/${previousDoc.slug}`
-
-      payload.logger.info(`Revalidating old product at path: ${oldPath}`)
-
-      revalidatePath(oldPath)
-      revalidateTag('products-sitemap', 'max')
-    }
-  }
-
-  return doc
-}
-
-const revalidateDelete: CollectionAfterDeleteHook<Product> = ({ doc, req: { context } }) => {
-  if (!context.disableRevalidate) {
-    revalidatePath(`/shop/${doc?.slug}`)
-    revalidateTag('products-sitemap', 'max')
-  }
-
-  return doc
-}
 
 export const Products: CollectionConfig = {
   slug: 'products',
@@ -81,8 +38,8 @@ export const Products: CollectionConfig = {
     { name: 'order', type: 'number', defaultValue: 100, admin: { position: 'sidebar' } },
   ],
   hooks: {
-    afterChange: [revalidateProduct, revalidatePublicSiteAfterChange],
-    afterDelete: [revalidateDelete, revalidatePublicSiteAfterDelete],
+    afterChange: [revalidatePublicSiteAfterChange],
+    afterDelete: [revalidatePublicSiteAfterDelete],
   },
   versions: {
     drafts: true,

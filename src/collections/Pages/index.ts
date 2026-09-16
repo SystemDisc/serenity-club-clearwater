@@ -11,7 +11,6 @@ import { hero } from '@/heros/config'
 import { slugField } from 'payload'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
 import { generatePreviewPath } from '../../utilities/generatePreviewPath'
-import { revalidateDelete, revalidatePage } from './hooks/revalidatePage'
 import {
   revalidatePublicSiteAfterChange,
   revalidatePublicSiteAfterDelete,
@@ -124,14 +123,14 @@ export const Pages: CollectionConfig<'pages'> = {
     slugField(),
   ],
   hooks: {
-    afterChange: [revalidatePage, revalidatePublicSiteAfterChange],
+    afterChange: [revalidatePublicSiteAfterChange],
     beforeChange: [populatePublishedAt],
-    afterDelete: [revalidateDelete, revalidatePublicSiteAfterDelete],
+    afterDelete: [revalidatePublicSiteAfterDelete],
   },
   versions: {
     drafts: {
       autosave: {
-        interval: 100, // We set this interval for optimal live preview
+        interval: 1500,
       },
       schedulePublish: true,
     },

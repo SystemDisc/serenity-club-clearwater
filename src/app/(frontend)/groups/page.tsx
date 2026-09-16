@@ -4,7 +4,7 @@ import { CalendarDays, Mail, Users } from 'lucide-react'
 import { getSerenityData } from '@/serenity/data'
 
 export default async function GroupsPage() {
-  const data = await getSerenityData()
+  const data = await getSerenityData([])
 
   return (
     <main>

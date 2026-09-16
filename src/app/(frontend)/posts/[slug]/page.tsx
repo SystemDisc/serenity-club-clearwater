@@ -20,27 +20,23 @@ import { hasUsableDatabaseUrl } from '@/serenity/data'
 export async function generateStaticParams() {
   if (!hasUsableDatabaseUrl()) return []
 
-  try {
-    const payload = await getPayload({ config: configPromise })
-    const posts = await payload.find({
-      collection: 'posts',
-      draft: false,
-      limit: 1000,
-      overrideAccess: false,
-      pagination: false,
-      select: {
-        slug: true,
-      },
-    })
+  const payload = await getPayload({ config: configPromise })
+  const posts = await payload.find({
+    collection: 'posts',
+    draft: false,
+    limit: 1000,
+    overrideAccess: false,
+    pagination: false,
+    select: {
+      slug: true,
+    },
+  })
 
-    const params = posts.docs.map(({ slug }) => {
-      return { slug }
-    })
+  const params = posts.docs.map(({ slug }) => {
+    return { slug }
+  })
 
-    return params
-  } catch (_error) {
-    return []
-  }
+  return params
 }
 
 type Args = {
@@ -117,30 +113,23 @@ const queryPostBySlug = cache(async ({ slug }: { slug: string }) => {
     }
   }
 
-  try {
-    const payload = await getPayload({ config: configPromise })
+  const payload = await getPayload({ config: configPromise })
 
-    const result = await payload.find({
-      collection: 'posts',
-      draft,
-      limit: 1,
-      overrideAccess: draft,
-      pagination: false,
-      where: {
-        slug: {
-          equals: slug,
-        },
+  const result = await payload.find({
+    collection: 'posts',
+    draft,
+    limit: 1,
+    overrideAccess: draft,
+    pagination: false,
+    where: {
+      slug: {
+        equals: slug,
       },
-    })
+    },
+  })
 
-    return {
-      canQueryRedirects: true,
-      post: (result.docs?.[0] || null) as Post | null,
-    }
-  } catch (_error) {
-    return {
-      canQueryRedirects: false,
-      post: null,
-    }
+  return {
+    canQueryRedirects: true,
+    post: (result.docs?.[0] || null) as Post | null,
   }
 })

@@ -7,7 +7,7 @@ import { getPayload } from 'payload'
 import { hasUsableDatabaseUrl } from '@/serenity/data'
 import { getCanonicalSiteURL } from '@/utilities/siteURL'
 
-export const revalidate = false
+export const revalidate = 300
 
 type SitemapEntry = MetadataRoute.Sitemap[number]
 
@@ -54,84 +54,80 @@ const getCmsEntries = unstable_cache(
   async (siteUrl: string): Promise<SitemapEntry[]> => {
     if (!hasUsableDatabaseUrl()) return []
 
-    try {
-      const payload = await getPayload({ config: configPromise })
+    const payload = await getPayload({ config: configPromise })
 
-      const [pages, products] = await Promise.all([
-        payload.find({
-          collection: 'pages',
-          depth: 0,
-          draft: false,
-          limit: 1000,
-          overrideAccess: false,
-          pagination: false,
-          select: {
-            slug: true,
-            updatedAt: true,
+    const [pages, products] = await Promise.all([
+      payload.find({
+        collection: 'pages',
+        depth: 0,
+        draft: false,
+        limit: 1000,
+        overrideAccess: false,
+        pagination: false,
+        select: {
+          slug: true,
+          updatedAt: true,
+        },
+        where: {
+          _status: {
+            equals: 'published',
           },
-          where: {
-            _status: {
-              equals: 'published',
-            },
+        },
+      }),
+      payload.find({
+        collection: 'products',
+        depth: 0,
+        draft: false,
+        limit: 1000,
+        overrideAccess: false,
+        pagination: false,
+        select: {
+          slug: true,
+          updatedAt: true,
+        },
+        where: {
+          _status: {
+            equals: 'published',
           },
-        }),
-        payload.find({
-          collection: 'products',
-          depth: 0,
-          draft: false,
-          limit: 1000,
-          overrideAccess: false,
-          pagination: false,
-          select: {
-            slug: true,
-            updatedAt: true,
-          },
-          where: {
-            _status: {
-              equals: 'published',
-            },
-          },
-        }),
-      ])
+        },
+      }),
+    ])
 
-      const pageEntries = pages.docs.flatMap((page): SitemapEntry[] => {
-        const slug = normalizeSlug(page.slug || '')
+    const pageEntries = pages.docs.flatMap((page): SitemapEntry[] => {
+      const slug = normalizeSlug(page.slug || '')
 
-        if (!slug || reservedSlugs.has(slug)) return []
+      if (!slug || reservedSlugs.has(slug)) return []
 
-        return [
-          {
-            url: slug === 'home' ? `${siteUrl}/` : `${siteUrl}/${slug}`,
-            lastModified: getLastModified(page.updatedAt),
-            changeFrequency: 'weekly',
-            priority: slug === 'home' ? 1 : 0.7,
-          },
-        ]
-      })
+      return [
+        {
+          url: slug === 'home' ? `${siteUrl}/` : `${siteUrl}/${slug}`,
+          lastModified: getLastModified(page.updatedAt),
+          changeFrequency: 'weekly',
+          priority: slug === 'home' ? 1 : 0.7,
+        },
+      ]
+    })
 
-      const productEntries = products.docs.flatMap((product): SitemapEntry[] => {
-        const slug = normalizeSlug(product.slug || '')
+    const productEntries = products.docs.flatMap((product): SitemapEntry[] => {
+      const slug = normalizeSlug(product.slug || '')
 
-        if (!slug) return []
+      if (!slug) return []
 
-        return [
-          {
-            url: `${siteUrl}/shop/${slug}`,
-            lastModified: getLastModified(product.updatedAt),
-            changeFrequency: 'weekly',
-            priority: 0.6,
-          },
-        ]
-      })
+      return [
+        {
+          url: `${siteUrl}/shop/${slug}`,
+          lastModified: getLastModified(product.updatedAt),
+          changeFrequency: 'weekly',
+          priority: 0.6,
+        },
+      ]
+    })
 
-      return [...pageEntries, ...productEntries]
-    } catch (_error) {
-      return []
-    }
+    return [...pageEntries, ...productEntries]
   },
   ['public-sitemap'],
   {
-    revalidate: false,
+    revalidate: 300,
     tags: ['pages-sitemap', 'products-sitemap'],
   },
 )

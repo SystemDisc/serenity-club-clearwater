@@ -17,6 +17,7 @@ export async function seedTestUser(): Promise<void> {
 
   // Delete existing test user if any
   await payload.delete({
+    context: { disableRevalidate: true },
     collection: 'users',
     where: {
       email: {
@@ -27,6 +28,7 @@ export async function seedTestUser(): Promise<void> {
 
   // Create fresh test user
   await payload.create({
+    context: { disableRevalidate: true },
     collection: 'users',
     data: testUser,
   })
@@ -40,6 +42,7 @@ export async function cleanupTestUser(): Promise<void> {
   const payload = await getPayload({ config })
 
   await payload.delete({
+    context: { disableRevalidate: true },
     collection: 'users',
     where: {
       email: {
@@ -47,4 +50,5 @@ export async function cleanupTestUser(): Promise<void> {
       },
     },
   })
+  await payload.destroy()
 }

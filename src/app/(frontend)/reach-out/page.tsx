@@ -1,14 +1,11 @@
-import {
-  SERENITY_GOOGLE_MAPS_EMBED_URL,
-  SERENITY_GOOGLE_MAPS_PLACE_URL,
-} from '@/serenity/content'
+import { SERENITY_GOOGLE_MAPS_EMBED_URL, SERENITY_GOOGLE_MAPS_PLACE_URL } from '@/serenity/content'
 import { PageHeader, SectionHeader } from '@/serenity/ui'
 import { Mail, MapPin, Phone } from 'lucide-react'
 
 import { getSerenityData } from '@/serenity/data'
 
 export default async function ReachOutPage() {
-  const data = await getSerenityData()
+  const data = await getSerenityData([])
 
   return (
     <main>

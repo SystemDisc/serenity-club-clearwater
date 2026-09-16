@@ -16,7 +16,7 @@ import { sortedMeetingsByTime } from '@/serenity/meetings'
 import { siteMetadata } from '@/utilities/siteURL'
 
 export default async function HomePage() {
-  const data = await getSerenityData()
+  const data = await getSerenityData(['meetings', 'events', 'products', 'sponsors'])
   const sortedMeetings = sortedMeetingsByTime(data.meetings)
   const recoveryMeetings = sortedMeetings.filter((meeting) => meeting.fellowship !== 'Club')
   const firstMeeting = recoveryMeetings[0]
