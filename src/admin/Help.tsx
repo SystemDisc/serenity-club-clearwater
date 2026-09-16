@@ -36,11 +36,13 @@ export default function Help(props: AdminViewServerProps) {
     ['Individual event announcements', '/admin/collections/events', '/events'],
     ['Meeting days, times, and details', '/admin/collections/meetings', '/meeting-schedule'],
     ['About-page dues reminder', '/admin/globals/duesReminder', '/about'],
-    ['Contact details, hours, and homepage pictures', '/admin/globals/clubSettings', '/reach-out'],
+    ['Contact, hours, public wording & pictures', '/admin/globals/clubSettings', '/reach-out'],
     ['Board and team', '/admin/collections/teamMembers', '/about'],
     ['Memberships and shop', '/admin/collections/products', '/shop'],
     ['Club rules', '/admin/collections/policies', '/policies'],
-    ['Gallery photos', '/admin/collections/galleryItems', '/gallery'],
+    ['Add photos & albums', '/admin/photos', '/gallery'],
+    ['Sponsorship terms & volunteering', '/admin/globals/clubSettings', '/ways-to-give'],
+    ['Group & facility information', '/admin/globals/clubSettings', '/groups'],
   ]
   return (
     <AdminPage {...props}>

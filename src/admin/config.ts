@@ -7,6 +7,7 @@ const names: Record<string, [string, string, string]> = {
   media: ['Photo or file', 'Photo & file library', 'Website details'],
   teamMembers: ['Board or team member', 'Board & team', 'Website details'],
   products: ['Membership or shop item', 'Memberships & shop', 'Website details'],
+  sponsors: ['Sponsor', 'Community sponsors', 'Website details'],
   policies: ['Club rule', 'Club rules', 'Website details'],
 }
 

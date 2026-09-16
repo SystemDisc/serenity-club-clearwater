@@ -11,6 +11,7 @@ const everyday = new Set([
   'teamMembers',
   'products',
   'policies',
+  'sponsors',
 ])
 
 export default function Navigation(props: ServerProps & { req?: PayloadRequest }) {

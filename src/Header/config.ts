@@ -1,19 +1,25 @@
 import type { GlobalConfig } from 'payload'
 
 import { authenticated } from '@/access/authenticated'
+import { adminOnly } from '@/access/users'
 import { link } from '@/fields/link'
 import { revalidateHeader } from './hooks/revalidateHeader'
 
 export const Header: GlobalConfig = {
   slug: 'header',
-  label: 'Header Navigation',
+  label: 'Top menu',
   access: {
     read: () => true,
-    update: authenticated,
+    update: adminOnly,
+    readVersions: authenticated,
   },
   admin: {
-    group: 'Serenity Club',
+    group: 'Manager settings',
+    hideAPIURL: true,
+    description:
+      'Saving changes links across the website immediately. Empty menus show no links. Restore an earlier saved menu from Previous versions.',
   },
+  versions: { max: 30 },
   fields: [
     {
       name: 'navItems',

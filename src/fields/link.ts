@@ -1,3 +1,4 @@
+import { validateWebsiteURL } from '@/utilities/validateWebsiteURL'
 import type { Field, GroupField } from 'payload'
 
 import deepMerge from '@/utilities/deepMerge'
@@ -39,14 +40,14 @@ export const link: LinkType = ({ appearances, disableLabel = false, overrides = 
               layout: 'horizontal',
               width: '50%',
             },
-            defaultValue: 'reference',
+            defaultValue: 'custom',
             options: [
               {
-                label: 'Internal link',
+                label: 'Additional page or news article',
                 value: 'reference',
               },
               {
-                label: 'Custom URL',
+                label: 'Club page or website address',
                 value: 'custom',
               },
             ],
@@ -74,17 +75,19 @@ export const link: LinkType = ({ appearances, disableLabel = false, overrides = 
       admin: {
         condition: (_, siblingData) => siblingData?.type === 'reference',
       },
-      label: 'Document to link to',
+      label: 'Choose a page or article',
       relationTo: ['pages', 'posts'],
       required: true,
     },
     {
       name: 'url',
       type: 'text',
+      validate: validateWebsiteURL,
       admin: {
         condition: (_, siblingData) => siblingData?.type === 'custom',
+        components: { Field: '@/admin/WebsiteLinkField' },
       },
-      label: 'Custom URL',
+      label: 'Club page or website address',
       required: true,
     },
   ]

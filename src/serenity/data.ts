@@ -1,3 +1,4 @@
+import { siteCopyDefaults, type SiteCopy } from './siteCopy'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import { cache } from 'react'
@@ -228,6 +229,12 @@ export const getSerenitySettings = cache(async (): Promise<ClubSettings> => {
   })) as unknown as Record<string, unknown>
 
   return {
+    ...(Object.fromEntries(
+      Object.entries(siteCopyDefaults).map(([key, fallback]) => [
+        key,
+        getText(settings[key], fallback),
+      ]),
+    ) as SiteCopy),
     address: getText(settings.address, fallbackClubSettings.address),
     cityStateZip: getText(settings.cityStateZip, fallbackClubSettings.cityStateZip),
     donationUrl: getText(settings.donationUrl, fallbackClubSettings.donationUrl),

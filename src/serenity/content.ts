@@ -1,4 +1,5 @@
-export type ClubSettings = {
+import { siteCopyDefaults, type SiteCopy } from './siteCopy'
+export type ClubSettings = SiteCopy & {
   address: string
   cityStateZip: string
   donationUrl: string
@@ -128,6 +129,7 @@ export const SERENITY_GOOGLE_MAPS_EMBED_URL =
   'https://maps.google.com/maps?cid=2964191645503102868&output=embed'
 
 export const fallbackClubSettings: ClubSettings = {
+  ...siteCopyDefaults,
   name: 'Serenity Club of Clearwater',
   legalName: 'Serenity Club of Clearwater, Inc.',
   tagline: 'A safe, supportive, and empowering home for Clearwater recovery.',

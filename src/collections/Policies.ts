@@ -26,8 +26,18 @@ export const Policies: CollectionConfig = {
   },
   fields: [
     { name: 'title', type: 'text', required: true },
-    { name: 'body', type: 'textarea', required: true },
-    { name: 'order', type: 'number', defaultValue: 100, admin: { position: 'sidebar' } },
+    { name: 'body', type: 'textarea', label: 'Rule details', required: true },
+    {
+      name: 'order',
+      type: 'number',
+      label: 'Display position',
+      defaultValue: 100,
+      admin: {
+        position: 'sidebar',
+        description:
+          'Lower numbers appear first. Leave gaps, such as 10, 20, 30, to fit new entries between them.',
+      },
+    },
   ],
   hooks: {
     afterChange: [revalidatePublicSiteAfterChange],

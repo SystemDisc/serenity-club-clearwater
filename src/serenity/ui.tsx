@@ -1,3 +1,4 @@
+import { mapLinks } from './siteCopy'
 import {
   ArrowRight,
   CalendarDays,
@@ -15,7 +16,6 @@ import Link from 'next/link'
 import React from 'react'
 
 import {
-  SERENITY_GOOGLE_MAPS_PLACE_URL,
   type ClubSettings,
   type EventItem,
   type GalleryItem,
@@ -225,7 +225,7 @@ export function ContactBand({ settings }: { settings: ClubSettings }) {
         </a>
         <a
           className="flex min-h-11 min-w-0 items-center gap-3 rounded-md hover:text-emerald-900 sm:col-span-2 lg:col-span-1"
-          href={SERENITY_GOOGLE_MAPS_PLACE_URL}
+          href={mapLinks(settings.address, settings.cityStateZip).place}
           rel="noreferrer"
           target="_blank"
         >

@@ -1,5 +1,6 @@
 import { SerenityMark } from '@/components/SerenityMark'
-import { SERENITY_GOOGLE_MAPS_PLACE_URL, type NavItem } from '@/serenity/content'
+import type { NavItem } from '@/serenity/content'
+import { mapLinks } from '@/serenity/siteCopy'
 import { getSerenitySettings, getSiteNavigation } from '@/serenity/data'
 import { Mail, MapPin, Phone } from 'lucide-react'
 import Link from 'next/link'
@@ -71,7 +72,7 @@ export async function Footer() {
           </a>
           <a
             className="flex min-h-11 items-center gap-3 hover:text-white"
-            href={SERENITY_GOOGLE_MAPS_PLACE_URL}
+            href={mapLinks(settings.address, settings.cityStateZip).place}
             rel="noreferrer"
             target="_blank"
           >
@@ -83,6 +84,26 @@ export async function Footer() {
             </span>
           </a>
           <p>{settings.hours}</p>
+          {settings.facebookUrl ? (
+            <a
+              href={settings.facebookUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="flex min-h-11 items-center hover:text-white"
+            >
+              Facebook ↗
+            </a>
+          ) : null}
+          {settings.instagramUrl ? (
+            <a
+              href={settings.instagramUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="flex min-h-11 items-center hover:text-white"
+            >
+              Instagram ↗
+            </a>
+          ) : null}
         </div>
       </div>
       <div className="container border-t border-slate-800 py-5 text-xs text-slate-400">

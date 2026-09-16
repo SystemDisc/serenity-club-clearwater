@@ -27,22 +27,11 @@ export default async function AboutPage() {
           <DuesNotice notice={notice} legacyImage={data.settings.logoImageUrl} />
           <div>
             <SectionHeader eyebrow="Mission" title="Safe, supportive, and member supported">
-              <p>
-                Serenity Club opened more than 50 years ago as a safe, sober place to go. The club
-                was incorporated in 1993 to provide assistance, encouragement, and reassurance to
-                people seeking recovery.
-              </p>
+              <p>{data.settings.aboutHistory}</p>
             </SectionHeader>
             <div className="grid gap-5 text-base leading-8 text-slate-700">
-              <p>
-                The clubhouse at {data.settings.address} serves people irrespective of race, color,
-                creed, or gender, and supports the moral, mental, social, and physical betterment of
-                its members.
-              </p>
-              <p>
-                The board and club manager steward the space, policies, events, and membership
-                program so the clubhouse can continue serving Clearwater.
-              </p>
+              <p>{data.settings.aboutWelcome}</p>
+              <p>{data.settings.aboutStewardship}</p>
             </div>
           </div>
         </div>

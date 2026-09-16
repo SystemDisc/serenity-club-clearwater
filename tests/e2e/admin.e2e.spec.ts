@@ -32,6 +32,67 @@ test.describe('Admin Panel', () => {
     await cleanupTestUser()
   })
 
+  test('shared settings update repeated contact text and restore a saved version', async ({
+    request,
+    browser,
+  }) => {
+    const { token } = await (await request.post('/api/users/login', { data: testUser })).json()
+    const headers = { authorization: `JWT ${token}` }
+    const original = await (
+      await request.get('/api/globals/clubSettings?depth=0', { headers })
+    ).json()
+    const visitor = await browser.newContext()
+    const publicPage = await visitor.newPage()
+    const hours = `Fixture clubhouse hours ${Date.now()}`
+    try {
+      await request.post('/api/globals/clubSettings', { headers, data: original })
+      const versions = await (
+        await request.get('/api/globals/clubSettings/versions?limit=1&sort=-updatedAt', { headers })
+      ).json()
+      await publicPage.goto('/reach-out')
+      await page.goto('/admin/globals/clubSettings')
+      await page.getByRole('textbox', { name: 'Hours', exact: true }).fill(hours)
+      await expect(
+        page.getByRole('link', { name: 'Check this address on Google Maps ↗' }),
+      ).toHaveAttribute('href', /query=/)
+      const save = page.waitForResponse(
+        (response) =>
+          response.url().includes('/api/globals/clubSettings') &&
+          response.request().method() === 'POST',
+      )
+      await page.getByRole('button', { name: 'Save', exact: true }).click()
+      expect((await save).ok()).toBeTruthy()
+      await expect
+        .poll(async () => {
+          await publicPage.reload()
+          return publicPage.getByText(hours, { exact: true }).count()
+        })
+        .toBe(2)
+      await expect(publicPage.locator('main')).toContainText(hours)
+      expect(
+        (
+          await request.post(`/api/globals/clubSettings/versions/${versions.docs[0].id}`, {
+            headers,
+          })
+        ).ok(),
+      ).toBeTruthy()
+      await expect
+        .poll(async () => {
+          await publicPage.reload()
+          return publicPage.getByText(hours, { exact: true }).count()
+        })
+        .toBe(0)
+      await page.reload()
+      await expect(page.getByRole('textbox', { name: 'Hours', exact: true })).toHaveValue(
+        original.hours,
+      )
+      await expect(page.getByRole('link', { name: /Previous versions/ }).first()).toBeVisible()
+    } finally {
+      await request.post('/api/globals/clubSettings', { headers, data: original })
+      await visitor.close()
+    }
+  })
+
   for (const [destination, count] of [
     ['main', 30],
     ['new', 50],

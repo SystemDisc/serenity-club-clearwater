@@ -72,6 +72,13 @@ const getEmailAdapter = () => {
 }
 
 export default buildConfig({
+  i18n: {
+    translations: {
+      en: {
+        version: { versions: 'Previous versions', compareVersions: 'Compare previous versions' },
+      },
+    },
+  },
   admin: {
     components: {
       beforeLogin: ['@/components/BeforeLogin'],

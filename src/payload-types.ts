@@ -1114,8 +1114,14 @@ export interface TeamMember {
   role: string;
   bio: string;
   image?: (number | null) | Media;
+  /**
+   * Usually leave blank and choose a library photo above.
+   */
   externalImageUrl?: string | null;
   imageAlt?: string | null;
+  /**
+   * Lower numbers appear first. Leave gaps, such as 10, 20, 30, to fit new entries between them.
+   */
   order?: number | null;
   updatedAt: string;
   createdAt: string;
@@ -1129,15 +1135,28 @@ export interface TeamMember {
 export interface Product {
   id: number;
   title: string;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
   slug: string;
   price: string;
   description: string;
   badge?: string | null;
   image?: (number | null) | Media;
+  /**
+   * Usually leave blank and choose a library photo above.
+   */
   externalImageUrl?: string | null;
   imageAlt?: string | null;
+  /**
+   * Manager setting: verify the payment account. A displayed price does not change the price charged by this destination.
+   */
   checkoutUrl?: string | null;
   fulfillmentNote: string;
+  /**
+   * Lower numbers appear first. Leave gaps, such as 10, 20, 30, to fit new entries between them.
+   */
   order?: number | null;
   updatedAt: string;
   createdAt: string;
@@ -1152,6 +1171,9 @@ export interface Policy {
   id: number;
   title: string;
   body: string;
+  /**
+   * Lower numbers appear first. Leave gaps, such as 10, 20, 30, to fit new entries between them.
+   */
   order?: number | null;
   updatedAt: string;
   createdAt: string;
@@ -1167,8 +1189,14 @@ export interface Sponsor {
   name: string;
   url?: string | null;
   image?: (number | null) | Media;
+  /**
+   * Usually leave blank and choose a library photo above.
+   */
   externalImageUrl?: string | null;
   imageAlt?: string | null;
+  /**
+   * Lower numbers appear first. Leave gaps, such as 10, 20, 30, to fit new entries between them.
+   */
   order?: number | null;
   updatedAt: string;
   createdAt: string;
@@ -1817,6 +1845,7 @@ export interface TeamMembersSelect<T extends boolean = true> {
  */
 export interface ProductsSelect<T extends boolean = true> {
   title?: T;
+  generateSlug?: T;
   slug?: T;
   price?: T;
   description?: T;
@@ -2345,27 +2374,27 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   createdAt?: T;
 }
 /**
+ * Saving updates the public website immediately. Earlier saved settings are available in Previous versions. Donation and social links are managed by a website manager.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "clubSettings".
  */
 export interface ClubSetting {
   id: number;
-  name: string;
-  legalName?: string | null;
-  tagline?: string | null;
-  summary?: string | null;
   address?: string | null;
   cityStateZip?: string | null;
   phone?: string | null;
   email?: string | null;
   hours?: string | null;
-  donationUrl?: string | null;
-  facebookUrl?: string | null;
-  instagramUrl?: string | null;
+  name: string;
+  legalName?: string | null;
+  tagline?: string | null;
+  summary?: string | null;
   heroImage?: (number | null) | Media;
   heroImageUrl?: string | null;
-  roomImage?: (number | null) | Media;
-  roomImageUrl?: string | null;
+  aboutHistory?: string | null;
+  aboutWelcome?: string | null;
+  aboutStewardship?: string | null;
   /**
    * Use Membership dues reminder for the current message. This earlier poster is kept for reference and only appears when that editor chooses the earlier uploaded poster.
    */
@@ -2374,6 +2403,28 @@ export interface ClubSetting {
    * Advanced: used only when no reminder image is selected above.
    */
   logoImageUrl?: string | null;
+  groupIntroduction?: string | null;
+  facilityInformation?: string | null;
+  smallRoomInformation?: string | null;
+  /**
+   * Shown on Groups & facilities.
+   */
+  roomImage?: (number | null) | Media;
+  roomImageUrl?: string | null;
+  sponsorshipInformation?: string | null;
+  sponsorshipContact?: string | null;
+  donatedItemsInformation?: string | null;
+  officeVolunteerInformation?: string | null;
+  coffeeVolunteerInformation?: string | null;
+  /**
+   * Changes all Donate buttons. Verify the account and destination before saving; this does not change shop checkout links.
+   */
+  donationUrl?: string | null;
+  facebookUrl?: string | null;
+  /**
+   * Shown in the site footer when filled in.
+   */
+  instagramUrl?: string | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -2403,6 +2454,8 @@ export interface DuesReminder {
   createdAt?: string | null;
 }
 /**
+ * Saving changes links across the website immediately. Empty menus show no links. Restore an earlier saved menu from Previous versions.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "header".
  */
@@ -2458,6 +2511,8 @@ export interface Header {
   createdAt?: string | null;
 }
 /**
+ * Saving changes links across the website immediately. Empty menus show no links. Restore an earlier saved menu from Previous versions.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "footer".
  */
@@ -2494,24 +2549,35 @@ export interface Footer {
  * via the `definition` "clubSettings_select".
  */
 export interface ClubSettingsSelect<T extends boolean = true> {
-  name?: T;
-  legalName?: T;
-  tagline?: T;
-  summary?: T;
   address?: T;
   cityStateZip?: T;
   phone?: T;
   email?: T;
   hours?: T;
+  name?: T;
+  legalName?: T;
+  tagline?: T;
+  summary?: T;
+  heroImage?: T;
+  heroImageUrl?: T;
+  aboutHistory?: T;
+  aboutWelcome?: T;
+  aboutStewardship?: T;
+  logoImage?: T;
+  logoImageUrl?: T;
+  groupIntroduction?: T;
+  facilityInformation?: T;
+  smallRoomInformation?: T;
+  roomImage?: T;
+  roomImageUrl?: T;
+  sponsorshipInformation?: T;
+  sponsorshipContact?: T;
+  donatedItemsInformation?: T;
+  officeVolunteerInformation?: T;
+  coffeeVolunteerInformation?: T;
   donationUrl?: T;
   facebookUrl?: T;
   instagramUrl?: T;
-  heroImage?: T;
-  heroImageUrl?: T;
-  roomImage?: T;
-  roomImageUrl?: T;
-  logoImage?: T;
-  logoImageUrl?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

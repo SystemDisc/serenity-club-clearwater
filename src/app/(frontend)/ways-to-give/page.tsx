@@ -3,26 +3,17 @@ import { Coffee, Gift, HeartHandshake, Mail, Phone, Shirt, Users } from 'lucide-
 
 import { getSerenityData } from '@/serenity/data'
 
-const donationMethods = [
-  {
-    title: 'In person',
-    text: 'Donate at the coffee bar when the clubhouse is open.',
-    icon: Coffee,
-  },
-  {
-    title: 'By phone',
-    text: 'Call the club and ask for the coffee bar manager.',
-    icon: Phone,
-  },
-  {
-    title: 'Items',
-    text: 'Drop off new and gently used donations during weekday business hours.',
-    icon: Shirt,
-  },
-]
-
 export default async function WaysToGivePage() {
   const data = await getSerenityData([])
+  const donationMethods = [
+    {
+      title: 'In person',
+      text: 'Donate at the coffee bar when the clubhouse is open.',
+      icon: Coffee,
+    },
+    { title: 'By phone', text: 'Call the club and ask for the coffee bar manager.', icon: Phone },
+    { title: 'Items', text: data.settings.donatedItemsInformation, icon: Shirt },
+  ]
 
   return (
     <main>
@@ -92,7 +83,7 @@ export default async function WaysToGivePage() {
               <Gift aria-hidden="true" className="size-7 text-emerald-900" />
               <h2 className="mt-4 text-lg font-semibold text-slate-950">Volunteer in the office</h2>
               <p className="mt-2 text-sm leading-6 text-slate-700">
-                Contact the coffee bar manager about office volunteer needs.
+                {data.settings.officeVolunteerInformation}
               </p>
             </article>
             <article className="rounded-lg border border-slate-200 bg-white p-5">
@@ -101,7 +92,7 @@ export default async function WaysToGivePage() {
                 Volunteer at the coffee bar
               </h2>
               <p className="mt-2 text-sm leading-6 text-slate-700">
-                Monthly coffee bar volunteer schedules are coordinated through the club manager.
+                {data.settings.coffeeVolunteerInformation}
               </p>
             </article>
           </div>
@@ -111,10 +102,7 @@ export default async function WaysToGivePage() {
       <section className="bg-white px-4 py-10 md:py-12">
         <div className="container grid gap-8 lg:grid-cols-[0.85fr_1.15fr]">
           <SectionHeader eyebrow="Sponsors" title="Community sponsorships">
-            <p>
-              Club sponsors support events, supplies, and clubhouse needs. The sponsor level listed
-              by the club starts at a $500 annual donation.
-            </p>
+            <p>{data.settings.sponsorshipInformation}</p>
           </SectionHeader>
           <div className="grid gap-4 md:grid-cols-2">
             <div className="rounded-lg border border-slate-200 bg-[#fbfaf7] p-5">
@@ -122,8 +110,7 @@ export default async function WaysToGivePage() {
                 Start a sponsorship conversation
               </h2>
               <p className="mt-3 text-sm leading-6 text-slate-700">
-                Contact the club manager with your name, email, phone number, and sponsorship
-                message.
+                {data.settings.sponsorshipContact}
               </p>
               <div className="mt-5 flex flex-col gap-3">
                 <ButtonLink href={`mailto:${data.settings.email}`} variant="primary">
