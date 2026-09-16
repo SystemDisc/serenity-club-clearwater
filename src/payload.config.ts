@@ -26,11 +26,13 @@ import { docxToImagePlugin } from './plugins/docxToImage'
 import { defaultLexical } from '@/fields/defaultLexical'
 import { generatePublicMediaURL } from './utilities/generatePublicMediaURL'
 import { getServerSideURL } from './utilities/getURL'
+import { assertDatabaseSafety, isLocalDatabase } from './utilities/databaseSafety'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 const getDatabaseURL = () => {
+  assertDatabaseSafety()
   const databaseURL = process.env.DATABASE_URL || ''
 
   if (!databaseURL) return ''
@@ -103,6 +105,7 @@ export default buildConfig({
   editor: defaultLexical,
   email: getEmailAdapter(),
   db: postgresAdapter({
+    push: process.env.PAYLOAD_DB_PUSH === 'true' && isLocalDatabase(process.env.DATABASE_URL),
     pool: {
       connectionString: getDatabaseURL(),
     },

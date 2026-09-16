@@ -34,12 +34,44 @@ Admins can add a page in Payload, then add a custom URL or page reference under
 
 ## Local Commands
 
+Start the local Postgres service with `docker compose up -d postgres`. Copy
+`.env.example` to `.env.development.local` and set local secrets. This file takes
+precedence over `.env.local` during development; do not use a pulled production
+environment for routine development. Automatic schema push is disabled by default.
+Run committed migrations against the local database before starting the app.
+
 ```bash
 npm install
 npm run dev
 npm run generate:types
 npm run lint
 npm run build
+```
+
+For a local production build, explicitly load the local environment:
+
+```bash
+node --env-file=.env.development.local node_modules/next/dist/bin/next build
+node --env-file=.env.development.local node_modules/next/dist/bin/next start
+```
+
+Remote database connections outside Vercel fail closed. Reviewed maintenance
+commands may explicitly set `ALLOW_REMOTE_DATABASE=true`; this never enables
+remote schema push. `PAYLOAD_DB_PUSH=true` is honored only for loopback databases.
+
+### Tests
+
+Copy `.env.test.example` to `.env.test.local`. Tests require a loopback database
+whose name ends in `_test`, and disable external Blob, email, and conversion.
+Migrate/seed that disposable database and build with its environment before E2E
+tests. Playwright starts its own production server on port 3100 and refuses to
+reuse another application's server. Override `TEST_SERVER_URL` for another port.
+
+```bash
+npm run test:unit
+node --env-file=.env.test.local node_modules/next/dist/bin/next build
+npm run test:int
+npm run test:e2e
 ```
 
 Run migrations against a configured database:
@@ -57,7 +89,7 @@ npm run seed:serenity
 
 ## Environment
 
-Copy `.env.example` to `.env.local` for local work. For Vercel, configure:
+Use `.env.development.local` for local work. For Vercel, configure:
 
 - `DATABASE_URL`
 - `PAYLOAD_SECRET`
@@ -91,7 +123,7 @@ and send a separate private copy to `zorn.timothy@gmail.com`.
 4. Pull env vars locally:
 
    ```bash
-   vercel env pull .env.local --yes
+   vercel env pull .env.production.local --environment=production --yes
    ```
 
 5. Run committed Payload migrations:
