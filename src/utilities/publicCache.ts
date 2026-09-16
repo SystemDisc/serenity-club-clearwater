@@ -24,7 +24,11 @@ type Change = {
   previousSlug?: string | null
 }
 type Pending = { changes: Change[] }
-const pending = new AsyncLocalStorage<Pending>()
+// Next can bundle this module separately for admin and API routes while Payload
+// reuses its initialized config/hooks across them. Share the scope per process.
+const scopeKey = Symbol.for('serenity.publicMutationScope')
+const scopes = globalThis as unknown as Record<symbol, AsyncLocalStorage<Pending>>
+const pending = (scopes[scopeKey] ??= new AsyncLocalStorage<Pending>())
 
 const routes: Record<string, string[]> = {
   meetings: ['/', '/meeting-schedule', '/groups'],
