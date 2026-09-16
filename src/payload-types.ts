@@ -292,6 +292,9 @@ export interface Post {
  */
 export interface Media {
   id: number;
+  /**
+   * Describe meaningful image content for screen readers. Leave blank only for decorative images; gallery titles provide a fallback.
+   */
   alt?: string | null;
   caption?: {
     root: {
