@@ -1,5 +1,6 @@
 import AxeBuilder from '@axe-core/playwright'
 import { expect, test } from '@playwright/test'
+import { testServerURL } from '../helpers/environment'
 
 const publicPages = [
   '/',
@@ -101,6 +102,49 @@ test.describe('Frontend', () => {
     const response = await page.goto('/search')
 
     expect(response?.status()).toBe(404)
+  })
+
+  test('missing pages show recovery links and preserve the 404 status', async ({ page }) => {
+    for (const url of ['/test', '/test/missing', '/posts/missing-404-regression']) {
+      const response = await page.goto(url)
+
+      expect(response?.status(), url).toBe(404)
+      await expect(page.getByRole('heading', { name: 'We couldn’t find that page.' })).toBeVisible()
+      await expect(page.getByRole('link', { name: 'Go to homepage', exact: true })).toHaveAttribute(
+        'href',
+        '/',
+      )
+      await expect(
+        page.getByRole('main').getByRole('link', { name: 'Find a meeting' }),
+      ).toHaveAttribute('href', '/meeting-schedule')
+      await expect(page.locator('meta[name="robots"]').first()).toHaveAttribute(
+        'content',
+        /noindex/,
+      )
+    }
+
+    await page.getByRole('link', { name: 'Go to homepage', exact: true }).click()
+    await expect(page).toHaveURL('/')
+    await expect(
+      page.getByRole('heading', { name: 'Daily recovery meetings in downtown Clearwater' }),
+    ).toBeVisible()
+  })
+
+  test('unmatched routes render the club 404 without JavaScript', async ({ browser }) => {
+    const context = await browser.newContext({ javaScriptEnabled: false })
+    const page = await context.newPage()
+
+    try {
+      const response = await page.goto(`${testServerURL}/test/missing`)
+      expect(response?.status()).toBe(404)
+      await expect(page.getByRole('heading', { name: 'We couldn’t find that page.' })).toBeVisible()
+      await page.getByRole('link', { name: 'Find a meeting', exact: true }).click()
+      await expect(
+        page.getByRole('heading', { name: 'Find a meeting at Serenity Club' }),
+      ).toBeVisible()
+    } finally {
+      await context.close()
+    }
   })
 
   test('homepage passes its accessibility regression checks', async ({ page }) => {
