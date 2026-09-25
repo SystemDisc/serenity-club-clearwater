@@ -94,12 +94,13 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
   const postResult = await queryPostBySlug({ slug: decodedSlug })
 
   const metadata = await generateMeta({ doc: postResult.post, collection: 'posts' })
+  const canIndex = Boolean(postResult.post) && !(await draftMode()).isEnabled
 
   return {
     ...metadata,
     robots: {
-      follow: !(await draftMode()).isEnabled,
-      index: !(await draftMode()).isEnabled,
+      follow: canIndex,
+      index: canIndex,
     },
   }
 }
