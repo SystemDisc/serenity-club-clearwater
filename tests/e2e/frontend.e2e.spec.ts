@@ -110,6 +110,8 @@ test.describe('Frontend', () => {
 
       expect(response?.status(), url).toBe(404)
       await expect(page.getByRole('heading', { name: 'We couldn’t find that page.' })).toBeVisible()
+      // Playwright's visibility check allows opacity: 0, which caused blank 404s.
+      await expect(page.locator('html')).toHaveCSS('opacity', '1')
       await expect(page.getByRole('link', { name: 'Go to homepage', exact: true })).toHaveAttribute(
         'href',
         '/',
@@ -138,6 +140,7 @@ test.describe('Frontend', () => {
       const response = await page.goto(`${testServerURL}/test/missing`)
       expect(response?.status()).toBe(404)
       await expect(page.getByRole('heading', { name: 'We couldn’t find that page.' })).toBeVisible()
+      await expect(page.locator('html')).toHaveCSS('opacity', '1')
       await page.getByRole('link', { name: 'Find a meeting', exact: true }).click()
       await expect(
         page.getByRole('heading', { name: 'Find a meeting at Serenity Club' }),
