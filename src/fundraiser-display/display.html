@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>Serenity Club · Restoration fund</title>
+    <link rel="stylesheet" href="/fundraiser-display-assets/style.css" />
+    <script src="/fundraiser-display-assets/app.js" defer></script>
+  </head>
+  <body>
+    <main class="display">
+      <section class="campaign">
+        <header class="brand">
+          <img
+            src="/fundraiser-display-assets/logo.svg"
+            alt="Serenity Club of Clearwater"
+            width="78"
+            height="71"
+          />
+          <div>Serenity Club<span>of Clearwater</span></div>
+        </header>
+        <div class="main-content">
+          <p class="eyebrow">Clubhouse restoration fund</p>
+          <h1>Help Restore the<br />Serenity Club of Clearwater</h1>
+          <p class="purpose">Your gift helps repair and protect our home for recovery.</p>
+          <section class="fundraising" aria-label="Fundraising progress">
+            <div class="raised" id="raised">—</div>
+            <p class="goal">raised toward <strong id="goal">$100,000</strong></p>
+            <progress
+              id="progress"
+              max="100"
+              value="0"
+              aria-label="Percentage of fundraising goal"
+            ></progress>
+            <div class="progress-meta">
+              <span id="percentage">Checking progress…</span><span id="remaining"></span>
+            </div>
+            <p class="sync" id="sync" role="status">Connecting to campaign…</p>
+          </section>
+          <button id="donate" class="primary donate">
+            Or donate on this screen <span aria-hidden="true">→</span>
+          </button>
+          <p class="payment-note">
+            This is a shared screen. Scanning the QR code is recommended for privacy.
+          </p>
+        </div>
+        <footer>
+          <span>Thank you for helping preserve this place.</span
+          ><button id="fullscreen" class="text-button">Full screen ⛶</button>
+        </footer>
+      </section>
+      <aside class="support">
+        <div class="photo">
+          <img
+            id="photo"
+            alt="The Serenity Club sign and clubhouse entrance"
+            src="https://res.cloudinary.com/hxn9dbuhd/image/upload/f_auto,c_limit,w_1200,q_auto/v1790356279/organizations/0/a/1/5/0a157c98-bc1d-4854-b591-cb54061d5246/f4dc0bb4-b97f-4363-9a2e-4df88564baca.png"
+          />
+          <div class="photo-caption">A place for recovery.<br />A community worth protecting.</div>
+        </div>
+        <a
+          id="phone-link"
+          class="phone"
+          href="https://www.zeffy.com/en-US/donation-form/help-restore-the-serenity-club-of-clearwater"
+          target="_blank"
+          rel="noopener"
+          ><img
+            src="/fundraiser-display-assets/qr.svg"
+            alt="Scan with your phone camera to donate through Zeffy"
+            width="240"
+            height="240"
+          />
+          <div>
+            <h2>Scan to donate</h2>
+            <p>For your privacy, scan with your phone.</p>
+            <span>Open your camera, scan, and donate through Zeffy.</span>
+          </div></a
+        >
+      </aside>
+    </main>
+    <dialog id="checkout" class="checkout" aria-labelledby="checkout-title">
+      <header class="checkout-header">
+        <div>
+          <h2 id="checkout-title">Help restore the clubhouse</h2>
+          <p>Shared-device checkout · Use the QR code for a private checkout on your phone.</p>
+        </div>
+        <button id="finish" class="secondary">Finish / start over</button>
+      </header>
+      <div class="checkout-frame" id="frame-container"></div>
+      <p class="checkout-foot">
+        Finished? Select “Finish / start over” to return to the progress display.
+      </p>
+    </dialog>
+    <dialog id="leave-confirm" class="confirmation" aria-labelledby="leave-title">
+      <h2 id="leave-title">Return to the display?</h2>
+      <p>
+        This will close the donation form. A donation is complete only when Zeffy confirms your
+        payment.
+      </p>
+      <div>
+        <button id="stay" class="primary">Keep donating</button
+        ><button id="leave" class="secondary">Return to display</button>
+      </div>
+    </dialog>
+  </body>
+</html>
