@@ -12,7 +12,7 @@ const compactMoney = (value) =>
         maximumFractionDigits: 0,
       }).format(value)
     : money.format(value)
-let campaignUrl =
+const campaignUrl =
   'https://www.zeffy.com/en-US/donation-form/help-restore-the-serenity-club-of-clearwater'
 let refreshing = false
 let lastView = null
@@ -58,7 +58,6 @@ function showProgress(data) {
         : data.mode === 'stale'
           ? `Connection interrupted · Last verified ${when}`
           : 'Cannot retrieve the total right now. You can still donate.'
-  if (data.campaignUrl) campaignUrl = data.campaignUrl
 }
 async function refresh() {
   if (refreshing) return
@@ -83,6 +82,9 @@ $('donate').addEventListener('click', () => {
   frame.title = 'Secure Zeffy donation form'
   frame.src = campaignUrl
   frame.allow = 'payment'
+  // Keep checkout interactive without letting its links replace the kiosk,
+  // launch another app, open a tab, or download files on the shared device.
+  frame.sandbox = 'allow-scripts allow-same-origin allow-forms'
   frame.referrerPolicy = 'strict-origin-when-cross-origin'
   $('frame-container').replaceChildren(frame)
   $('checkout').showModal()
@@ -105,20 +107,21 @@ $('leave').addEventListener('click', () => {
   $('donate').focus()
   refresh()
 })
-$('fullscreen').addEventListener('click', async () => {
-  try {
-    if (document.fullscreenElement) await document.exitFullscreen()
-    else await document.documentElement.requestFullscreen()
-  } catch {
-    $('fullscreen').textContent = 'Use browser full screen'
-  }
-})
+// Suppress image/link preview and drag menus on the kiosk document. These
+// listeners do not reach into Zeffy's cross-origin form or block its inputs.
+document.addEventListener('contextmenu', (event) => event.preventDefault())
+document.addEventListener('dragstart', (event) => event.preventDefault())
+// Safari may ignore user-scalable=no. Keep one-finger scrolling available,
+// but suppress the kiosk document's pinch gesture without disabling touch.
+for (const type of ['gesturestart', 'gesturechange']) {
+  document.addEventListener(type, (event) => event.preventDefault(), { passive: false })
+}
 document.addEventListener(
-  'fullscreenchange',
-  () =>
-    ($('fullscreen').textContent = document.fullscreenElement
-      ? 'Exit full screen ⛶'
-      : 'Full screen ⛶'),
+  'touchmove',
+  (event) => {
+    if (event.touches.length > 1) event.preventDefault()
+  },
+  { passive: false },
 )
 window.addEventListener('online', refresh)
 document.addEventListener('visibilitychange', () => {

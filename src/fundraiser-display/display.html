@@ -2,7 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
     <meta name="robots" content="noindex,nofollow" />
     <title>Serenity Club · Restoration fund</title>
     <link rel="stylesheet" href="/fundraiser-display-assets/style.css" />
@@ -45,10 +48,7 @@
             This is a shared screen. Scanning the QR code is recommended for privacy.
           </p>
         </div>
-        <footer>
-          <span>Thank you for helping preserve this place.</span
-          ><button id="fullscreen" class="text-button">Full screen ⛶</button>
-        </footer>
+        <footer>Thank you for helping preserve this place.</footer>
       </section>
       <aside class="support">
         <div class="photo">
@@ -59,24 +59,20 @@
           />
           <div class="photo-caption">A place for recovery.<br />A community worth protecting.</div>
         </div>
-        <a
-          id="phone-link"
-          class="phone"
-          href="https://www.zeffy.com/en-US/donation-form/help-restore-the-serenity-club-of-clearwater"
-          target="_blank"
-          rel="noopener"
-          ><img
+        <section class="phone" aria-labelledby="qr-heading">
+          <img
             src="/fundraiser-display-assets/qr.svg"
             alt="Scan with your phone camera to donate through Zeffy"
             width="240"
             height="240"
+            draggable="false"
           />
           <div>
-            <h2>Scan to donate</h2>
+            <h2 id="qr-heading">Scan to donate</h2>
             <p>For your privacy, scan with your phone.</p>
             <span>Open your camera, scan, and donate through Zeffy.</span>
-          </div></a
-        >
+          </div>
+        </section>
       </aside>
     </main>
     <dialog id="checkout" class="checkout" aria-labelledby="checkout-title">

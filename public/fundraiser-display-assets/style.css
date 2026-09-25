@@ -16,11 +16,18 @@
 * {
   box-sizing: border-box;
 }
+html,
+body {
+  overscroll-behavior: none;
+  touch-action: pan-y;
+}
 body {
   margin: 0;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
-button,
-a {
+button {
   -webkit-tap-highlight-color: transparent;
 }
 button {
@@ -28,7 +35,6 @@ button {
   cursor: pointer;
 }
 button:focus-visible,
-a:focus-visible,
 input:focus-visible {
   outline: 3px solid #af6800;
   outline-offset: 4px;
@@ -39,9 +45,6 @@ button:disabled {
 }
 button {
   min-height: 52px;
-}
-a {
-  color: inherit;
 }
 h1,
 h2,
@@ -213,13 +216,6 @@ footer {
   color: var(--muted);
   font-size: 12px;
 }
-.text-button {
-  border: 0;
-  background: none;
-  color: var(--muted);
-  padding: 8px;
-  white-space: nowrap;
-}
 .support {
   display: flex;
   flex-direction: column;
@@ -310,6 +306,7 @@ dialog::backdrop {
   animation: arrive 0.22s ease-out;
 }
 .checkout-header {
+  flex-shrink: 0;
   padding: 18px 24px;
   display: flex;
   align-items: center;
@@ -347,6 +344,7 @@ dialog::backdrop {
   background: #fff;
 }
 .checkout-foot {
+  flex-shrink: 0;
   padding: 12px;
   text-align: center;
   font-size: 12px;
