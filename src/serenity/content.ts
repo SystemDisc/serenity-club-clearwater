@@ -54,6 +54,7 @@ export type EventItem = {
   category: 'Fundraiser' | 'Meeting' | 'Service' | 'Community'
   dateLabel: string
   id?: string | number
+  coverImageUrl?: string
   imageAlt?: string
   imageUrl?: string
   order: number

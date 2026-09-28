@@ -1,0 +1,478 @@
+.page {
+  --ink: #163e32;
+  --paper: #fcfaf4;
+  --orange: #aa461f;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.page a:focus-visible,
+.page summary:focus-visible {
+  outline: 3px solid var(--orange);
+  outline-offset: 5px;
+}
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  background: #f6ecd4;
+}
+
+.heroInner {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  align-items: center;
+  min-height: 410px;
+}
+
+.heroCopy {
+  position: relative;
+  z-index: 1;
+  padding: 48px 30px 48px 0;
+}
+.eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+.hero h1 {
+  font-family: Georgia, serif;
+  font-size: clamp(42px, 4.5vw, 68px);
+  line-height: 1.05;
+  font-weight: 400;
+  letter-spacing: -0.035em;
+  margin: 18px 0;
+  text-wrap: balance;
+}
+.heroDescription {
+  max-width: 430px;
+  font-size: 16px;
+  line-height: 1.7;
+  color: #3d5548;
+}
+.heroImage {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 46%;
+}
+.heroImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.heroLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 24px;
+  padding: 10px 0;
+  min-height: 44px;
+  border-bottom: 1px solid var(--ink);
+  font-weight: 650;
+  font-size: 14px;
+}
+.heroLink svg {
+  transition: transform 0.2s;
+}
+.heroLink:hover svg {
+  transform: translateY(3px);
+}
+
+.jumpNav {
+  border-bottom: 1px solid #d8dfd3;
+  background: var(--paper);
+}
+.jumpInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  min-height: 64px;
+}
+.jumpLinks {
+  display: flex;
+  gap: 32px;
+}
+.jumpLinks a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 8px 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+.jumpLinks a:hover {
+  color: var(--orange);
+}
+.address {
+  display: flex;
+  gap: 8px;
+  font-size: 12px;
+  align-items: center;
+  color: #536255;
+}
+.upcoming {
+  padding: 56px 0 64px;
+  scroll-margin-top: 96px;
+}
+.sectionHeading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 30px;
+}
+.sectionHeading h2,
+.bulletin h2,
+.support h2 {
+  font-family: Georgia, serif;
+  font-size: clamp(30px, 3vw, 42px);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+}
+.sectionHeading .eyebrow {
+  color: var(--orange);
+  margin-bottom: 10px;
+}
+.sectionAside {
+  font-size: 14px;
+  max-width: 250px;
+  line-height: 1.6;
+  color: #536255;
+}
+.events {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 46px 30px;
+}
+.event {
+  min-width: 0;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #d8dfd3;
+}
+.eventImage {
+  overflow: hidden;
+  background: #eee5d0;
+}
+.cover {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3/2;
+  object-fit: cover;
+  transition: transform 0.35s ease;
+}
+.event:hover .cover {
+  transform: scale(1.025);
+}
+.eventHeading {
+  display: flex;
+  align-items: start;
+  gap: 18px;
+  margin: 22px 0 16px;
+}
+.eventHeading .eyebrow {
+  color: #536255;
+  margin: 1px 0 7px;
+}
+.eventHeading h3 {
+  font-size: 21px;
+  font-weight: 650;
+  letter-spacing: -0.025em;
+  line-height: 1.22;
+  text-wrap: balance;
+}
+.date {
+  flex: 0 0 46px;
+  text-align: center;
+  color: var(--orange);
+}
+.date span {
+  display: block;
+  font-size: 11px;
+  font-weight: 750;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.date strong {
+  display: block;
+  font-family: Georgia, serif;
+  font-size: 40px;
+  line-height: 1.1;
+  font-weight: 400;
+}
+.when,
+.location {
+  display: flex;
+  align-items: start;
+  gap: 8px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.when {
+  font-weight: 650;
+}
+.when svg,
+.location svg {
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+.description {
+  font-size: 14px;
+  line-height: 1.75;
+  color: #455749;
+  margin-top: 12px;
+}
+.location {
+  color: #536255;
+  margin-top: 14px;
+}
+.eventLinks {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+.eventLinks a {
+  display: inline-flex;
+  gap: 5px;
+  align-items: center;
+  min-height: 44px;
+  font-size: 13px;
+  font-weight: 650;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.eventLinks a:hover {
+  color: var(--orange);
+}
+
+.bulletin {
+  background: #edf0e6;
+  padding: 60px 0;
+  scroll-margin-top: 96px;
+}
+.bulletinInner {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 70px;
+  align-items: start;
+}
+.flyerImage {
+  max-width: 320px;
+  margin: 0 auto;
+  display: block;
+  transform: rotate(-2deg);
+  transition: transform 0.25s;
+  box-shadow: 0 12px 30px #163e321a;
+}
+.flyerImage:hover {
+  transform: rotate(0);
+}
+.flyerImage img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.bulletin .eyebrow {
+  color: #526348;
+  margin: 12px 0;
+}
+.bulletinIntro {
+  font-size: 16px;
+  line-height: 1.8;
+  max-width: 440px;
+  margin: 18px 0 24px;
+  color: #455749;
+}
+.bulletinDetails {
+  border-top: 1px solid #b9c5b4;
+  border-bottom: 1px solid #b9c5b4;
+  margin-top: 28px;
+}
+.bulletinDetails summary {
+  min-height: 54px;
+  padding: 16px 0;
+  font-size: 14px;
+  font-weight: 650;
+  cursor: pointer;
+}
+.bulletinDetails p {
+  white-space: pre-line;
+  line-height: 1.8;
+  font-size: 14px;
+  padding: 2px 0 24px;
+}
+.archive {
+  padding: 42px 0;
+  scroll-margin-top: 96px;
+}
+.archive > div > details {
+  border-bottom: 1px solid #d8dfd3;
+}
+.archive summary {
+  cursor: pointer;
+  padding: 20px 0;
+  min-height: 60px;
+  font-weight: 600;
+}
+.archiveContent {
+  padding: 18px 0 30px;
+}
+.support {
+  padding: 50px 0;
+  background: #183f32;
+  color: #fff9e8;
+}
+.supportInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+}
+.support h2 {
+  font-size: 34px;
+}
+.support p {
+  max-width: 600px;
+  margin-top: 12px;
+  color: #dee5d6;
+  line-height: 1.7;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .heroCopy {
+    animation: arrive 0.55s ease-out both;
+  }
+  .heroImage {
+    animation: arrive 0.7s ease-out both;
+  }
+  @supports (animation-timeline: view()) {
+    .eventImage {
+      animation: reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 35%;
+    }
+  }
+}
+@keyframes arrive {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes reveal {
+  from {
+    opacity: 0.65;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .page *,
+  .page *::before,
+  .page *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  .event:hover .cover,
+  .flyerImage,
+  .flyerImage:hover,
+  .heroLink:hover svg {
+    transform: none;
+  }
+}
+@media (max-width: 999px) {
+  .events {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .heroInner {
+    min-height: 370px;
+  }
+  .address {
+    display: none;
+  }
+  .bulletinInner {
+    gap: 36px;
+  }
+}
+@media (max-width: 639px) {
+  .heroInner {
+    display: block;
+    min-height: 0;
+  }
+  .heroCopy {
+    padding: 36px 0 30px;
+  }
+  .hero h1 {
+    max-width: 370px;
+    font-size: 44px;
+  }
+  .heroImage {
+    position: relative;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 2/1;
+  }
+  .heroImage img {
+    object-position: center 52%;
+  }
+  .jumpInner {
+    min-height: 58px;
+  }
+  .jumpLinks {
+    gap: 24px;
+  }
+  .jumpLinks a {
+    font-size: 12px;
+  }
+  .upcoming {
+    padding: 38px 0 48px;
+  }
+  .sectionHeading {
+    display: block;
+  }
+  .sectionAside {
+    margin-top: 12px;
+    max-width: none;
+  }
+  .events {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 30px;
+  }
+  .eventHeading h3 {
+    font-size: 23px;
+  }
+  .description {
+    font-size: 15px;
+  }
+  .bulletin {
+    padding: 38px 0;
+  }
+  .bulletinInner {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 36px;
+  }
+  .flyerImage {
+    max-width: 270px;
+  }
+  .supportInner {
+    align-items: start;
+    flex-direction: column;
+  }
+  .support h2 {
+    font-size: 30px;
+  }
+}

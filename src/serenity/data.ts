@@ -282,6 +282,7 @@ export const getSerenityData = cache(
           fallbackEvents,
           (doc) => ({
             category: (getText(doc.category, 'Community') as EventItem['category']) || 'Community',
+            coverImageUrl: getText(doc.externalImageUrl) || undefined,
             featured: doc.featured !== false,
             location: getText(doc.location) || undefined,
             id: String(doc.id),

@@ -123,8 +123,23 @@ export const Events: CollectionConfig = {
         description: 'Required before publishing. You can finish this after saving a draft.',
       },
     },
-    { name: 'image', type: 'upload', relationTo: 'media' },
-    { name: 'externalImageUrl', type: 'text', label: 'External Image URL' },
+    {
+      name: 'image',
+      type: 'upload',
+      relationTo: 'media',
+      admin: {
+        description: 'Original flyer or image. Visitors can open it from the event listing.',
+      },
+    },
+    {
+      name: 'externalImageUrl',
+      type: 'text',
+      label: 'External Image URL',
+      admin: {
+        description:
+          'Optional cover image override. Common events automatically use illustrated artwork; the uploaded original stays available. Use an image from the Media library or another supported image host.',
+      },
+    },
     { name: 'imageAlt', type: 'text', label: 'Describe the picture for people who cannot see it' },
     { name: 'url', type: 'text', label: 'Link for more event details (optional)' },
     {

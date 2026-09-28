@@ -1,4 +1,5 @@
 import { mapLinks } from './siteCopy'
+import { getEventArtwork } from './eventArtwork'
 import {
   ArrowRight,
   CalendarDays,
@@ -314,13 +315,20 @@ export function EventGrid({
               target="_blank"
             >
               <SerenityImage
-                alt={event.imageAlt || event.title}
-                className="aspect-[4/3] w-full object-contain"
+                alt={getEventArtwork(event).alt}
+                className="aspect-[3/2] w-full object-cover"
                 sizes="(min-width: 768px) 33vw, 100vw"
-                src={event.imageUrl}
+                src={getEventArtwork(event).src}
               />
             </a>
-          ) : null}
+          ) : (
+            <SerenityImage
+              alt={getEventArtwork(event).alt}
+              className="aspect-[3/2] w-full object-cover"
+              sizes="(min-width: 768px) 33vw, 100vw"
+              src={getEventArtwork(event).src}
+            />
+          )}
           <div className="p-5">
             <p className="text-sm font-semibold uppercase tracking-[0.12em] text-emerald-900">
               {event.category}
