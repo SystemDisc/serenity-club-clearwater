@@ -17,7 +17,7 @@ export const MonthlyFlyers: CollectionConfig = {
     defaultColumns: ['month', 'image', '_status', 'updatedAt'],
     hideAPIURL: true,
     description:
-      'One flyer per month. Keep next month as a draft until it is ready. Previous images and original documents remain available through Versions.',
+      'One flyer per month. Home and Events show next month’s published flyer once no events remain this month. Keep unfinished flyers as drafts. Previous images and original documents remain available through Versions.',
   },
   access: {
     create: authenticated,

@@ -41,7 +41,7 @@ export function FlyerCard({
           </p>
           <h3 className="mb-5 mt-2 text-xl font-semibold text-slate-950">{month} at the club</h3>
           <ButtonLink className="mt-auto self-start" href="/events" variant="secondary">
-            Read this month’s events
+            Read {month} events
             <ArrowRight aria-hidden="true" />
           </ButtonLink>
         </div>

@@ -19,10 +19,8 @@ import { FlyerCard } from '@/serenity/FlyerCard'
 import { isPastEvent } from '@/serenity/events'
 
 export default async function HomePage() {
-  const [data, flyers] = await Promise.all([
-    getSerenityData(['meetings', 'events', 'products', 'sponsors']),
-    getMonthlyFlyers(),
-  ])
+  const data = await getSerenityData(['meetings', 'events', 'products', 'sponsors'])
+  const flyers = await getMonthlyFlyers(data.events)
   const sortedMeetings = regularMeetingRows(data.meetings)
   const recoveryMeetings = sortedMeetings.filter((meeting) => meeting.fellowship !== 'Club')
   const firstMeeting = recoveryMeetings[0]

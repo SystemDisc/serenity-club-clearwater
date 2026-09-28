@@ -8,8 +8,9 @@ import { localDateKey } from '@/serenity/calendar'
 import { isPastEvent } from '@/serenity/events'
 
 export default async function EventsPage() {
-  const [data, flyers] = await Promise.all([getSerenityData(['events']), getMonthlyFlyers()])
+  const data = await getSerenityData(['events'])
   const today = localDateKey()
+  const flyers = await getMonthlyFlyers(data.events, today)
   const upcoming = data.events.filter((event) => !isPastEvent(event, today))
   const past = data.events.filter((event) => isPastEvent(event, today)).reverse()
 
