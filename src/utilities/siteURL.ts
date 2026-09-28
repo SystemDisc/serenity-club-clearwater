@@ -6,8 +6,8 @@ export const siteMetadata = {
   description:
     'Serenity Club of Clearwater hosts daily recovery meetings, fellowship, memberships, events, and support in downtown Clearwater, Florida.',
   name: 'Serenity Club of Clearwater',
-  ogImageAlt: 'Serenity Club of Clearwater homepage preview with clubhouse sign and meeting details',
-  ogImagePath: '/og-image.png',
+  ogImageAlt: 'Serenity Club of Clearwater daily recovery meetings heading beside the illustrated clubhouse sign',
+  ogImagePath: '/og-image-2026.png',
   title: 'Serenity Club of Clearwater',
 }
 
