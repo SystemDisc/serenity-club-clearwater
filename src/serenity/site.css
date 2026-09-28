@@ -144,8 +144,10 @@
 }
 .club-sign-stage {
   position: relative;
+  align-self: start;
   width: 100%;
   aspect-ratio: 550 / 492;
+  margin-top: clamp(1rem, 3vw, 3rem);
 }
 .club-sign-frame {
   position: absolute;
@@ -590,6 +592,7 @@
     max-width: 500px;
     width: 100%;
     margin-inline: auto;
+    margin-top: 0;
   }
   .club-next-list {
     grid-template-columns: 1fr;
