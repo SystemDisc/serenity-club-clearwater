@@ -38,7 +38,9 @@ try {
     if (existing.docs.length) continue
     const data = await sharp({
       create: { width: 640, height: 480, channels: 3, background: color },
-    }).png().toBuffer()
+    })
+      .png()
+      .toBuffer()
     const media = await payload.create({
       collection: 'media',
       data: { alt: `Synthetic gallery fixture ${index + 1}` },
@@ -47,7 +49,45 @@ try {
     })
     await payload.create({
       collection: 'galleryItems',
-      data: { importKey, title: `Gallery fixture ${index + 1}`, image: media.id, _status: 'published' },
+      data: {
+        importKey,
+        title: `Gallery fixture ${index + 1}`,
+        image: media.id,
+        _status: 'published',
+      },
+      context: { disableRevalidate: true },
+    })
+  }
+  // Predictable, synthetic meetings for the date/fellowship finder browser test.
+  for (const fixture of [
+    { name: 'Test AA morning', fellowship: 'AA' as const, time: '07:00' },
+    { name: 'Test AA evening', fellowship: 'AA' as const, time: '18:00' },
+    { name: 'Test NA evening', fellowship: 'NA' as const, time: '19:00' },
+  ]) {
+    const existing = await payload.find({
+      collection: 'meetings',
+      where: { name: { equals: fixture.name } },
+      limit: 1,
+    })
+    if (existing.docs.length) continue
+    await payload.create({
+      collection: 'meetings',
+      data: {
+        name: fixture.name,
+        fellowship: fixture.fellowship,
+        _status: 'published',
+        sessions: [
+          {
+            key: 'daily',
+            recurrence: 'weekly',
+            days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+            time: fixture.time,
+            room: 'Test room',
+            format: 'discussion',
+            confirmed: true,
+          },
+        ],
+      },
       context: { disableRevalidate: true },
     })
   }

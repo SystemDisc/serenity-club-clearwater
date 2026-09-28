@@ -11,24 +11,27 @@ import { AdminBar } from '@/components/AdminBar'
 import { Footer } from '@/Footer/Component'
 import { Header } from '@/Header/Component'
 import { Providers } from '@/providers'
-import { InitTheme } from '@/providers/Theme/InitTheme'
+import { defaultTheme, themeLocalStorageKey } from '@/providers/Theme/shared'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
 
 import './globals.css'
+import '@/serenity/site.css'
 import { getAbsoluteSiteURL, getCanonicalSiteURL, siteMetadata } from '@/utilities/siteURL'
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const themeScript = `(function(){try{var preference=localStorage.getItem(${JSON.stringify(themeLocalStorageKey)});var theme=preference==='dark'||preference==='light'?preference:(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':${JSON.stringify(defaultTheme)});document.documentElement.setAttribute('data-theme',theme)}catch(error){document.documentElement.setAttribute('data-theme',${JSON.stringify(defaultTheme)})}})()`
+
   return (
-    <html className={cn(GeistSans.variable, GeistMono.variable)} lang="en" suppressHydrationWarning>
+    <html className={cn(GeistSans.variable, GeistMono.variable)} data-theme={defaultTheme} lang="en" suppressHydrationWarning>
       <head>
-        <InitTheme />
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <link href="/favicon.ico" rel="icon" sizes="32x32" />
         <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
         <link href="/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png" />
         <link href="/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png" />
         <link href="/apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180" />
       </head>
-      <body>
+      <body className="club-site">
         <Providers>
           <AdminBar />
 

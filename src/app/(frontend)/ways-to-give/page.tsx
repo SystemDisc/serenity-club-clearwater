@@ -1,152 +1,124 @@
+import Image from 'next/image'
 import { ButtonLink, PageHeader, SectionHeader } from '@/serenity/ui'
-import { Coffee, Gift, HeartHandshake, Mail, Phone, Shirt, Users } from 'lucide-react'
-
 import { getSerenityData } from '@/serenity/data'
+import communityArt from '@/serenity/artwork/community.webp'
 
 export default async function WaysToGivePage() {
-  const data = await getSerenityData([])
-  const donationMethods = [
-    {
-      title: 'In person',
-      text: 'Donate at the coffee bar when the clubhouse is open.',
-      icon: Coffee,
-    },
-    { title: 'By phone', text: 'Call the club and ask for the coffee bar manager.', icon: Phone },
-    { title: 'Items', text: data.settings.donatedItemsInformation, icon: Shirt },
-  ]
-
+  const { settings } = await getSerenityData([])
   return (
     <main>
-      <PageHeader eyebrow="Ways to Give" title="Support Serenity Club">
+      <PageHeader eyebrow="Many ways to make a difference" title="Support Serenity Club">
         <p>
           Serenity Club is sustained by memberships, donations, volunteers, and community support.
+          There’s a place for your contribution.
         </p>
-        <div className="mt-5">
-          <ButtonLink href={data.settings.donationUrl} variant="primary">
-            <HeartHandshake aria-hidden="true" />
-            Donate online
-          </ButtonLink>
-        </div>
       </PageHeader>
-
-      <section className="bg-white px-4 py-10 md:py-12">
-        <div className="container">
-          <SectionHeader eyebrow="Donate" title="Give money, items, or time">
+      <section className="club-section">
+        <div className="club-shell club-split">
+          <div>
+            <p className="club-eyebrow">Keep the doors open</p>
+            <h2>
+              Give a little.
+              <br />
+              Help a lot.
+            </h2>
             <p>
               Donations help cover clubhouse operations and keep the space available for meetings,
               fellowship, and community support.
             </p>
+            <div className="club-actions">
+              <ButtonLink href={settings.donationUrl}>Donate online ↗</ButtonLink>
+              <ButtonLink href="/shop" variant="secondary">
+                Become a member →
+              </ButtonLink>
+            </div>
+            <p>Monthly and annual memberships are a simple way to support the Club year-round.</p>
+          </div>
+          <Image
+            src={communityArt}
+            alt="Illustration of coffee cups, books, and a community noticeboard"
+            className="club-wide-photo"
+            sizes="(min-width: 760px) 45vw, 100vw"
+          />
+        </div>
+      </section>
+      <section className="club-section club-tint">
+        <div className="club-shell club-split items-start">
+          <SectionHeader eyebrow="Every contribution counts" title="Give money, items, or time">
+            <p>Choose a way to help that fits your life.</p>
           </SectionHeader>
-          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
-            <article className="flex flex-col rounded-lg border border-slate-200 bg-white p-5">
-              <HeartHandshake aria-hidden="true" className="size-7 text-emerald-900" />
-              <h2 className="mt-4 text-xl font-semibold text-slate-950">Online</h2>
-              <p className="mt-3 text-sm leading-6 text-slate-700">
-                Make a donation online through the club donation link.
+          <div className="club-giving-list">
+            <article>
+              <h3>At the coffee bar</h3>
+              <p>
+                Donate in person when the clubhouse is open, or call and ask for the coffee bar
+                manager.
               </p>
-              <div className="mt-auto pt-5">
-                <ButtonLink href={data.settings.donationUrl} variant="primary">
-                  Donate online
-                </ButtonLink>
-              </div>
+              <a className="club-text-link" href={`tel:${settings.phone}`}>
+                Call {settings.phone} →
+              </a>
             </article>
-            {donationMethods.map(({ icon: Icon, text, title }) => (
-              <article
-                className="flex flex-col rounded-lg border border-slate-200 bg-white p-5"
-                key={title}
+            <article>
+              <h3>Donate useful items</h3>
+              <p>{settings.donatedItemsInformation}</p>
+            </article>
+            <article>
+              <h3>Volunteer in the office</h3>
+              <p>{settings.officeVolunteerInformation}</p>
+            </article>
+            <article>
+              <h3>Volunteer at the coffee bar</h3>
+              <p>{settings.coffeeVolunteerInformation}</p>
+              <a
+                className="club-text-link"
+                href={`mailto:${settings.email}?subject=Volunteering%20at%20Serenity%20Club`}
               >
-                <Icon aria-hidden="true" className="size-7 text-emerald-900" />
-                <h2 className="mt-4 text-xl font-semibold text-slate-950">{title}</h2>
-                <p className="mt-3 text-sm leading-6 text-slate-700">{text}</p>
-              </article>
-            ))}
+                Ask about volunteering →
+              </a>
+            </article>
           </div>
         </div>
       </section>
-
-      <section className="bg-[#f7f2e8] px-4 py-10 md:py-12">
-        <div className="container grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
+      <section className="club-section">
+        <div className="club-shell club-split items-start">
           <div>
-            <SectionHeader eyebrow="Membership" title="Become a member">
-              <p>
-                Monthly and annual memberships are one of the simplest ways to support the club
-                year-round.
-              </p>
+            <SectionHeader eyebrow="Community sponsors" title="Help our community thrive">
+              <p>{settings.sponsorshipInformation}</p>
+              <p className="mt-4">{settings.sponsorshipContact}</p>
             </SectionHeader>
-            <ButtonLink href="/shop" variant="secondary">
-              <Users aria-hidden="true" />
-              View memberships
+            <ButtonLink href={`mailto:${settings.email}?subject=Community%20sponsorship`}>
+              Start a sponsorship conversation →
             </ButtonLink>
           </div>
-          <div className="grid gap-4 md:grid-cols-2">
-            <article className="rounded-lg border border-slate-200 bg-white p-5">
-              <Gift aria-hidden="true" className="size-7 text-emerald-900" />
-              <h2 className="mt-4 text-lg font-semibold text-slate-950">Volunteer in the office</h2>
-              <p className="mt-2 text-sm leading-6 text-slate-700">
-                {data.settings.officeVolunteerInformation}
+          <div>
+            <SectionHeader eyebrow="Stay connected" title="Be part of what’s next">
+              <p>
+                The Club shares events and announcements. Email us to join update lists or receive
+                current event information.
               </p>
-            </article>
-            <article className="rounded-lg border border-slate-200 bg-white p-5">
-              <Coffee aria-hidden="true" className="size-7 text-emerald-900" />
-              <h2 className="mt-4 text-lg font-semibold text-slate-950">
-                Volunteer at the coffee bar
-              </h2>
-              <p className="mt-2 text-sm leading-6 text-slate-700">
-                {data.settings.coffeeVolunteerInformation}
-              </p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-white px-4 py-10 md:py-12">
-        <div className="container grid gap-8 lg:grid-cols-[0.85fr_1.15fr]">
-          <SectionHeader eyebrow="Sponsors" title="Community sponsorships">
-            <p>{data.settings.sponsorshipInformation}</p>
-          </SectionHeader>
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="rounded-lg border border-slate-200 bg-[#fbfaf7] p-5">
-              <h2 className="text-xl font-semibold text-slate-950">
-                Start a sponsorship conversation
-              </h2>
-              <p className="mt-3 text-sm leading-6 text-slate-700">
-                {data.settings.sponsorshipContact}
-              </p>
-              <div className="mt-5 flex flex-col gap-3">
-                <ButtonLink href={`mailto:${data.settings.email}`} variant="primary">
-                  <Mail aria-hidden="true" />
-                  Email the club
-                </ButtonLink>
-                {data.settings.facebookUrl ? (
-                  <ButtonLink href={data.settings.facebookUrl} variant="secondary">
-                    Facebook
-                  </ButtonLink>
-                ) : null}
-              </div>
-            </div>
-            <div className="rounded-lg border border-slate-200 bg-[#fbfaf7] p-5">
-              <h2 className="text-xl font-semibold text-slate-950">Stay connected</h2>
-              <p className="mt-3 text-sm leading-6 text-slate-700">
-                The club shares event and announcement updates. Email the club if you want to be
-                added to update lists or receive current event information.
-              </p>
-              <div className="mt-5">
-                <ButtonLink
-                  href={`mailto:${data.settings.email}?subject=Serenity%20Club%20updates`}
-                  variant="secondary"
-                >
-                  <Mail aria-hidden="true" />
-                  Request updates
-                </ButtonLink>
-              </div>
-            </div>
+            </SectionHeader>
+            <ButtonLink
+              href={`mailto:${settings.email}?subject=Serenity%20Club%20updates`}
+              variant="secondary"
+            >
+              Request updates
+            </ButtonLink>
+            {settings.facebookUrl && (
+              <a
+                href={settings.facebookUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="club-text-link ml-5"
+              >
+                Follow on Facebook ↗
+              </a>
+            )}
           </div>
         </div>
       </section>
     </main>
   )
 }
-
 export const metadata = {
   alternates: { canonical: '/ways-to-give' },
   title: 'Ways to Give | Serenity Club of Clearwater',

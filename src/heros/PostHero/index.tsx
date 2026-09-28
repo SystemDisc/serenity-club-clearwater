@@ -1,3 +1,5 @@
+import Image from 'next/image'
+import communityArt from '@/serenity/artwork/community.webp'
 import type { Post } from '@/payload-types'
 import { PageHeader, SerenityImage } from '@/serenity/ui'
 import { displayDate, localDateKey } from '@/serenity/calendar'
@@ -30,7 +32,16 @@ export function PostHero({ post }: { post: Post }) {
             className="max-h-[65vh] w-full rounded-lg object-contain"
           />
         </div>
-      ) : null}
+      ) : (
+        <div className="container mt-8 max-w-4xl">
+          <Image
+            src={communityArt}
+            alt="Illustration of a clubhouse noticeboard, books, and coffee"
+            sizes="(min-width: 900px) 900px, 100vw"
+            className="aspect-[2/1] w-full object-cover"
+          />
+        </div>
+      )}
     </>
   )
 }

@@ -28,6 +28,14 @@ const nextConfig: NextConfig = {
       {
         pathname: '/api/media/file/**',
       },
+      {
+        pathname: '/brand/**',
+        search: '',
+      },
+      {
+        pathname: '/shop/aa-medallions.jpg',
+        search: '',
+      },
     ],
     qualities: [85, 90, 100],
     remotePatterns: [

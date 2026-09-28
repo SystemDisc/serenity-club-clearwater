@@ -4,9 +4,11 @@ import { SerenityImage } from './ui'
 export function DuesNotice({
   notice,
   legacyImage,
+  compact = false,
 }: {
   notice: ReturnType<typeof duesView>
   legacyImage?: string
+  compact?: boolean
 }) {
   if (notice.mode === 'off') return null
   if (notice.mode === 'legacy')
@@ -23,7 +25,7 @@ export function DuesNotice({
       style={{
         border: '1px solid #cbd5d1',
         borderRadius: 12,
-        padding: 'clamp(20px, 4vw, 40px)',
+        padding: compact ? '24px' : 'clamp(20px, 4vw, 40px)',
         background: '#edf5ef',
         color: '#173c2c',
         lineHeight: 1.6,
@@ -35,7 +37,7 @@ export function DuesNotice({
       </p>
       <h2
         style={{
-          fontSize: 'clamp(24px, 3vw, 34px)',
+          fontSize: compact ? 26 : 'clamp(24px, 3vw, 34px)',
           lineHeight: 1.2,
           margin: '12px 0 20px',
           color: 'inherit',
@@ -43,12 +45,12 @@ export function DuesNotice({
       >
         {notice.heading}
       </h2>
-      <p style={{ whiteSpace: 'pre-line', fontSize: 18 }}>{notice.message}</p>
+      <p style={{ whiteSpace: 'pre-line', fontSize: compact ? 16 : 18 }}>{notice.message}</p>
       {notice.image ? (
         <SerenityImage
           src={notice.image}
           alt={notice.imageAlt}
-          className="w-full object-contain"
+          className={compact ? 'max-h-64 w-full object-contain' : 'w-full object-contain'}
           sizes="(min-width: 1024px) 40vw, 100vw"
         />
       ) : null}

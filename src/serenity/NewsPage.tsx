@@ -1,7 +1,9 @@
+import Image from 'next/image'
+import communityArt from './artwork/community.webp'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getNewsPage } from './news'
-import { PageHeader, SerenityImage } from './ui'
+import { ButtonLink, PageHeader, SerenityImage } from './ui'
 import { displayDate, localDateKey } from './calendar'
 export async function NewsPageContent({ page = 1 }: { page?: number }) {
   if (!Number.isSafeInteger(page) || page < 1) notFound()
@@ -20,19 +22,23 @@ export async function NewsPageContent({ page = 1 }: { page?: number }) {
               {result.docs.map((post) => {
                 const cover = typeof post.heroImage === 'object' ? post.heroImage : null
                 return (
-                  <article
-                    key={post.id}
-                    className="overflow-hidden rounded-lg border border-slate-200 bg-white"
-                  >
+                  <article key={post.id} className="club-news-card">
                     <Link href={`/posts/${post.slug}`} className="block">
                       {cover?.url ? (
                         <SerenityImage
                           src={cover.sizes?.medium?.url || cover.url}
                           alt=""
-                          className="aspect-[4/3] w-full object-cover"
+                          className="aspect-[3/2] w-full object-cover"
                         />
-                      ) : null}
-                      <div className="p-5">
+                      ) : (
+                        <Image
+                          src={communityArt}
+                          alt="Illustrated clubhouse noticeboard and coffee cups"
+                          className="aspect-[3/2] w-full object-cover"
+                          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                        />
+                      )}
+                      <div className="py-5">
                         <h2 className="text-xl font-semibold text-slate-950">{post.title}</h2>
                         {post.publishedAt ? (
                           <p className="mt-2 text-sm text-slate-600">
@@ -54,13 +60,25 @@ export async function NewsPageContent({ page = 1 }: { page?: number }) {
               })}
             </div>
           ) : (
-            <p>
-              No club updates have been published yet. Check the{' '}
-              <Link href="/events" className="underline">
-                Events page
-              </Link>{' '}
-              for current activities.
-            </p>
+            <div className="club-split py-8">
+              <Image
+                src={communityArt}
+                alt="Illustration of coffee, books, and a clubhouse noticeboard"
+                className="club-wide-photo"
+                sizes="(min-width: 760px) 45vw, 100vw"
+              />
+              <div>
+                <p className="club-eyebrow">From our community</p>
+                <h2>There’s always something happening.</h2>
+                <p>
+                  News and stories from the Club will appear here as they’re published. In the
+                  meantime, see what’s coming up on the events calendar.
+                </p>
+                <div className="club-actions">
+                  <ButtonLink href="/events">Explore Club events →</ButtonLink>
+                </div>
+              </div>
+            </div>
           )}
           {result.totalPages > 1 ? (
             <nav

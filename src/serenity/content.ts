@@ -78,6 +78,8 @@ export type TeamMember = {
   bio: string
   id?: string | number
   imageAlt?: string
+  imageFocalX?: number
+  imageFocalY?: number
   imageUrl?: string
   name: string
   order: number
@@ -174,11 +176,26 @@ export const fallbackMeetings: Meeting[] = [
     name: 'BYOC Early Birds',
     fellowship: 'AA',
     time: '7:00 AM',
-    days: 'Daily',
-    room: 'Back room',
+    days: 'Monday through Saturday',
     format: 'Bring Your Own Coffee',
-    description: 'Bring Your Own Coffee (BYOC) meets every morning in the back room.',
+    description: 'Bring Your Own Coffee (BYOC) meets Monday through Saturday mornings.',
     order: 10,
+  },
+  {
+    name: "Chairperson's Choice",
+    fellowship: 'AA',
+    time: '7:00 AM',
+    days: 'Sunday',
+    format: 'Open speaker meeting',
+    order: 11,
+  },
+  {
+    name: 'Sunday Morning',
+    fellowship: 'AA',
+    time: '10:00 AM',
+    days: 'Sunday',
+    format: 'Open discussion',
+    order: 21,
   },
   {
     name: 'Feelings',
@@ -237,7 +254,7 @@ export const fallbackMeetings: Meeting[] = [
     fellowship: 'NA',
     time: '7:00 PM',
     days: 'Daily',
-    room: 'Front room',
+    room: 'Back room',
     format: 'NA meeting',
     description:
       'Serenity in Addiction rotates open discussion, literature study, beginner, speaker, celebration, and IP discussion formats. Its business meeting is the first Monday at 8pm.',
@@ -247,12 +264,20 @@ export const fallbackMeetings: Meeting[] = [
     name: 'Turner Street Evening Group',
     fellowship: 'AA',
     time: '8:00 PM',
-    days: 'Daily',
+    days: 'Monday through Saturday',
     room: 'Front room',
     format: 'Open discussion and campfire meeting',
     description:
-      'Turner Street meets in the front room Sunday through Friday. Saturday night is the campfire meeting.',
+      'Turner Street meets in the front room Monday through Friday. Saturday night is the outdoor campfire meeting.',
     order: 80,
+  },
+  {
+    name: 'Sunday Evening Big Book',
+    fellowship: 'AA',
+    time: '8:00 PM',
+    days: 'Sunday',
+    format: 'Open Big Book meeting',
+    order: 81,
   },
   {
     name: 'Intergroup Unity Speakers Meeting',
@@ -279,7 +304,7 @@ export const fallbackMeetings: Meeting[] = [
     fellowship: 'Club',
     time: '5:30 PM',
     days: 'Second Wednesday of each month',
-    room: 'Clubhouse',
+    room: 'Back room',
     format: 'Club business',
     description: 'Monthly board meeting for club business and stewardship.',
     order: 110,
@@ -438,9 +463,8 @@ export const fallbackProducts: Product[] = [
     price: '$10',
     description: 'Monthly dues for Serenity Club membership.',
     fulfillmentNote: 'Monthly memberships can be purchased at the clubhouse.',
-    imageUrl:
-      'https://static.wixstatic.com/media/ed8244_b097ed7e5323442189dfb29c80084744~mv2.png/v1/fit/w_500,h_500,q_90/file.png',
-    imageAlt: 'Monthly Membership',
+    imageUrl: '/brand/serenity-sign.svg',
+    imageAlt: 'Illustration of the Serenity Club of Clearwater sign',
     order: 10,
   },
   {
@@ -449,9 +473,8 @@ export const fallbackProducts: Product[] = [
     price: '$99',
     description: 'Save over $20 by paying annually for Serenity Club membership.',
     fulfillmentNote: 'Annual memberships can be purchased at the clubhouse.',
-    imageUrl:
-      'https://static.wixstatic.com/media/ed8244_4f0085be20aa4b9dbb5b805f5bcced3e~mv2.jpg/v1/fit/w_500,h_500,q_90/file.jpg',
-    imageAlt: 'Annual Membership',
+    imageUrl: '/brand/serenity-sign.svg',
+    imageAlt: 'Illustration of the Serenity Club of Clearwater sign',
     order: 20,
   },
   {
@@ -460,21 +483,18 @@ export const fallbackProducts: Product[] = [
     price: '$2',
     description: 'Anniversary medallions are available for recovery milestones and celebrations.',
     fulfillmentNote: 'Available for purchase at the clubhouse.',
-    imageUrl:
-      'https://static.wixstatic.com/media/ed8244_d0ee1db61a5248bda9259efd9f9384fd~mv2.jpg/v1/fit/w_500,h_500,q_90/file.jpg',
-    imageAlt: 'Anniversary medallions',
+    imageUrl: '/shop/aa-medallions.jpg',
+    imageAlt: 'Photograph of AA recovery medallions representing available anniversary medallions',
     order: 30,
   },
   {
     title: 'Coffee Mug',
     slug: 'coffee-mug',
     price: '$10',
-    badge: 'Sample image',
     description: 'Souvenir coffee mug for everyday coffee-bar use and Serenity Club support.',
-    fulfillmentNote: 'Available for purchase at the clubhouse. Product photo is a sample.',
-    imageUrl:
-      'https://static.wixstatic.com/media/ed8244_42156afcb5f640c495e074d99934cd41~mv2.jpg/v1/fit/w_500,h_500,q_90/file.jpg',
-    imageAlt: 'Coffee mug sample',
+    fulfillmentNote: 'Available for purchase at the clubhouse.',
+    imageUrl: '/brand/shop-coffee-mug.svg',
+    imageAlt: 'Illustration of a white mug with the Serenity Club of Clearwater name',
     order: 40,
   },
 ]

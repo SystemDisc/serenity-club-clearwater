@@ -43,12 +43,35 @@ export default async function ProductPage({ params }: Args) {
       <section className="bg-white px-4 py-10 md:py-12">
         <div className="container grid gap-8 lg:grid-cols-[0.9fr_1fr] lg:items-start">
           {product.imageUrl ? (
-            <SerenityImage
-              alt={product.imageAlt || product.title}
-              className="aspect-[4/3] w-full rounded-lg border border-slate-200 object-cover"
-              sizes="(min-width: 1024px) 40vw, 100vw"
-              src={product.imageUrl}
-            />
+            <figure>
+              <SerenityImage
+                alt={product.imageAlt || product.title}
+                className={`aspect-[4/3] w-full rounded-lg border border-slate-200 object-contain ${product.imageUrl === '/brand/shop-coffee-mug.svg' ? 'bg-[#e8ebe5]' : 'bg-[#f0eee6]'}`}
+                sizes="(min-width: 1024px) 40vw, 100vw"
+                src={product.imageUrl}
+              />
+              {product.slug === 'medallions' && product.imageUrl === '/shop/aa-medallions.jpg' ? (
+                <figcaption className="club-photo-credit">
+                  Representative AA medallions; designs and milestones may vary. Photo by{' '}
+                  <a
+                    href="https://commons.wikimedia.org/wiki/File:Enduring_Strength_(3144377781).jpg"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    frankieleon / Wikimedia Commons
+                  </a>{' '}
+                  ·{' '}
+                  <a
+                    href="https://creativecommons.org/licenses/by/2.0/"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    CC BY 2.0
+                  </a>
+                  .
+                </figcaption>
+              ) : null}
+            </figure>
           ) : (
             <div className="rounded-lg border border-emerald-100 bg-emerald-50 p-6 text-emerald-950">
               <ShoppingBag aria-hidden="true" className="size-8 text-emerald-900" />
@@ -62,13 +85,13 @@ export default async function ProductPage({ params }: Args) {
               </p>
             </div>
           )}
-          <div className="rounded-lg border border-slate-200 bg-white p-6">
+          <div className="border-t-2 border-[#163e32] py-6">
             {product.badge ? (
               <p className="mb-3 w-fit rounded-md bg-amber-100 px-2 py-1 text-xs font-semibold uppercase tracking-[0.1em] text-amber-950">
                 {product.badge}
               </p>
             ) : null}
-            <p className="text-3xl font-semibold text-emerald-900">{product.price}</p>
+            <p className="font-serif text-5xl text-[#a44224]">{product.price}</p>
             <p className="mt-4 text-base leading-7 text-slate-700">{product.fulfillmentNote}</p>
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
               {product.checkoutUrl ? (

@@ -5,6 +5,7 @@ import { cache } from 'react'
 import { unstable_cache } from 'next/cache'
 import type { Event } from '@/payload-types'
 import { eventCalendarDetails, sortEvents } from './events'
+import { presentShopProduct } from './shopArtwork'
 
 import {
   type ClubSettings,
@@ -67,6 +68,16 @@ const getImageAlt = (doc: Record<string, unknown>) => {
   return getText(doc.imageAlt) || getText(media?.alt) || undefined
 }
 
+const getImageFocalPoint = (doc: Record<string, unknown>) => {
+  const media =
+    doc.image && typeof doc.image === 'object'
+      ? (doc.image as { focalX?: unknown; focalY?: unknown })
+      : undefined
+  const coordinate = (value: unknown) =>
+    typeof value === 'number' && Number.isFinite(value) ? Math.min(100, Math.max(0, value)) : 50
+  return { imageFocalX: coordinate(media?.focalX), imageFocalY: coordinate(media?.focalY) }
+}
+
 const fallbackSiteNavigation = (): SiteNavigation => ({
   footerNavItems: [...fallbackPrimaryNavItems, ...fallbackSecondaryNavItems],
   primaryNavItems: fallbackPrimaryNavItems,
@@ -95,7 +106,9 @@ const collectionDocuments = (collection: SerenityCollection) =>
         overrideAccess: false,
         pagination: false,
         sort: ['order', 'id'],
-        populate: { media: { url: true, filename: true, prefix: true, alt: true } },
+        populate: {
+          media: { url: true, filename: true, prefix: true, alt: true, focalX: true, focalY: true },
+        },
       })
       return result.docs
     },
@@ -304,6 +317,7 @@ export const getSerenityData = cache(
             bio: getText(doc.bio),
             id: String(doc.id),
             imageAlt: getImageAlt(doc),
+            ...getImageFocalPoint(doc),
             imageUrl: getImageUrl(doc, 'image', 'externalImageUrl'),
             name: getText(doc.name),
             order: getNumber(doc.order),
@@ -361,7 +375,7 @@ export const getSerenityData = cache(
       galleryItems: sortByOrder(galleryItems),
       meetings: sortByOrder(meetings),
       policies: sortByOrder(policies),
-      products: sortByOrder(products),
+      products: sortByOrder(products.map(presentShopProduct)),
       settings,
       sponsors: sortByOrder(sponsors),
       teamMembers: sortByOrder(teamMembers),

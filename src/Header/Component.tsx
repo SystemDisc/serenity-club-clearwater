@@ -9,7 +9,7 @@ export async function Header() {
   const [settings, navigation] = await Promise.all([getSerenitySettings(), getSiteNavigation()])
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 text-slate-950 backdrop-blur">
+    <header className="site-header sticky top-0 z-50 border-b border-slate-200 bg-white/95 text-slate-950 backdrop-blur">
       <div className="container flex min-h-16 items-center justify-between gap-2 py-2 lg:min-h-20 lg:gap-3">
         <Link className="flex min-h-11 min-w-0 flex-1 items-center gap-2 sm:gap-3" href="/">
           <SerenityMark className="size-10 shadow-sm ring-1 ring-slate-900/10 lg:size-11" />

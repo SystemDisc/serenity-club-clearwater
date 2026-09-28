@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { AlbumCover } from './AlbumCover'
 import { notFound } from 'next/navigation'
 import { getGalleryPage } from './gallery'
-import { GalleryGrid, PageHeader, SectionHeader } from './ui'
+import { GalleryGrid, PageHeader } from './ui'
 
 export async function GalleryPageContent({ page = 1 }: { page?: number }) {
   if (!Number.isSafeInteger(page) || page < 1) notFound()
@@ -16,22 +16,16 @@ export async function GalleryPageContent({ page = 1 }: { page?: number }) {
       </PageHeader>
       <section className="bg-white px-4 py-10 text-slate-950 md:py-12">
         <div className="container">
-          <SectionHeader eyebrow="Serenity Club media" title="A look inside the clubhouse">
-            <p>Get to know our space and see moments from club events.</p>
-          </SectionHeader>
           {result.albums.length ? (
             <>
               <h2 className="mb-5 text-2xl font-semibold">Albums</h2>
-              <div className="mb-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="mb-14 grid gap-8 md:grid-cols-2">
                 {result.albums.map((album) => {
                   return (
-                    <article
-                      key={album.id}
-                      className="overflow-hidden rounded-lg border border-slate-200"
-                    >
+                    <article key={album.id} className="club-news-card">
                       <Link href={`/gallery/albums/${album.slug}`}>
                         <AlbumCover images={album.preview.images} />
-                        <div className="p-5">
+                        <div className="py-5">
                           <h3 className="text-xl font-semibold">{album.title}</h3>
                           <p className="mt-2 text-slate-600">
                             {album.preview.totalPhotos}{' '}

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="960" viewBox="105 105 750 750" role="img" aria-labelledby="title description">
+  <title id="title">Serenity Club coffee mug illustration</title>
+  <desc id="description">A clean illustration of a white mug with the Serenity Club of Clearwater name printed on it; it is not a photograph of the item sold.</desc>
+  <rect width="960" height="960" fill="#e8ebe5"/>
+  <ellipse cx="477" cy="766" rx="295" ry="42" fill="#cad4cb"/>
+  <path d="M648 354h50c87 0 130 57 130 125s-43 126-130 126h-51v-61h47c46 0 69-27 69-65s-23-65-69-65h-46z" fill="#fcfbf8" stroke="#aebbb2" stroke-width="8" stroke-linejoin="round"/>
+  <path d="M238 312h426l-24 344c-4 61-50 107-111 107H373c-61 0-107-46-111-107z" fill="#fcfbf8" stroke="#aebbb2" stroke-width="8" stroke-linejoin="round"/>
+  <ellipse cx="451" cy="312" rx="213" ry="26" fill="#fcfbf8" stroke="#aebbb2" stroke-width="8"/>
+  <path d="M287 690c38 31 281 31 326 0" fill="none" stroke="#e3e7e0" stroke-width="8" stroke-linecap="round"/>
+  <g text-anchor="middle" fill="#42292a">
+    <text x="451" y="491" font-family="Georgia, 'Times New Roman', serif" font-size="73" letter-spacing="-3">Serenity</text>
+    <text x="451" y="558" font-family="Georgia, 'Times New Roman', serif" font-size="64" letter-spacing="7">CLUB</text>
+  </g>
+  <path d="M325 582h252" stroke="#788680" stroke-width="3"/>
+  <text x="451" y="615" fill="#456050" font-family="Arial, sans-serif" font-size="20" font-weight="700" letter-spacing="4" text-anchor="middle">OF CLEARWATER</text>
+</svg>

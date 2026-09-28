@@ -10,7 +10,7 @@ export function SerenityMark({ className }: SerenityMarkProps) {
     <span
       aria-hidden="true"
       className={cn(
-        'block shrink-0 overflow-hidden rounded-md bg-stone-50 bg-cover bg-center',
+        'block shrink-0 overflow-hidden rounded-md bg-white bg-cover bg-center',
         className,
       )}
       style={{ backgroundImage: "url('/brand/serenity-sc-mark.svg')" }}

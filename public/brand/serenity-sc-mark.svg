@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="title desc">
-  <title id="title">Serenity Club SC mark, classic ivory</title>
+  <title id="title">Serenity Club SC mark, white</title>
   <desc id="desc">A square SC monogram inspired by the Serenity Club sign lettering.</desc>
-  <rect width="1024" height="1024" rx="132" fill="#f8f6ef"/>
+  <rect width="1024" height="1024" rx="132" fill="#ffffff"/>
   <rect x="54" y="54" width="916" height="916" rx="112" fill="none" stroke="#3f4a51" stroke-width="18"/>
   <rect x="94" y="94" width="836" height="836" rx="82" fill="none" stroke="#a8a59a" stroke-width="4"/>
 

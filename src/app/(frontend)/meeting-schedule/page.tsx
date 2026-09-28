@@ -1,7 +1,9 @@
 import { ContactBand, MeetingList, PageHeader, SectionHeader } from '@/serenity/ui'
 
 import { getSerenityData } from '@/serenity/data'
-import { meetingsOnDate, regularMeetingRows } from '@/serenity/publicMeetings'
+import { regularMeetingRows } from '@/serenity/publicMeetings'
+
+import { MeetingFinder } from '@/serenity/MeetingFinder'
 
 const amenities = [
   {
@@ -28,88 +30,45 @@ export default async function MeetingSchedulePage() {
   const aaMeetings = sortedMeetings.filter((meeting) => meeting.fellowship === 'AA')
   const naMeetings = sortedMeetings.filter((meeting) => meeting.fellowship === 'NA')
   const clubMeetings = sortedMeetings.filter((meeting) => meeting.fellowship === 'Club')
-  const now = new Date()
-  const today = new Intl.DateTimeFormat('en-US', {
-    timeZone: 'America/New_York',
-    weekday: 'long',
-  }).format(now)
-  const todayMeetings = meetingsOnDate(data.meetings, now)
 
   return (
-    <main>
+    <main className="meeting-page">
       <PageHeader eyebrow="Meeting Schedule" title="Find a meeting at Serenity Club">
         <p>
           {data.settings.hours} Serenity Club hosts multiple AA and NA recovery groups. Non-members
           may access the club 30 minutes before and after the meetings they attend.
         </p>
       </PageHeader>
+
+      <MeetingFinder meetings={data.meetings} initialNow={new Date().getTime()} />
+
       <ContactBand settings={data.settings} />
 
-      <section className="border-b border-slate-200 bg-white px-4 py-8">
-        <div className="container">
-          <div className="grid gap-3 md:grid-cols-3">
-            {[
-              {
-                count: data.meetings.filter((meeting) => meeting.fellowship === 'AA').length,
-                href: '#aa',
-                label: 'AA groups',
-              },
-              {
-                count: data.meetings.filter((meeting) => meeting.fellowship === 'NA').length,
-                href: '#na',
-                label: 'NA groups',
-              },
-              {
-                count: data.meetings.filter((meeting) => meeting.fellowship === 'Club').length,
-                href: '#club',
-                label: 'Club activities',
-              },
-            ].map((item) => (
-              <a
-                className="rounded-lg border border-slate-200 bg-[#fbfaf7] p-4 transition hover:border-emerald-700 hover:bg-white"
-                href={item.href}
-                key={item.href}
-              >
-                <span className="block text-2xl font-semibold text-emerald-900">{item.count}</span>
-                <span className="mt-1 block text-sm font-semibold text-slate-950">
-                  {item.label}
-                </span>
-              </a>
-            ))}
+      <details className="club-shell my-12">
+        <summary className="club-text-link cursor-pointer">
+          Browse the full recurring schedule
+        </summary>
+        <section className="bg-white px-4 py-10 md:py-12" id="aa">
+          <div className="container">
+            <SectionHeader eyebrow="AA" title="Alcoholics Anonymous meetings" />
+            <MeetingList meetings={aaMeetings} />
           </div>
+        </section>
 
-          {todayMeetings.length ? (
-            <div className="mt-8">
-              <SectionHeader eyebrow="Today" title={`${today} meetings`}>
-                <p>Regularly listed meetings for today, followed by the full schedule below.</p>
-              </SectionHeader>
-              <MeetingList compact meetings={todayMeetings} />
-            </div>
-          ) : null}
-        </div>
-      </section>
+        <section className="bg-[#fbfaf7] px-4 py-10 md:py-12" id="na">
+          <div className="container">
+            <SectionHeader eyebrow="NA" title="Narcotics Anonymous meetings" />
+            <MeetingList meetings={naMeetings} />
+          </div>
+        </section>
 
-      <section className="bg-white px-4 py-10 md:py-12" id="aa">
-        <div className="container">
-          <SectionHeader eyebrow="AA" title="Alcoholics Anonymous meetings" />
-          <MeetingList meetings={aaMeetings} />
-        </div>
-      </section>
-
-      <section className="bg-[#fbfaf7] px-4 py-10 md:py-12" id="na">
-        <div className="container">
-          <SectionHeader eyebrow="NA" title="Narcotics Anonymous meetings" />
-          <MeetingList meetings={naMeetings} />
-        </div>
-      </section>
-
-      <section className="bg-white px-4 py-10 md:py-12" id="club">
-        <div className="container">
-          <SectionHeader eyebrow="Club" title="Club meetings and service" />
-          <MeetingList meetings={clubMeetings} />
-        </div>
-      </section>
-
+        <section className="bg-white px-4 py-10 md:py-12" id="club">
+          <div className="container">
+            <SectionHeader eyebrow="Club" title="Club meetings and service" />
+            <MeetingList meetings={clubMeetings} />
+          </div>
+        </section>
+      </details>
       <section className="bg-white px-4 py-10 md:py-12">
         <div className="container">
           <SectionHeader eyebrow="Around the club" title="Between meetings">
@@ -120,11 +79,8 @@ export default async function MeetingSchedulePage() {
           </SectionHeader>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             {amenities.map((amenity) => (
-              <article
-                className="rounded-lg border border-slate-200 bg-[#fbfaf7] p-5"
-                key={amenity.title}
-              >
-                <h2 className="text-lg font-semibold text-slate-950">{amenity.title}</h2>
+              <article className="border-t border-[#cbd3c5] pt-5" key={amenity.title}>
+                <h3 className="text-lg font-semibold text-slate-950">{amenity.title}</h3>
                 <p className="mt-2 text-sm leading-6 text-slate-700">{amenity.text}</p>
               </article>
             ))}

@@ -35,10 +35,7 @@ export function GalleryViewer({ items }: { items: GalleryItem[] }) {
     <>
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {items.map((item) => (
-          <figure
-            className="overflow-hidden rounded-lg border border-slate-200 bg-white"
-            key={item.id || item.title}
-          >
+          <figure className="club-news-card" key={item.id || item.title}>
             {item.imageUrl ? (
               <a
                 href={item.imageUrl}
@@ -67,7 +64,7 @@ export function GalleryViewer({ items }: { items: GalleryItem[] }) {
                 Photo unavailable
               </div>
             )}
-            <figcaption className="p-5">
+            <figcaption className="py-5">
               <p className="text-sm font-semibold text-emerald-900">{item.category}</p>
               <h2 className="mt-2 text-xl font-semibold text-slate-950">{item.title}</h2>
               {item.description ? (

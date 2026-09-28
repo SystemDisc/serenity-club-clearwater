@@ -33,7 +33,7 @@ export async function Footer() {
   const [settings, navigation] = await Promise.all([getSerenitySettings(), getSiteNavigation()])
 
   return (
-    <footer className="mt-auto border-t border-slate-800 bg-slate-950 px-4 text-white">
+    <footer className="site-footer mt-auto border-t border-white/15 bg-slate-950 px-4 text-white">
       <div className="container grid gap-6 py-7 md:grid-cols-2 md:py-8 lg:grid-cols-[1.1fr_1fr_1.1fr] lg:gap-8 lg:py-10">
         <div>
           <Link className="inline-flex items-center gap-3" href="/">
@@ -106,7 +106,7 @@ export async function Footer() {
           ) : null}
         </div>
       </div>
-      <div className="container border-t border-slate-800 py-5 text-xs text-slate-400">
+      <div className="container border-t border-white/15 py-5 text-xs text-slate-400">
         <p>
           Copyright {new Date().getFullYear()} {settings.legalName}
         </p>

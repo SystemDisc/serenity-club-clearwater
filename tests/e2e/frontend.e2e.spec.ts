@@ -17,13 +17,61 @@ const publicPages = [
 ]
 
 test.describe('Frontend', () => {
-  test('password recovery explains the action and keeps account existence private', async ({ page }) => {
+  test('meeting finder filters fellowship and date, and exposes earlier meetings', async ({
+    page,
+  }) => {
+    await page.clock.install({ time: new Date('2026-09-28T17:00:00Z') })
+    await page.goto('/meeting-schedule')
+    const finder = page.getByRole('region', { name: 'Meeting finder' })
+    await expect(finder.getByLabel('Choose another date')).toHaveValue('2026-09-28')
+    await finder.getByRole('button', { name: 'NA', exact: true }).click()
+    await finder.getByLabel('Choose another date').fill('2026-09-29')
+    await expect(finder.getByRole('heading', { name: 'Tue, Sep 29' })).toBeVisible()
+    await expect(finder.getByRole('button', { name: 'NA', exact: true })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    )
+    await expect(finder.getByRole('article')).not.toHaveCount(0)
+    for (const row of await finder.getByRole('article').all()) {
+      await expect(row.getByText('NA', { exact: true })).toBeVisible()
+      await expect(row.getByText('AA', { exact: true })).toHaveCount(0)
+    }
+    await finder.getByRole('button', { name: 'All meetings', exact: true }).click()
+    await finder.getByRole('button', { name: /^Today / }).click()
+    await finder.getByText(/^Earlier today/).click()
+    await expect(finder.getByText('7:00 AM', { exact: true })).toBeVisible()
+    const results = await new AxeBuilder({ page }).include('.club-finder').analyze()
+    expect(results.violations).toEqual([])
+  })
+
+  test('refreshed public pages fit a phone and retain readable text', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    for (const url of publicPages) {
+      await page.goto(url)
+      expect(
+        await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
+        url,
+      ).toBeTruthy()
+      const results = await new AxeBuilder({ page })
+        .withRules(['color-contrast', 'label-content-name-mismatch'])
+        .analyze()
+      expect(results.violations, url).toEqual([])
+    }
+  })
+
+  test('password recovery explains the action and keeps account existence private', async ({
+    page,
+  }) => {
     await page.goto('/admin/forgot')
     await expect(page.getByRole('heading', { name: 'Reset your website password' })).toBeVisible()
-    await page.getByLabel('Email address', { exact: true }).fill('nonexistent-password-test@example.com')
+    await page
+      .getByLabel('Email address', { exact: true })
+      .fill('nonexistent-password-test@example.com')
     await page.getByRole('button', { name: 'Send password reset email', exact: true }).click()
     await expect(page.getByRole('heading', { name: 'Check your email' })).toBeVisible()
-    await expect(page.getByText('If this email has website access,', { exact: false })).toBeVisible()
+    await expect(
+      page.getByText('If this email has website access,', { exact: false }),
+    ).toBeVisible()
     await page.getByRole('link', { name: 'Back to sign in' }).click()
     await expect(page).toHaveURL(/\/admin\/login$/)
   })

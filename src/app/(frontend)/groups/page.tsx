@@ -18,26 +18,26 @@ export default async function GroupsPage() {
             <SectionHeader eyebrow="Use the space" title="Coordinate meeting and event needs">
               <p>{data.settings.facilityInformation}</p>
             </SectionHeader>
-            <div className="grid gap-4 md:grid-cols-3">
-              <article className="rounded-lg border border-slate-200 bg-white p-5">
-                <CalendarDays aria-hidden="true" className="size-7 text-emerald-900" />
-                <h2 className="mt-4 text-lg font-semibold text-slate-950">Meeting schedule</h2>
+            <div className="club-giving-list">
+              <article className="">
+                <CalendarDays aria-hidden="true" className="hidden" />
+                <h3 className="mt-4 text-lg font-semibold text-slate-950">Meeting schedule</h3>
                 <p className="mt-2 text-sm leading-6 text-slate-700">
                   Keep group meeting details current and easy to find.
                 </p>
               </article>
-              <article className="rounded-lg border border-slate-200 bg-white p-5">
-                <Users aria-hidden="true" className="size-7 text-emerald-900" />
-                <h2 className="mt-4 text-lg font-semibold text-slate-950">Service work</h2>
+              <article className="">
+                <Users aria-hidden="true" className="hidden" />
+                <h3 className="mt-4 text-lg font-semibold text-slate-950">Service work</h3>
                 <p className="mt-2 text-sm leading-6 text-slate-700">
                   Coordinate volunteers, events, and practical clubhouse support.
                 </p>
               </article>
-              <article className="rounded-lg border border-slate-200 bg-white p-5">
-                <Mail aria-hidden="true" className="size-7 text-emerald-900" />
-                <h2 className="mt-4 text-lg font-semibold text-slate-950">
+              <article className="">
+                <Mail aria-hidden="true" className="hidden" />
+                <h3 className="mt-4 text-lg font-semibold text-slate-950">
                   Your meeting could be here
-                </h2>
+                </h3>
                 <p className="mt-2 text-sm leading-6 text-slate-700">
                   Reach out if your recovery group needs a consistent clubhouse meeting space.
                 </p>

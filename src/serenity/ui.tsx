@@ -38,12 +38,14 @@ export function SerenityImage({
   priority = false,
   sizes = '(min-width: 1024px) 33vw, 100vw',
   src,
+  style,
 }: {
   alt: string
   className?: string
   priority?: boolean
   sizes?: string
   src: string
+  style?: React.CSSProperties
 }) {
   return (
     <Image
@@ -55,6 +57,7 @@ export function SerenityImage({
       quality={85}
       sizes={sizes}
       src={src}
+      style={style}
       width={1200}
     />
   )
@@ -72,7 +75,7 @@ export function ButtonLink({
   variant?: 'primary' | 'secondary' | 'light'
 }) {
   const classes = [
-    'inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-semibold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2',
+    'club-button inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-semibold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2',
     variant === 'primary'
       ? 'bg-emerald-900 text-white hover:bg-emerald-800 focus-visible:outline-emerald-900'
       : '',
@@ -112,7 +115,7 @@ export function PageHeader({
   title: string
 }) {
   return (
-    <section className="bg-[#f7f2e8] px-4 py-10 text-slate-950 md:py-14">
+    <section className="page-heading bg-[#f7f2e8] px-4 py-10 text-slate-950 md:py-14">
       <div className="container max-w-5xl">
         {eyebrow ? (
           <p className="mb-3 text-sm font-semibold uppercase tracking-[0.14em] text-emerald-900">
@@ -142,7 +145,7 @@ export function SectionHeader({
   title: string
 }) {
   return (
-    <div className={`${flush ? 'mb-0' : 'mb-6'} max-w-3xl`}>
+    <div className={`section-heading ${flush ? 'mb-0' : 'mb-6'} max-w-3xl`}>
       {eyebrow ? (
         <p className="mb-2 text-sm font-semibold uppercase tracking-[0.14em] text-emerald-800">
           {eyebrow}
@@ -363,11 +366,7 @@ export function ProductGrid({ products }: { products: Product[] }) {
   return (
     <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
       {products.map((product) => (
-        <Link
-          className="group flex min-h-full flex-col rounded-lg border-2 border-white bg-white p-5 shadow-md transition hover:-translate-y-0.5 hover:border-emerald-300 hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-amber-200"
-          href={`/shop/${product.slug}`}
-          key={product.slug}
-        >
+        <Link className="club-product group" href={`/shop/${product.slug}`} key={product.slug}>
           {product.imageUrl ? (
             <SerenityImage
               alt={product.imageAlt || product.title}
@@ -412,21 +411,30 @@ const getInitials = (name: string) =>
     .map((part) => part[0]?.toUpperCase())
     .join('') || 'SC'
 
+const teamPortraitDefaults = new Map([
+  ['Jack', 10],
+  ['Nancy', 0],
+  ['Sherry', 0],
+])
+
+const teamPortraitPosition = ({ imageFocalX = 50, imageFocalY = 50, name }: TeamMember) =>
+  `${imageFocalX}% ${imageFocalY === 50 ? (teamPortraitDefaults.get(name) ?? 50) : imageFocalY}%`
+
 export function TeamGrid({ teamMembers }: { teamMembers: TeamMember[] }) {
   return (
-    <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+    <div className="club-team">
       {teamMembers.map((member) => (
-        <article
-          className="overflow-hidden rounded-lg border border-slate-200 bg-white"
-          key={`${member.name}-${member.role}`}
-        >
-          <div className="aspect-[4/5] bg-slate-100">
-            {member.imageUrl ? (
+        <article className="club-person" key={`${member.name}-${member.role}`}>
+          <div className="club-person-photo">
+            {member.imageUrl && !member.imageAlt?.startsWith('Coming soon placeholder') ? (
               <SerenityImage
                 alt={member.imageAlt || member.name}
-                className="h-full w-full object-cover object-top"
+                className="h-full w-full object-cover"
                 sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
                 src={member.imageUrl}
+                style={{
+                  objectPosition: teamPortraitPosition(member),
+                }}
               />
             ) : (
               <div className="flex h-full w-full items-center justify-center bg-emerald-950 text-3xl font-semibold text-white">
@@ -434,12 +442,13 @@ export function TeamGrid({ teamMembers }: { teamMembers: TeamMember[] }) {
               </div>
             )}
           </div>
-          <div className="p-5">
-            <h3 className="text-xl font-semibold text-slate-950">{member.name}</h3>
-            <p className="mt-1 text-sm font-semibold uppercase tracking-[0.12em] text-emerald-900">
-              {member.role}
-            </p>
-            <p className="mt-3 text-sm leading-6 text-slate-700">{member.bio}</p>
+          <div>
+            <h3>{member.name}</h3>
+            <p className="club-person-role">{member.role}</p>
+            <details>
+              <summary>About {member.name}</summary>
+              <p>{member.bio}</p>
+            </details>
           </div>
         </article>
       ))}
@@ -451,7 +460,7 @@ export function PolicyList({ policies }: { policies: Policy[] }) {
   return (
     <div className="grid gap-4">
       {policies.map((policy) => (
-        <article className="rounded-lg border border-slate-200 bg-white p-5" key={policy.title}>
+        <article className="club-policy" key={policy.title}>
           <h2 className="text-xl font-semibold text-slate-950">{policy.title}</h2>
           <p className="mt-3 leading-7 text-slate-700">{policy.body}</p>
         </article>

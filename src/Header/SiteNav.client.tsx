@@ -156,7 +156,7 @@ export function SiteNav({
       </nav>
 
       <div className="flex items-center gap-2 lg:hidden">
-        <ButtonLink className="size-11 px-0" href={donationUrl} variant="primary">
+        <ButtonLink className="club-icon-button size-11 px-0" href={donationUrl} variant="primary">
           <HeartHandshake aria-hidden="true" className="size-4" />
           <span className="sr-only">Donate</span>
         </ButtonLink>
