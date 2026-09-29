@@ -22,10 +22,12 @@ export const siteCopyDefaults = {
     'Monthly coffee bar volunteer schedules are coordinated through the club manager.',
 }
 export type SiteCopy = typeof siteCopyDefaults
-export const mapLinks = (address: string, cityStateZip: string) => {
-  const query = encodeURIComponent(`${address}, ${cityStateZip}`)
-  return {
-    place: `https://www.google.com/maps/search/?api=1&query=${query}`,
-    embed: `https://maps.google.com/maps?q=${query}&output=embed`,
-  }
-}
+
+const clubPlaceId = 'ChIJ8YlxEgfxwogRlJ9kvJjsIik'
+const clubName = encodeURIComponent('The Serenity Club of Clearwater')
+
+export const mapLinks = () => ({
+  place: 'https://www.google.com/maps?cid=2964191645503102868',
+  directions: `https://www.google.com/maps/dir/?api=1&destination=${clubName}&destination_place_id=${clubPlaceId}`,
+  embed: 'https://maps.google.com/maps?cid=2964191645503102868&output=embed',
+})

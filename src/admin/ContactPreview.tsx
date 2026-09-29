@@ -19,12 +19,12 @@ export default function ContactPreview() {
       <p>
         {values.phone} · {values.email}
       </p>
-      <a href={mapLinks(values.address, values.city).place} target="_blank" rel="noreferrer">
-        Check this address on Google Maps ↗
+      <a href={mapLinks().place} target="_blank" rel="noreferrer">
+        View the Club listing on Google Maps ↗
       </a>
       <p>
-        The map uses this address. Check its pin before saving. These details also appear in the
-        site footer.
+        The map uses the Club&apos;s Google Maps listing. Confirm that the address above matches the
+        listing before saving. These details also appear in the site footer.
       </p>
     </section>
   )

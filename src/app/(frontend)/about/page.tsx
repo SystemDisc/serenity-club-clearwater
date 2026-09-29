@@ -33,11 +33,7 @@ export default async function AboutPage() {
               className="club-wide-photo"
             />
             <figcaption className="club-photo-credit">
-              <a
-                href={mapLinks(data.settings.address, data.settings.cityStateZip).place}
-                target="_blank"
-                rel="noreferrer"
-              >
+              <a href={mapLinks().place} target="_blank" rel="noreferrer">
                 Photo via Google Maps ↗
               </a>
             </figcaption>

@@ -7,7 +7,7 @@ import streetView from '@/serenity/artwork/street-view.webp'
 
 export default async function ReachOutPage() {
   const { settings } = await getSerenityData([])
-  const maps = mapLinks(settings.address, settings.cityStateZip)
+  const maps = mapLinks()
   return (
     <main>
       <PageHeader eyebrow="Come on in" title="Contact Serenity Club">
@@ -38,7 +38,7 @@ export default async function ReachOutPage() {
                 </a>
               </div>
               <div className="club-actions">
-                <ButtonLink href={maps.place}>
+                <ButtonLink href={maps.directions}>
                   Get directions <ArrowUpRight aria-hidden="true" />
                 </ButtonLink>
                 <ButtonLink href="/meeting-schedule" variant="secondary">

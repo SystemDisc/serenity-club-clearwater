@@ -72,7 +72,7 @@ export async function Footer() {
           </a>
           <a
             className="flex min-h-11 items-center gap-3 hover:text-white"
-            href={mapLinks(settings.address, settings.cityStateZip).place}
+            href={mapLinks().place}
             rel="noreferrer"
             target="_blank"
           >

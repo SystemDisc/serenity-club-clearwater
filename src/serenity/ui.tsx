@@ -227,7 +227,7 @@ export function ContactBand({ settings }: { settings: ClubSettings }) {
         </a>
         <a
           className="flex min-h-11 min-w-0 items-center gap-3 rounded-md hover:text-emerald-900 sm:col-span-2 lg:col-span-1"
-          href={mapLinks(settings.address, settings.cityStateZip).place}
+          href={mapLinks().place}
           rel="noreferrer"
           target="_blank"
         >

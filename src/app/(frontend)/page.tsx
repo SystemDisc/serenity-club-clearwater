@@ -16,7 +16,7 @@ export default async function HomePage() {
   const featuredEvents = data.events
     .filter((event) => event.featured !== false && !isPastEvent(event))
     .slice(0, 3)
-  const maps = mapLinks(data.settings.address, data.settings.cityStateZip)
+  const maps = mapLinks()
   return (
     <main>
       <section className="club-hero">
