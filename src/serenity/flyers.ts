@@ -27,7 +27,7 @@ export async function getMonthlyFlyers(events: EventItem[], today = localDateKey
       return result.docs
     },
     ['monthly-flyers'],
-    { revalidate: 300, tags: ['public-monthlyFlyers', 'public-media'] },
+    { revalidate: 3600, tags: ['public-monthlyFlyers', 'public-media'] },
   )(nextMonth)
 
   // Use the same published events and recurrence dates as the public listings.

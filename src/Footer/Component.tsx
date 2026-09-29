@@ -23,7 +23,7 @@ function FooterNavLink({ item }: { item: NavItem }) {
   }
 
   return (
-    <Link className={className} href={item.href}>
+    <Link className={className} href={item.href} prefetch={false}>
       {item.label}
     </Link>
   )
@@ -36,7 +36,7 @@ export async function Footer() {
     <footer className="site-footer mt-auto border-t border-white/15 bg-slate-950 px-4 text-white">
       <div className="container grid gap-6 py-7 md:grid-cols-2 md:py-8 lg:grid-cols-[1.1fr_1fr_1.1fr] lg:gap-8 lg:py-10">
         <div>
-          <Link className="inline-flex items-center gap-3" href="/">
+          <Link className="inline-flex items-center gap-3" href="/" prefetch={false}>
             <SerenityMark className="size-11 ring-1 ring-white/20" />
             <span className="text-lg font-semibold">{settings.name}</span>
           </Link>

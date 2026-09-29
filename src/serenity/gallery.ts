@@ -52,7 +52,7 @@ export const getGalleryPage = unstable_cache(
     }
   },
   ['public-gallery-page'],
-  { revalidate: 300, tags: ['public-galleryItems', 'public-albums', 'public-media'] },
+  { revalidate: 3600, tags: ['public-galleryItems', 'public-albums', 'public-media'] },
 )
 
 export const getAlbumPage = unstable_cache(
@@ -89,5 +89,5 @@ export const getAlbumPage = unstable_cache(
     }
   },
   ['public-album-page'],
-  { revalidate: 300, tags: ['public-albums', 'public-galleryItems', 'public-media'] },
+  { revalidate: 3600, tags: ['public-albums', 'public-galleryItems', 'public-media'] },
 )

@@ -50,6 +50,7 @@ function NavLink({
       className={classes}
       href={href}
       onClick={onClick}
+      prefetch={false}
     >
       {label}
     </Link>

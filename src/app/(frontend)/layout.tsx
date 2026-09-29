@@ -46,8 +46,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   )
 }
 
-// Publish hooks invalidate immediately; this also recovers from a missed hook.
-export const revalidate = 300
+// Publish hooks invalidate immediately; hourly revalidation recovers from a missed hook.
+export const revalidate = 3600
 
 export const metadata: Metadata = {
   applicationName: siteMetadata.name,

@@ -114,7 +114,7 @@ const collectionDocuments = (collection: SerenityCollection) =>
     },
     ['public-collection', collection],
     {
-      revalidate: 300,
+      revalidate: 3600,
       tags: [
         `public-${collection}`,
         'public-media',
@@ -199,7 +199,7 @@ const getNavItems = (global: unknown, fieldName: string) => {
   return field.map(normalizeNavItem).filter((item): item is NavItem => Boolean(item))
 }
 
-export const getSiteNavigation = cache(async (): Promise<SiteNavigation> => {
+const getCachedSiteNavigation = unstable_cache(async (): Promise<SiteNavigation> => {
   const payload = await getPayloadClient()
 
   if (!payload) return fallbackSiteNavigation()
@@ -228,9 +228,14 @@ export const getSiteNavigation = cache(async (): Promise<SiteNavigation> => {
     primaryNavItems: resolvedPrimary,
     secondaryNavItems: resolvedSecondary,
   }
+}, ['public-site-navigation'], {
+  revalidate: 3600,
+  tags: ['public-header', 'public-footer', 'public-media'],
 })
 
-export const getSerenitySettings = cache(async (): Promise<ClubSettings> => {
+export const getSiteNavigation = cache(() => getCachedSiteNavigation())
+
+const getCachedSerenitySettings = unstable_cache(async (): Promise<ClubSettings> => {
   const payload = await getPayloadClient()
 
   if (!payload) return fallbackClubSettings
@@ -264,7 +269,12 @@ export const getSerenitySettings = cache(async (): Promise<ClubSettings> => {
     summary: getText(settings.summary, fallbackClubSettings.summary),
     tagline: getText(settings.tagline, fallbackClubSettings.tagline),
   }
+}, ['public-club-settings'], {
+  revalidate: 3600,
+  tags: ['public-clubSettings', 'public-media'],
 })
+
+export const getSerenitySettings = cache(() => getCachedSerenitySettings())
 
 export const getSerenityData = cache(
   async (selected?: readonly SerenityCollection[]): Promise<SerenityData> => {

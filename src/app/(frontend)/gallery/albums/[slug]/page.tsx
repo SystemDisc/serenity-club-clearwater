@@ -1,7 +1,7 @@
 import { AlbumPageContent } from '@/serenity/AlbumPage'
 import { getAlbumPage } from '@/serenity/gallery'
 type Args = { params: Promise<{ slug: string }> }
-export const revalidate = 300
+export const revalidate = 3600
 export function generateStaticParams() {
   return []
 }

@@ -124,7 +124,7 @@ export async function withPublicMutation<T>(operation: () => Promise<T>): Promis
         invalidatePublicChanges(scope.changes)
       } catch (error) {
         // The database may already be committed. Preserve the save result and
-        // emit an actionable error; the five-minute TTL is the recovery path.
+        // emit an actionable error; the hourly TTL is the recovery path.
         console.error(
           JSON.stringify({
             event: 'public-revalidation-failed',

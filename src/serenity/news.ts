@@ -26,7 +26,7 @@ export const getNewsPage = unstable_cache(
     })
   },
   ['public-news-page'],
-  { revalidate: 300, tags: ['public-posts', 'public-media'] },
+  { revalidate: 3600, tags: ['public-posts', 'public-media'] },
 )
 
 export function richTextSummary(value: unknown): string {
