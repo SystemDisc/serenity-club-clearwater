@@ -443,8 +443,8 @@ test.describe('Admin Panel', () => {
       await page.goto('/admin/globals/clubSettings')
       await page.getByRole('textbox', { name: 'Hours', exact: true }).fill(hours)
       await expect(
-        page.getByRole('link', { name: 'Check this address on Google Maps ↗' }),
-      ).toHaveAttribute('href', /query=/)
+        page.getByRole('link', { name: 'View the Club listing on Google Maps ↗' }),
+      ).toHaveAttribute('href', 'https://www.google.com/maps?cid=2964191645503102868')
       const save = page.waitForResponse(
         (response) =>
           response.url().includes('/api/globals/clubSettings') &&
