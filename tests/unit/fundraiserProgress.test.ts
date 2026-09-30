@@ -2,6 +2,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { GET } from '@/app/api/fundraiser-progress/route'
 import { fundraiserCampaignId, parseFundraiserProgress } from '@/utilities/fundraiserProgress'
 
+vi.mock('next/cache', () => ({ unstable_cache: vi.fn((fn: unknown) => fn) }))
+
 const campaign = {
   id: fundraiserCampaignId,
   object: 'campaign',

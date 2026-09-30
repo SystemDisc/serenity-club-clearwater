@@ -1,3 +1,4 @@
+import KioskRefresh from './KioskRefresh'
 import { Gutter } from '@payloadcms/ui'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
@@ -226,6 +227,7 @@ export default async function Dashboard({ initPageResult }: AdminViewServerProps
   const published = recent.filter((doc) => doc.status === 'Published on website').slice(0, 6)
   return (
     <Gutter className="club-admin">
+      {req.user.role === 'admin' ? <KioskRefresh /> : null}
       <header className="club-admin__heading">
         <p>Serenity Club of Clearwater</p>
         <h1>Manage the website</h1>

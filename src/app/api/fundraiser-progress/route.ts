@@ -1,3 +1,4 @@
+import { unstable_cache } from 'next/cache'
 import {
   fundraiserCampaignId,
   fundraiserCampaignTitle,
@@ -5,14 +6,27 @@ import {
   parseFundraiserProgress,
 } from '@/utilities/fundraiserProgress'
 
-export const dynamic = 'force-dynamic'
+const getProgress = unstable_cache(
+  async (key: string) => {
+    const response = await fetch(`https://api.zeffy.com/api/v1/campaigns/${fundraiserCampaignId}`, {
+      headers: { Authorization: `Bearer ${key}`, Accept: 'application/json' },
+      cache: 'no-store',
+      redirect: 'error',
+      signal: AbortSignal.timeout(15_000),
+    })
+    if (!response.ok) throw new Error('Upstream unavailable')
+    return parseFundraiserProgress(await response.json())
+  },
+  ['fundraiser-progress'],
+  { revalidate: 300, tags: ['fundraiser-progress'] },
+)
 
 export async function GET() {
   const key = process.env.ZEFFY_API_KEY
   const base = {
     title: fundraiserCampaignTitle,
     campaignUrl: fundraiserCampaignUrl,
-    refreshSeconds: 60,
+    refreshSeconds: 300,
   }
 
   if (!key) {
@@ -23,14 +37,7 @@ export async function GET() {
   }
 
   try {
-    const response = await fetch(`https://api.zeffy.com/api/v1/campaigns/${fundraiserCampaignId}`, {
-      headers: { Authorization: `Bearer ${key}`, Accept: 'application/json' },
-      cache: 'no-store',
-      redirect: 'error',
-      signal: AbortSignal.timeout(15_000),
-    })
-    if (!response.ok) throw new Error('Upstream unavailable')
-    const progress = parseFundraiserProgress(await response.json())
+    const progress = await getProgress(key)
 
     return Response.json(
       { ...base, mode: 'live', progress },

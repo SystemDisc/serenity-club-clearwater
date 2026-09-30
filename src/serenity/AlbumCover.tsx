@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import type { AlbumCoverImage } from './albumCover'
+import type { AlbumCoverImage } from './albumCoverData'
 
 /** Shared crop/layout for the public card and the editor's cover preview. */
 export function AlbumCover({ images }: { images: AlbumCoverImage[] }) {

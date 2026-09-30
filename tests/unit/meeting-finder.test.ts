@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { Meeting } from '../../src/serenity/content'
-import { clubClockMinutes, meetingsForDate, nextMeetings } from '../../src/serenity/meetingFinder'
+import { clubClockMinutes, meetingsForDate, nextMeetings } from '../../src/serenity/meetingFinderData'
 const group = (changes: Partial<Meeting> = {}): Meeting => ({
   name: 'Recovery group',
   fellowship: 'AA',

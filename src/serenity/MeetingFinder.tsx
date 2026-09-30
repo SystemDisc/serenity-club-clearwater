@@ -4,7 +4,7 @@ import { useMemo, useState, useSyncExternalStore } from 'react'
 import Link from 'next/link'
 import type { Meeting } from './content'
 import { addCalendarDays, displayDate, localDateKey, validDateKey } from './calendar'
-import { isEarlierToday, meetingsForDate, nextMeetings, type DatedMeeting } from './meetingFinder'
+import { isEarlierToday, meetingsForDate, nextMeetings, type DatedMeeting } from './meetingFinderData'
 
 const minuteSnapshot = () => Math.floor(Date.now() / 60000) * 60000
 const subscribeClock = (onChange: () => void) => {

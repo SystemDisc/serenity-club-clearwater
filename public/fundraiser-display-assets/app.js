@@ -16,6 +16,7 @@ const campaignUrl =
   'https://www.zeffy.com/en-US/donation-form/help-restore-the-serenity-club-of-clearwater'
 let refreshing = false
 let lastView = null
+let checkoutRefreshTimers = []
 
 function showProgress(data) {
   lastView = data
@@ -54,13 +55,13 @@ function showProgress(data) {
     data.mode === 'preview'
       ? `Preview total · ${when} · Live updates not connected`
       : data.mode === 'live'
-        ? `Updated ${when} · Refreshes every minute`
+        ? `Updated ${when} · Refreshes every 5 minutes`
         : data.mode === 'stale'
           ? `Connection interrupted · Last verified ${when}`
           : 'Cannot retrieve the total right now. You can still donate.'
 }
 async function refresh() {
-  if (refreshing) return
+  if (document.hidden || refreshing) return
   refreshing = true
   try {
     const response = await fetch('/api/fundraiser-progress', {
@@ -105,7 +106,12 @@ $('leave').addEventListener('click', () => {
   $('frame-container').replaceChildren()
   $('checkout').close()
   $('donate').focus()
+  // Zeffy may finish processing just after the visitor closes checkout.
+  // Keep this burst bounded; regular polling stays at five minutes.
+  checkoutRefreshTimers.forEach(clearTimeout)
   refresh()
+  checkoutRefreshTimers = [15000, 45000].map((delay) => setTimeout(refresh, delay))
+  applyPendingReload()
 })
 // Suppress image/link preview and drag menus on the kiosk document. These
 // listeners do not reach into Zeffy's cross-origin form or block its inputs.
@@ -128,4 +134,73 @@ document.addEventListener('visibilitychange', () => {
   if (!document.hidden) refresh()
 })
 refresh()
-setInterval(refresh, 60000)
+setInterval(async () => {
+  await refresh()
+  await checkReloadSignal()
+}, 300000)
+
+// Read a public CDN-hosted signal: no application function runs for these checks.
+const reloadURL = document.querySelector('meta[name="kiosk-refresh-url"]')?.content
+const reloadStorageKey = 'serenity-kiosk-refresh'
+const bootTime = Date.now()
+let lastInteraction = bootTime
+let pendingReload = null
+let reloadTimer
+let reloadChecking = false
+let seenReload = null
+let reloadStorageAvailable = true
+try {
+  seenReload = JSON.parse(localStorage.getItem(reloadStorageKey) || 'null')
+  if (seenReload && (!seenReload.revision || !Number.isFinite(seenReload.issuedAt))) seenReload = null
+  localStorage.setItem(reloadStorageKey, JSON.stringify(seenReload))
+} catch {
+  reloadStorageAvailable = false
+}
+function applyPendingReload() {
+  clearTimeout(reloadTimer)
+  if (!pendingReload || !reloadStorageAvailable || document.hidden || !navigator.onLine) return
+  if ($('checkout').open || $('leave-confirm').open) return
+  const idleRemaining = 30000 - (Date.now() - lastInteraction)
+  if (idleRemaining > 0) {
+    reloadTimer = setTimeout(applyPendingReload, idleRemaining + 1)
+    return
+  }
+  try {
+    // Persist before navigation so a cached signal cannot cause a reload loop.
+    localStorage.setItem(reloadStorageKey, JSON.stringify(pendingReload))
+  } catch { return }
+  seenReload = pendingReload
+  pendingReload = null
+  window.location.reload()
+}
+async function checkReloadSignal() {
+  if (!reloadURL || !reloadStorageAvailable || reloadChecking || document.hidden || !navigator.onLine) return
+  reloadChecking = true
+  try {
+    const response = await fetch(reloadURL, { cache: 'no-cache', signal: AbortSignal.timeout(10000) })
+    if (!response.ok) return
+    const signal = await response.json()
+    const issuedAt = Date.parse(signal.issuedAt)
+    if (!/^[a-f0-9-]{36}$/i.test(signal.revision) || !Number.isFinite(issuedAt) || issuedAt > Date.now() || Date.now() - issuedAt > 86400000) return
+    if (seenReload && (signal.revision === seenReload.revision || issuedAt <= seenReload.issuedAt)) return
+    const next = { revision: signal.revision, issuedAt }
+    if (issuedAt <= bootTime) {
+      // The current page was loaded after this command; it already has fresh code.
+      localStorage.setItem(reloadStorageKey, JSON.stringify(next))
+      seenReload = next
+      return
+    }
+    pendingReload = next
+    applyPendingReload()
+  } catch {
+    // Offline/missing storage must never disrupt a working donation kiosk.
+  } finally { reloadChecking = false }
+}
+for (const type of ['pointerdown', 'keydown']) {
+  document.addEventListener(type, () => { lastInteraction = Date.now() })
+}
+window.addEventListener('online', () => { checkReloadSignal(); applyPendingReload() })
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) { checkReloadSignal(); applyPendingReload() }
+})
+checkReloadSignal()

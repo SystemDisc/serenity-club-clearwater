@@ -8,8 +8,13 @@ const campaign =
   'https://www.zeffy.com/en-US/donation-form/help-restore-the-serenity-club-of-clearwater'
 let refresh: () => Promise<void>
 let raised: number
+let intervalDelay: number | undefined
 
 beforeEach(async () => {
+  vi.spyOn(document, 'hidden', 'get').mockReturnValue(false)
+  vi.spyOn(document, 'addEventListener')
+  vi.spyOn(window, 'addEventListener')
+  vi.useFakeTimers()
   raised = 500
   document.documentElement.innerHTML = html
   Object.assign(HTMLDialogElement.prototype, {
@@ -31,7 +36,8 @@ beforeEach(async () => {
       }),
     })),
   )
-  vi.stubGlobal('setInterval', (callback: () => Promise<void>) => {
+  vi.stubGlobal('setInterval', (callback: () => Promise<void>, delay: number) => {
+    intervalDelay = delay
     refresh = callback
     return 1
   })
@@ -39,7 +45,14 @@ beforeEach(async () => {
   await vi.waitFor(() => expect(document.getElementById('raised')?.textContent).toBe('$500'))
 })
 
-afterEach(() => vi.unstubAllGlobals())
+afterEach(() => {
+  vi.mocked(document.addEventListener).mock.calls.forEach(([type, listener]) => document.removeEventListener(type, listener))
+  vi.mocked(window.addEventListener).mock.calls.forEach(([type, listener]) => window.removeEventListener(type, listener))
+  vi.clearAllTimers()
+  vi.useRealTimers()
+  vi.unstubAllGlobals()
+  vi.restoreAllMocks()
+})
 
 function click(id: string) {
   document.getElementById(id)!.click()
@@ -50,6 +63,38 @@ function checkout() {
 }
 
 describe('interactive fundraiser kiosk', () => {
+  it('polls every five minutes and refreshes immediately and twice after checkout closes', async () => {
+    expect(intervalDelay).toBe(300000)
+    click('donate')
+    click('finish')
+    const request = vi.mocked(fetch)
+    request.mockClear()
+    raised = 725
+    click('leave')
+    await vi.waitFor(() => expect(document.getElementById('raised')?.textContent).toBe('$725'))
+    expect(request).toHaveBeenCalledTimes(1)
+    await vi.advanceTimersByTimeAsync(15000)
+    expect(request).toHaveBeenCalledTimes(2)
+    await vi.advanceTimersByTimeAsync(30000)
+    expect(request).toHaveBeenCalledTimes(3)
+    await vi.advanceTimersByTimeAsync(60000)
+    expect(request).toHaveBeenCalledTimes(3)
+  })
+
+  it('skips background polling and refreshes when the display becomes visible', async () => {
+    const request = vi.mocked(fetch)
+    request.mockClear()
+    vi.spyOn(document, 'hidden', 'get').mockReturnValue(true)
+    raised = 725
+    await refresh()
+    expect(request).not.toHaveBeenCalled()
+    expect(document.getElementById('raised')?.textContent).toBe('$500')
+    vi.spyOn(document, 'hidden', 'get').mockReturnValue(false)
+    document.dispatchEvent(new Event('visibilitychange'))
+    await vi.waitFor(() => expect(document.getElementById('raised')?.textContent).toBe('$725'))
+    expect(request).toHaveBeenCalledTimes(1)
+  })
+
   it('keeps the existing checkout instance during progress updates', async () => {
     click('donate')
     const frame = checkout().querySelector('iframe')!

@@ -1,6 +1,6 @@
 import type { Payload } from 'payload'
 import type { Album } from '@/payload-types'
-import { albumCoverImages } from './albumCover'
+import { albumCoverImages } from './albumCoverData'
 
 /** Read only published, accessible members, including when a saved cover was moved or hidden. */
 export async function getAlbumCover(payload: Payload, album: Album) {

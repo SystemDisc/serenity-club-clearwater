@@ -1,3 +1,4 @@
+import { kioskSignalURL } from '@/utilities/kioskSignal'
 import { readFile } from 'node:fs/promises'
 import path from 'node:path'
 
@@ -9,14 +10,16 @@ export async function GET() {
     path.join(process.cwd(), 'src/fundraiser-display/display.html'),
     'utf8',
   )
-  return new Response(html, {
+  const signalURL = kioskSignalURL()
+  const document = html.replace('name="kiosk-refresh-url" content=""', `name="kiosk-refresh-url" content="${signalURL ?? ''}"`)
+  return new Response(document, {
     headers: {
       'Content-Type': 'text/html; charset=utf-8',
       'X-Content-Type-Options': 'nosniff',
       'X-Robots-Tag': 'noindex, nofollow',
       'Referrer-Policy': 'strict-origin-when-cross-origin',
       'Content-Security-Policy':
-        "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' https://res.cloudinary.com; frame-src https://www.zeffy.com https://zeffy.com; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'",
+        "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' https://res.cloudinary.com; frame-src https://www.zeffy.com https://zeffy.com; connect-src 'self' https://*.public.blob.vercel-storage.com; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'",
     },
   })
 }

@@ -1,3 +1,4 @@
+import { kioskRefresh } from './endpoints/kioskRefresh'
 import { editorWorkflowPlugin } from '@/admin/editorWorkflow'
 import { isAdmin } from './access/users'
 import { postgresAdapter } from '@payloadcms/db-postgres'
@@ -73,6 +74,7 @@ const getEmailAdapter = () => {
 }
 
 export default buildConfig({
+  endpoints: [{ path: "/kiosk-refresh", method: "post", handler: kioskRefresh }],
   i18n: {
     translations: {
       en: {

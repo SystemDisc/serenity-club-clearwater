@@ -5,7 +5,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import type { GalleryItem, Media } from '@/payload-types'
 import { AlbumCover } from '@/serenity/AlbumCover'
-import { albumCoverImages } from '@/serenity/albumCover'
+import { albumCoverImages } from '@/serenity/albumCoverData'
 import { useResource } from './useResource'
 
 type PhotoPage = { docs: GalleryItem[]; totalDocs: number; totalPages: number }
