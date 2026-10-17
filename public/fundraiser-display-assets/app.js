@@ -135,6 +135,7 @@ document.addEventListener('visibilitychange', () => {
 })
 refresh()
 setInterval(async () => {
+  reportStatus('heartbeat')
   await refresh()
   await checkReloadSignal()
 }, 300000)
@@ -143,6 +144,49 @@ setInterval(async () => {
 const reloadURL = document.querySelector('meta[name="kiosk-refresh-url"]')?.content
 const reloadStorageKey = 'serenity-kiosk-refresh'
 const bootTime = Date.now()
+const version = document.querySelector('meta[name="kiosk-version"]')?.content
+const acknowledgementKey = 'serenity-kiosk-reload-ack'
+const uuidPattern = /^[a-f0-9]{8}(-[a-f0-9]{4}){3}-[a-f0-9]{12}$/i
+const pageLoadId = crypto.randomUUID()
+let deviceId = pageLoadId
+let appliedRefresh
+let lastReportAt = 0
+try {
+  const saved = localStorage.getItem('serenity-kiosk-device')
+  deviceId = saved && uuidPattern.test(saved) ? saved : crypto.randomUUID()
+  localStorage.setItem('serenity-kiosk-device', deviceId)
+  const ack = JSON.parse(sessionStorage.getItem(acknowledgementKey) || 'null')
+  sessionStorage.removeItem(acknowledgementKey)
+  const seen = JSON.parse(localStorage.getItem(reloadStorageKey) || 'null')
+  if (ack && uuidPattern.test(ack.revision) && ack.revision === seen?.revision &&
+      ack.pageLoadId !== pageLoadId && Number.isFinite(ack.startedAt) &&
+      bootTime >= ack.startedAt && bootTime - ack.startedAt < 300000 &&
+      performance.getEntriesByType('navigation')[0]?.type === 'reload') {
+    appliedRefresh = ack.revision
+  }
+} catch { /* Diagnostics must not interrupt a kiosk with unavailable storage. */ }
+const deviceType = /iPad/.test(navigator.userAgent) ||
+  (/Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints > 1)
+  ? 'iPad' : /iPhone/.test(navigator.userAgent) ? 'iPhone'
+    : /Android/.test(navigator.userAgent) ? 'Android'
+      : /Windows|Macintosh|Linux/.test(navigator.userAgent) ? 'computer' : 'unknown'
+
+function reportStatus(event, refreshRevision = appliedRefresh) {
+  if (!version || document.hidden || !navigator.onLine) return
+  if (event === 'heartbeat' && Date.now() - lastReportAt < 60000) return
+  lastReportAt = Date.now()
+  const displayMode = navigator.standalone || window.matchMedia?.('(display-mode: standalone)').matches
+    ? 'standalone' : 'browser'
+  fetch('/api/kiosk-heartbeat', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    credentials: 'omit', cache: 'no-store', keepalive: true,
+    signal: AbortSignal.timeout(10000),
+    body: JSON.stringify({
+      deviceId, pageLoadId, version, loadedAt: new Date(bootTime).toISOString(),
+      deviceType, displayMode, event, ...(refreshRevision ? { refreshRevision } : {}),
+    }),
+  }).catch(() => { /* A missed report must not block progress or refresh. */ })
+}
 let lastInteraction = bootTime
 let pendingReload = null
 let reloadTimer
@@ -170,6 +214,13 @@ function applyPendingReload() {
     localStorage.setItem(reloadStorageKey, JSON.stringify(pendingReload))
   } catch { return }
   seenReload = pendingReload
+  try {
+    // A subsequent load acknowledges the command only after an actual reload.
+    sessionStorage.setItem(acknowledgementKey, JSON.stringify({
+      revision: pendingReload.revision, pageLoadId, startedAt: Date.now(),
+    }))
+  } catch { /* Reload still works without an acknowledgement marker. */ }
+  reportStatus('refresh-starting', pendingReload.revision)
   pendingReload = null
   window.location.reload()
 }
@@ -190,6 +241,7 @@ async function checkReloadSignal() {
       seenReload = next
       return
     }
+    if (pendingReload?.revision !== next.revision) reportStatus('refresh-pending', next.revision)
     pendingReload = next
     applyPendingReload()
   } catch {
@@ -199,8 +251,9 @@ async function checkReloadSignal() {
 for (const type of ['pointerdown', 'keydown']) {
   document.addEventListener(type, () => { lastInteraction = Date.now() })
 }
-window.addEventListener('online', () => { checkReloadSignal(); applyPendingReload() })
+window.addEventListener('online', () => { reportStatus('heartbeat'); checkReloadSignal(); applyPendingReload() })
 document.addEventListener('visibilitychange', () => {
-  if (!document.hidden) { checkReloadSignal(); applyPendingReload() }
+  if (!document.hidden) { reportStatus('heartbeat'); checkReloadSignal(); applyPendingReload() }
 })
+reportStatus('loaded')
 checkReloadSignal()

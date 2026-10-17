@@ -20,7 +20,8 @@ export const kioskRefresh: PayloadHandler = async (req) => {
       contentType: 'application/json', cacheControlMaxAge: 60,
       token: process.env.BLOB_READ_WRITE_TOKEN,
     })
-    return Response.json({ queued: true }, { headers: { 'Cache-Control': 'no-store' } })
+    console.info(JSON.stringify({ kind: 'kiosk-refresh-request', ...signal }))
+    return Response.json({ queued: true, ...signal }, { headers: { 'Cache-Control': 'no-store' } })
   } catch {
     return Response.json({ error: 'Could not queue refresh. Please try again.' }, { status: 503 })
   }

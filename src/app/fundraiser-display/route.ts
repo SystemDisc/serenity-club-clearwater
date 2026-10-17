@@ -1,4 +1,5 @@
 import { kioskSignalURL } from '@/utilities/kioskSignal'
+import { kioskVersion } from '@/utilities/kioskVersion'
 import { readFile } from 'node:fs/promises'
 import path from 'node:path'
 
@@ -11,7 +12,12 @@ export async function GET() {
     'utf8',
   )
   const signalURL = kioskSignalURL()
-  const document = html.replace('name="kiosk-refresh-url" content=""', `name="kiosk-refresh-url" content="${signalURL ?? ''}"`)
+  const version = kioskVersion()
+  const document = html
+    .replace('name="kiosk-refresh-url" content=""', `name="kiosk-refresh-url" content="${signalURL ?? ''}"`)
+    .replace('name="kiosk-version" content=""', `name="kiosk-version" content="${version}"`)
+    .replace('/fundraiser-display-assets/app.js"', `/fundraiser-display-assets/app.js?v=${version}"`)
+    .replace('/fundraiser-display-assets/style.css"', `/fundraiser-display-assets/style.css?v=${version}"`)
   return new Response(document, {
     headers: {
       'Content-Type': 'text/html; charset=utf-8',
