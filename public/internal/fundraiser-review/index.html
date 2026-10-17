@@ -337,6 +337,19 @@
           break-before: page;
         }
       }
+      .tabs {
+        overflow-x: auto;
+      }
+      .tabs button {
+        flex-shrink: 0;
+        white-space: nowrap;
+        max-width: none;
+      }
+      @media (max-width: 520px) {
+        .tabs {
+          gap: 18px;
+        }
+      }
     </style>
   </head>
   <body>
@@ -344,11 +357,13 @@
       <div class="eyebrow">Serenity Club of Clearwater · Internal review · October 17, 2026</div>
       <h1>Clubhouse restoration.<br />Choose the next direction.</h1>
       <p>
-        Compare the original concept and two sets of flyer drafts. Choose the ideas worth carrying
+        Compare the original concept and three sets of flyer drafts. Choose the ideas worth carrying
         forward, then share feedback using each option’s ID.
       </p>
       <div class="downloads">
-        <a class="download" href="email_review/G02_Marketing_Directions_Review.pdf" download
+        <a class="download" href="email_review/G03_Illustrated_Directions_Review.pdf" download
+          >G03 review PDF <span>10.8 MB</span></a
+        ><a class="download" href="email_review/G02_Marketing_Directions_Review.pdf" download
           >G02 review PDF <span>4.4 MB</span></a
         ><a class="download" href="email_review/G01_First_Concepts_Review.pdf" download
           >G01 review PDF <span>9.7 MB</span></a
@@ -362,7 +377,16 @@
       </p>
     </header>
     <nav class="tabs" role="tablist" aria-label="Design sets">
-      <button id="tab-g02" role="tab" aria-selected="true" aria-controls="g02" data-tab="g02">
+      <button id="tab-g03" role="tab" aria-selected="true" aria-controls="g03" data-tab="g03">
+        G03 · Illustrated</button
+      ><button
+        id="tab-g02"
+        role="tab"
+        aria-selected="false"
+        tabindex="-1"
+        aria-controls="g02"
+        data-tab="g02"
+      >
         G02 · Marketing directions</button
       ><button
         id="tab-g01"
@@ -385,7 +409,192 @@
       </button>
     </nav>
     <main>
-      <section class="panel" id="g02" role="tabpanel" aria-labelledby="tab-g02">
+      <section class="panel" id="g03" role="tabpanel" aria-labelledby="tab-g03">
+        <div class="intro">
+          <h2>G03 · Illustrated directions</h2>
+          <p>
+            More abundant illustration, expressive lettering, and warm color. Each option includes
+            real clubhouse photography, the $100,000 fundraising goal, and ways to donate online or
+            mail a check.
+          </p>
+        </div>
+        <div class="grid">
+          <article class="concept">
+            <a
+              class="preview"
+              href="g03_expressive_set/layouts/G03_A1_sunlit_serenity_universal/G03_A1_sunlit_serenity_universal.png"
+              target="_blank"
+              aria-label="Open G03-A1 full-size preview"
+              ><img
+                src="g03_expressive_set/layouts/G03_A1_sunlit_serenity_universal/G03_A1_sunlit_serenity_universal.png"
+                alt="Sunlit Serenity flyer, G03-A1"
+                loading="lazy"
+                width="612"
+                height="792"
+            /></a>
+            <div class="caption">
+              <div class="eyebrow">G03-A1</div>
+              <h3>Sunlit Serenity</h3>
+              <p>Tropical canopy, a whole-building photograph, and warm campaign colors.</p>
+              <div class="links">
+                <a
+                  href="g03_expressive_set/layouts/G03_A1_sunlit_serenity_universal/G03_A1_sunlit_serenity_universal.png"
+                  target="_blank"
+                  >Full-size image ↗</a
+                ><a href="email_review/G03_Illustrated_Directions_Review.pdf#page=2" target="_blank"
+                  >PDF page 2 ↗</a
+                >
+              </div>
+            </div>
+          </article>
+          <article class="concept">
+            <a
+              class="preview"
+              href="g03_expressive_set/layouts/G03_A2_hope_in_bloom_universal/G03_A2_hope_in_bloom_universal.png"
+              target="_blank"
+              aria-label="Open G03-A2 full-size preview"
+              ><img
+                src="g03_expressive_set/layouts/G03_A2_hope_in_bloom_universal/G03_A2_hope_in_bloom_universal.png"
+                alt="Hope in Bloom flyer, G03-A2"
+                loading="lazy"
+                width="612"
+                height="792"
+            /></a>
+            <div class="caption">
+              <div class="eyebrow">G03-A2</div>
+              <h3>Hope in Bloom</h3>
+              <p>An abundant botanical frame and a centered clubhouse appeal.</p>
+              <div class="links">
+                <a
+                  href="g03_expressive_set/layouts/G03_A2_hope_in_bloom_universal/G03_A2_hope_in_bloom_universal.png"
+                  target="_blank"
+                  >Full-size image ↗</a
+                ><a href="email_review/G03_Illustrated_Directions_Review.pdf#page=3" target="_blank"
+                  >PDF page 3 ↗</a
+                >
+              </div>
+            </div>
+          </article>
+          <article class="concept">
+            <a
+              class="preview"
+              href="g03_expressive_set/layouts/G03_B1_coffee_and_community_universal/G03_B1_coffee_and_community_universal.png"
+              target="_blank"
+              aria-label="Open G03-B1 full-size preview"
+              ><img
+                src="g03_expressive_set/layouts/G03_B1_coffee_and_community_universal/G03_B1_coffee_and_community_universal.png"
+                alt="Coffee &amp; Community flyer, G03-B1"
+                loading="lazy"
+                width="612"
+                height="792"
+            /></a>
+            <div class="caption">
+              <div class="eyebrow">G03-B1</div>
+              <h3>Coffee &amp; Community</h3>
+              <p>
+                Generous coffee illustration, real building photography, and colorful project notes.
+              </p>
+              <div class="links">
+                <a
+                  href="g03_expressive_set/layouts/G03_B1_coffee_and_community_universal/G03_B1_coffee_and_community_universal.png"
+                  target="_blank"
+                  >Full-size image ↗</a
+                ><a href="email_review/G03_Illustrated_Directions_Review.pdf#page=4" target="_blank"
+                  >PDF page 4 ↗</a
+                >
+              </div>
+            </div>
+          </article>
+          <article class="concept">
+            <a
+              class="preview"
+              href="g03_expressive_set/layouts/G03_B2_same_purpose_brighter_tomorrow_universal/G03_B2_same_purpose_brighter_tomorrow_universal.png"
+              target="_blank"
+              aria-label="Open G03-B2 full-size preview"
+              ><img
+                src="g03_expressive_set/layouts/G03_B2_same_purpose_brighter_tomorrow_universal/G03_B2_same_purpose_brighter_tomorrow_universal.png"
+                alt="Same Purpose, Brighter Tomorrow flyer, G03-B2"
+                loading="lazy"
+                width="612"
+                height="792"
+            /></a>
+            <div class="caption">
+              <div class="eyebrow">G03-B2</div>
+              <h3>Same Purpose, Brighter Tomorrow</h3>
+              <p>Expressive lettering with photographs of the meeting rooms and coffee bar.</p>
+              <div class="links">
+                <a
+                  href="g03_expressive_set/layouts/G03_B2_same_purpose_brighter_tomorrow_universal/G03_B2_same_purpose_brighter_tomorrow_universal.png"
+                  target="_blank"
+                  >Full-size image ↗</a
+                ><a href="email_review/G03_Illustrated_Directions_Review.pdf#page=5" target="_blank"
+                  >PDF page 5 ↗</a
+                >
+              </div>
+            </div>
+          </article>
+          <article class="concept">
+            <a
+              class="preview"
+              href="g03_expressive_set/layouts/G03_C1_people_purpose_possibility_universal/G03_C1_people_purpose_possibility_universal.png"
+              target="_blank"
+              aria-label="Open G03-C1 full-size preview"
+              ><img
+                src="g03_expressive_set/layouts/G03_C1_people_purpose_possibility_universal/G03_C1_people_purpose_possibility_universal.png"
+                alt="People. Purpose. Possibility. flyer, G03-C1"
+                loading="lazy"
+                width="612"
+                height="792"
+            /></a>
+            <div class="caption">
+              <div class="eyebrow">G03-C1</div>
+              <h3>People. Purpose. Possibility.</h3>
+              <p>
+                A lively poster with bold type, coffee-and-flowers artwork, and the connected
+                clubhouse.
+              </p>
+              <div class="links">
+                <a
+                  href="g03_expressive_set/layouts/G03_C1_people_purpose_possibility_universal/G03_C1_people_purpose_possibility_universal.png"
+                  target="_blank"
+                  >Full-size image ↗</a
+                ><a href="email_review/G03_Illustrated_Directions_Review.pdf#page=6" target="_blank"
+                  >PDF page 6 ↗</a
+                >
+              </div>
+            </div>
+          </article>
+          <article class="concept">
+            <a
+              class="preview"
+              href="g03_expressive_set/layouts/G03_C2_a_place_worth_preserving_universal/G03_C2_a_place_worth_preserving_universal.png"
+              target="_blank"
+              aria-label="Open G03-C2 full-size preview"
+              ><img
+                src="g03_expressive_set/layouts/G03_C2_a_place_worth_preserving_universal/G03_C2_a_place_worth_preserving_universal.png"
+                alt="A Place Worth Preserving flyer, G03-C2"
+                loading="lazy"
+                width="612"
+                height="792"
+            /></a>
+            <div class="caption">
+              <div class="eyebrow">G03-C2</div>
+              <h3>A Place Worth Preserving</h3>
+              <p>Coastal illustration, a photographic collage, and a warm community invitation.</p>
+              <div class="links">
+                <a
+                  href="g03_expressive_set/layouts/G03_C2_a_place_worth_preserving_universal/G03_C2_a_place_worth_preserving_universal.png"
+                  target="_blank"
+                  >Full-size image ↗</a
+                ><a href="email_review/G03_Illustrated_Directions_Review.pdf#page=7" target="_blank"
+                  >PDF page 7 ↗</a
+                >
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+      <section class="panel" id="g02" role="tabpanel" aria-labelledby="tab-g02" hidden>
         <div class="intro">
           <h2>G02 · Six directions</h2>
           <p>
@@ -570,7 +779,7 @@
           <h2>G01 · First concepts</h2>
           <p>
             The earlier directions are retained for comparison. Their broad work descriptions
-            predate the fuller contractor scope incorporated into G02.
+            predate the fuller contractor scope incorporated into G02 and G03.
           </p>
         </div>
         <div class="grid">
@@ -774,7 +983,7 @@
           <div class="eyebrow">For the next draft</div>
           <h2>What should carry forward?</h2>
           <p>
-            Refer to IDs such as G02-A2 or G01-P02. It’s fine to choose elements from several
+            Refer to IDs such as G03-A2 or G01-P02. It’s fine to choose elements from several
             options.
           </p>
           <a href="email_review/FEEDBACK_GUIDE.txt" download>Download feedback prompts</a>
@@ -837,8 +1046,10 @@
           G02 photographs show the actual club. The whole-building image is from the club website’s
           historical Street View asset; its capture date is unverified. The coffee-bar entrance
           photograph was contributed to Google Maps by Corey Scott Hill in October 2025. The
-          meeting-room contributor is not yet verified. G01 includes generated coastal and coffee
-          illustrations; its building photographs are authentic.
+          meeting-room contributor is not yet verified. G01 and G03 include generated decorative
+          coastal, botanical, and coffee illustrations; their building photographs are authentic.
+          G03 adds the confirmed check-mailing address: Serenity Club of Clearwater, 631 Turner
+          Street, Clearwater, FL 33756.
         </p>
       </details>
     </main>
@@ -849,7 +1060,7 @@
     <script>
       const buttons = [...document.querySelectorAll('[role="tab"]')]
       function select(id, focus = false) {
-        if (!buttons.some((b) => b.dataset.tab === id)) id = 'g02'
+        if (!buttons.some((b) => b.dataset.tab === id)) id = 'g03'
         buttons.forEach((b) => {
           const active = b.dataset.tab === id
           b.setAttribute('aria-selected', String(active))
@@ -873,7 +1084,7 @@
           }
         })
       })
-      select(location.hash.slice(1) || 'g02')
+      select(location.hash.slice(1) || 'g03')
     </script>
   </body>
 </html>
