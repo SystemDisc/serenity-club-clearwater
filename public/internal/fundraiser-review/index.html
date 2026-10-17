@@ -1,0 +1,879 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <base href="/internal/fundraiser-review/" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow,nosnippet" />
+    <title>Flyer review | Serenity Club of Clearwater</title>
+    <style>
+      :root {
+        --ink: #183b3b;
+        --paper: #faf8f1;
+        --line: #cfd6ce;
+        --muted: #57645f;
+        --accent: #8b2638;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font:
+          17px/1.55 system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          'Segoe UI',
+          sans-serif;
+      }
+      a {
+        color: inherit;
+        text-underline-offset: 4px;
+      }
+      button,
+      a {
+        touch-action: manipulation;
+      }
+      a:focus-visible,
+      button:focus-visible {
+        outline: 3px solid #b87823;
+        outline-offset: 5px;
+      }
+      header {
+        padding: 46px max(24px, calc((100vw - 1280px) / 2));
+        border-bottom: 1px solid var(--line);
+      }
+      .eyebrow {
+        font-size: 12px;
+        font-weight: 750;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      h1,
+      h2,
+      h3 {
+        line-height: 1.1;
+        margin: 0;
+        font-family: Georgia, serif;
+        font-weight: 500;
+      }
+      h1 {
+        font-size: clamp(34px, 4.6vw, 64px);
+        margin: 12px 0 18px;
+        max-width: 950px;
+      }
+      header p {
+        max-width: 800px;
+        margin: 10px 0;
+        color: var(--muted);
+      }
+      .downloads {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin: 24px 0 8px;
+      }
+      .download {
+        background: var(--ink);
+        color: white;
+        padding: 12px 18px;
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 650;
+        transition: background 0.16s;
+      }
+      .download:hover {
+        background: #31594f;
+      }
+      .download span {
+        font-weight: 400;
+        opacity: 0.8;
+        margin-left: 8px;
+      }
+      .small {
+        font-size: 13px;
+      }
+      .tabs {
+        position: sticky;
+        top: 0;
+        z-index: 3;
+        background: rgba(250, 248, 241, 0.97);
+        border-bottom: 1px solid var(--line);
+        padding: 0 max(24px, calc((100vw - 1280px) / 2));
+        display: flex;
+        gap: 26px;
+      }
+      .tabs button {
+        font: 650 15px/1.4 system-ui;
+        padding: 18px 0;
+        border: 0;
+        border-bottom: 3px solid transparent;
+        background: transparent;
+        color: var(--muted);
+        cursor: pointer;
+      }
+      .tabs button[aria-selected='true'] {
+        border-color: var(--accent);
+        color: var(--ink);
+      }
+      main {
+        max-width: 1328px;
+        margin: auto;
+        padding: 36px 24px 70px;
+      }
+      .intro {
+        display: flex;
+        gap: 30px;
+        justify-content: space-between;
+        align-items: baseline;
+        margin: 0 0 30px;
+      }
+      .intro h2 {
+        font-size: 34px;
+        white-space: nowrap;
+      }
+      .intro p {
+        font-size: 15px;
+        max-width: 680px;
+        color: var(--muted);
+        margin: 0;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 46px 28px;
+      }
+      .preview {
+        display: block;
+        background: #e6e9e2;
+        padding: 16px;
+        transition: background 0.18s;
+      }
+      .preview:hover {
+        background: #d6ddd3;
+      }
+      .preview img {
+        display: block;
+        width: 100%;
+        height: auto;
+        box-shadow: 0 3px 10px #17313218;
+      }
+      .caption {
+        padding-top: 17px;
+      }
+      .caption h3 {
+        font-size: 25px;
+        margin: 7px 0 10px;
+      }
+      .caption p {
+        font-size: 15px;
+        color: var(--muted);
+        margin: 0 0 14px;
+      }
+      .links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 18px;
+        font-size: 13px;
+        font-weight: 650;
+      }
+      .panel {
+        animation: enter 0.2s ease-out;
+      }
+      .panel[hidden] {
+        display: none;
+      }
+      .original {
+        display: grid;
+        grid-template-columns: minmax(0, 720px) 1fr;
+        gap: 46px;
+      }
+      .original img {
+        max-width: 100%;
+        height: auto;
+      }
+      .original aside p {
+        color: var(--muted);
+      }
+      .feedback {
+        margin-top: 60px;
+        padding-top: 34px;
+        border-top: 1px solid var(--line);
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 40px;
+      }
+      .feedback h2 {
+        font-size: 31px;
+      }
+      .feedback p,
+      .feedback li {
+        color: var(--muted);
+        font-size: 15px;
+      }
+      .feedback ol {
+        margin-top: 0;
+        padding-left: 24px;
+      }
+      .feedback li {
+        padding-bottom: 8px;
+      }
+      details {
+        margin-top: 32px;
+        border-top: 1px solid var(--line);
+        padding-top: 20px;
+      }
+      summary {
+        font-weight: 650;
+        cursor: pointer;
+      }
+      details p,
+      details li {
+        font-size: 14px;
+        color: var(--muted);
+        max-width: 900px;
+      }
+      footer {
+        border-top: 1px solid var(--line);
+        padding: 24px;
+        color: var(--muted);
+        font-size: 12px;
+        text-align: center;
+      }
+      @keyframes enter {
+        from {
+          opacity: 0.65;
+          transform: translateY(5px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      @media (max-width: 850px) {
+        .grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .intro {
+          display: block;
+        }
+        .intro p {
+          margin-top: 14px;
+        }
+        .original {
+          grid-template-columns: 1fr;
+        }
+        .feedback {
+          grid-template-columns: 1fr;
+          gap: 14px;
+        }
+        .tabs {
+          gap: 20px;
+        }
+        .tabs button {
+          font-size: 13px;
+        }
+      }
+      @media (max-width: 520px) {
+        header {
+          padding: 30px 20px;
+        }
+        .grid {
+          grid-template-columns: 1fr;
+          gap: 36px;
+        }
+        .tabs {
+          padding: 0 20px;
+          gap: 16px;
+        }
+        .tabs button {
+          font-size: 12px;
+          max-width: 125px;
+        }
+        .download {
+          width: 100%;
+        }
+        main {
+          padding: 28px 20px 48px;
+        }
+        .intro h2 {
+          font-size: 30px;
+        }
+        .preview {
+          padding: 12px;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation: none !important;
+          transition: none !important;
+        }
+      }
+      @media print {
+        .tabs,
+        .downloads,
+        details,
+        .links {
+          display: none;
+        }
+        .panel[hidden] {
+          display: block;
+        }
+        .grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .concept {
+          break-inside: avoid;
+        }
+        header {
+          padding: 20px;
+        }
+        .preview {
+          padding: 0;
+        }
+        .feedback {
+          break-before: page;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="eyebrow">Serenity Club of Clearwater · Internal review · October 17, 2026</div>
+      <h1>Clubhouse restoration.<br />Choose the next direction.</h1>
+      <p>
+        Compare the original concept and two sets of flyer drafts. Choose the ideas worth carrying
+        forward, then share feedback using each option’s ID.
+      </p>
+      <div class="downloads">
+        <a class="download" href="email_review/G02_Marketing_Directions_Review.pdf" download
+          >G02 review PDF <span>4.4 MB</span></a
+        ><a class="download" href="email_review/G01_First_Concepts_Review.pdf" download
+          >G01 review PDF <span>9.7 MB</span></a
+        ><a class="download" href="email_review/Original_Concept.png" download
+          >Original Concept PNG <span>3.2 MB</span></a
+        >
+      </div>
+      <p class="small">
+        Each PDF has a comparison page and six full-page options. Review drafts for discussion; the
+        final flyer will be developed after feedback.
+      </p>
+    </header>
+    <nav class="tabs" role="tablist" aria-label="Design sets">
+      <button id="tab-g02" role="tab" aria-selected="true" aria-controls="g02" data-tab="g02">
+        G02 · Marketing directions</button
+      ><button
+        id="tab-g01"
+        role="tab"
+        aria-selected="false"
+        aria-controls="g01"
+        tabindex="-1"
+        data-tab="g01"
+      >
+        G01 · First concepts</button
+      ><button
+        id="tab-original"
+        role="tab"
+        aria-selected="false"
+        aria-controls="original"
+        tabindex="-1"
+        data-tab="original"
+      >
+        Original Concept
+      </button>
+    </nav>
+    <main>
+      <section class="panel" id="g02" role="tabpanel" aria-labelledby="tab-g02">
+        <div class="intro">
+          <h2>G02 · Six directions</h2>
+          <p>
+            Photographs, clearer project detail, and six compositions. These drafts describe the
+            entire connected clubhouse: meeting rooms and coffee bar together. $100,000 is the
+            fundraising goal.
+          </p>
+        </div>
+        <div class="grid">
+          <article class="concept">
+            <a
+              class="preview"
+              href="g02_marketing_set/layouts/G02_A1_heritage_appeal_universal/G02_A1_heritage_appeal_universal.png"
+              target="_blank"
+              aria-label="Open G02-A1 full-size preview"
+              ><img
+                src="g02_marketing_set/layouts/G02_A1_heritage_appeal_universal/G02_A1_heritage_appeal_universal.png"
+                alt="Heritage Appeal flyer, G02-A1"
+                loading="lazy"
+                width="612"
+                height="792"
+            /></a>
+            <div class="caption">
+              <div class="eyebrow">G02-A1</div>
+              <h3>Heritage Appeal</h3>
+              <p>Whole clubhouse photograph, navy and gold, and a three-part project summary.</p>
+              <div class="links">
+                <a
+                  href="g02_marketing_set/layouts/G02_A1_heritage_appeal_universal/G02_A1_heritage_appeal_universal.png"
+                  target="_blank"
+                  >Full-size image ↗</a
+                ><a href="email_review/G02_Marketing_Directions_Review.pdf#page=2" target="_blank"
+                  >PDF page 2 ↗</a
+                >
+              </div>
+            </div>
+          </article>
+          <article class="concept">
+            <a
+              class="preview"
+              href="g02_marketing_set/layouts/G02_A2_a_home_worth_preserving_universal/G02_A2_a_home_worth_preserving_universal.png"
+              target="_blank"
+              aria-label="Open G02-A2 full-size preview"
+              ><img
+                src="g02_marketing_set/layouts/G02_A2_a_home_worth_preserving_universal/G02_A2_a_home_worth_preserving_universal.png"
+                alt="A Home Worth Preserving flyer, G02-A2"
+                loading="lazy"
+                width="612"
+                height="792"
+            /></a>
+            <div class="caption">
+              <div class="eyebrow">G02-A2</div>
+              <h3>A Home Worth Preserving</h3>
+              <p>The club sign and authentic coffee-bar entrance with a traditional appeal.</p>
+              <div class="links">
+                <a
+                  href="g02_marketing_set/layouts/G02_A2_a_home_worth_preserving_universal/G02_A2_a_home_worth_preserving_universal.png"
+                  target="_blank"
+                  >Full-size image ↗</a
+                ><a href="email_review/G02_Marketing_Directions_Review.pdf#page=3" target="_blank"
+                  >PDF page 3 ↗</a
+                >
+              </div>
+            </div>
+          </article>
+          <article class="concept">
+            <a
+              class="preview"
+              href="g02_marketing_set/layouts/G02_B1_protect_this_place_universal/G02_B1_protect_this_place_universal.png"
+              target="_blank"
+              aria-label="Open G02-B1 full-size preview"
+              ><img
+                src="g02_marketing_set/layouts/G02_B1_protect_this_place_universal/G02_B1_protect_this_place_universal.png"
+                alt="Protect This Place flyer, G02-B1"
+                loading="lazy"
+                width="612"
+                height="792"
+            /></a>
+            <div class="caption">
+              <div class="eyebrow">G02-B1</div>
+              <h3>Protect This Place</h3>
+              <p>Forest green, a whole-building photograph, and a circular fundraising goal.</p>
+              <div class="links">
+                <a
+                  href="g02_marketing_set/layouts/G02_B1_protect_this_place_universal/G02_B1_protect_this_place_universal.png"
+                  target="_blank"
+                  >Full-size image ↗</a
+                ><a href="email_review/G02_Marketing_Directions_Review.pdf#page=4" target="_blank"
+                  >PDF page 4 ↗</a
+                >
+              </div>
+            </div>
+          </article>
+          <article class="concept">
+            <a
+              class="preview"
+              href="g02_marketing_set/layouts/G02_B2_keep_serenity_strong_universal/G02_B2_keep_serenity_strong_universal.png"
+              target="_blank"
+              aria-label="Open G02-B2 full-size preview"
+              ><img
+                src="g02_marketing_set/layouts/G02_B2_keep_serenity_strong_universal/G02_B2_keep_serenity_strong_universal.png"
+                alt="Keep Serenity Strong flyer, G02-B2"
+                loading="lazy"
+                width="612"
+                height="792"
+            /></a>
+            <div class="caption">
+              <div class="eyebrow">G02-B2</div>
+              <h3>Keep Serenity Strong</h3>
+              <p>Bold type, forest and rust, and a direct community message.</p>
+              <div class="links">
+                <a
+                  href="g02_marketing_set/layouts/G02_B2_keep_serenity_strong_universal/G02_B2_keep_serenity_strong_universal.png"
+                  target="_blank"
+                  >Full-size image ↗</a
+                ><a href="email_review/G02_Marketing_Directions_Review.pdf#page=5" target="_blank"
+                  >PDF page 5 ↗</a
+                >
+              </div>
+            </div>
+          </article>
+          <article class="concept">
+            <a
+              class="preview"
+              href="g02_marketing_set/layouts/G02_C1_a_stronger_clubhouse_universal/G02_C1_a_stronger_clubhouse_universal.png"
+              target="_blank"
+              aria-label="Open G02-C1 full-size preview"
+              ><img
+                src="g02_marketing_set/layouts/G02_C1_a_stronger_clubhouse_universal/G02_C1_a_stronger_clubhouse_universal.png"
+                alt="A Stronger Clubhouse flyer, G02-C1"
+                loading="lazy"
+                width="612"
+                height="792"
+            /></a>
+            <div class="caption">
+              <div class="eyebrow">G02-C1</div>
+              <h3>A Stronger Clubhouse</h3>
+              <p>The club sign, connected building, and a navy-and-gold composition.</p>
+              <div class="links">
+                <a
+                  href="g02_marketing_set/layouts/G02_C1_a_stronger_clubhouse_universal/G02_C1_a_stronger_clubhouse_universal.png"
+                  target="_blank"
+                  >Full-size image ↗</a
+                ><a href="email_review/G02_Marketing_Directions_Review.pdf#page=6" target="_blank"
+                  >PDF page 6 ↗</a
+                >
+              </div>
+            </div>
+          </article>
+          <article class="concept">
+            <a
+              class="preview"
+              href="g02_marketing_set/layouts/G02_C2_this_place_matters_universal/G02_C2_this_place_matters_universal.png"
+              target="_blank"
+              aria-label="Open G02-C2 full-size preview"
+              ><img
+                src="g02_marketing_set/layouts/G02_C2_this_place_matters_universal/G02_C2_this_place_matters_universal.png"
+                alt="This Place Matters flyer, G02-C2"
+                loading="lazy"
+                width="612"
+                height="792"
+            /></a>
+            <div class="caption">
+              <div class="eyebrow">G02-C2</div>
+              <h3>This Place Matters</h3>
+              <p>Meeting-room and coffee-bar photographs with a bold headline.</p>
+              <div class="links">
+                <a
+                  href="g02_marketing_set/layouts/G02_C2_this_place_matters_universal/G02_C2_this_place_matters_universal.png"
+                  target="_blank"
+                  >Full-size image ↗</a
+                ><a href="email_review/G02_Marketing_Directions_Review.pdf#page=7" target="_blank"
+                  >PDF page 7 ↗</a
+                >
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+      <section class="panel" id="g01" role="tabpanel" aria-labelledby="tab-g01" hidden>
+        <div class="intro">
+          <h2>G01 · First concepts</h2>
+          <p>
+            The earlier directions are retained for comparison. Their broad work descriptions
+            predate the fuller contractor scope incorporated into G02.
+          </p>
+        </div>
+        <div class="grid">
+          <article class="concept">
+            <a
+              class="preview"
+              href="layouts/B01_clearwater_community_partner_universal/B01_clearwater_community_partner_universal.png"
+              target="_blank"
+              aria-label="Open B01 full-size preview"
+              ><img
+                src="layouts/B01_clearwater_community_partner_universal/B01_clearwater_community_partner_universal.png"
+                alt="Clearwater Community Partner flyer, B01"
+                loading="lazy"
+                width="612"
+                height="792"
+            /></a>
+            <div class="caption">
+              <div class="eyebrow">B01</div>
+              <h3>Clearwater Community Partner</h3>
+              <p>A sign-led invitation with a local community emphasis.</p>
+              <div class="links">
+                <a
+                  href="layouts/B01_clearwater_community_partner_universal/B01_clearwater_community_partner_universal.png"
+                  target="_blank"
+                  >Full-size image ↗</a
+                ><a href="email_review/G01_First_Concepts_Review.pdf#page=2" target="_blank"
+                  >PDF page 2 ↗</a
+                >
+              </div>
+            </div>
+          </article>
+          <article class="concept">
+            <a
+              class="preview"
+              href="layouts/B02_restore_our_clubhouse_universal/B02_restore_our_clubhouse_universal.png"
+              target="_blank"
+              aria-label="Open B02 full-size preview"
+              ><img
+                src="layouts/B02_restore_our_clubhouse_universal/B02_restore_our_clubhouse_universal.png"
+                alt="Restore Our Clubhouse flyer, B02"
+                loading="lazy"
+                width="612"
+                height="792"
+            /></a>
+            <div class="caption">
+              <div class="eyebrow">B02</div>
+              <h3>Restore Our Clubhouse</h3>
+              <p>The connected clubhouse and an outline of the work.</p>
+              <div class="links">
+                <a
+                  href="layouts/B02_restore_our_clubhouse_universal/B02_restore_our_clubhouse_universal.png"
+                  target="_blank"
+                  >Full-size image ↗</a
+                ><a href="email_review/G01_First_Concepts_Review.pdf#page=3" target="_blank"
+                  >PDF page 3 ↗</a
+                >
+              </div>
+            </div>
+          </article>
+          <article class="concept">
+            <a
+              class="preview"
+              href="layouts/B03_personal_invitation_universal/B03_personal_invitation_universal.png"
+              target="_blank"
+              aria-label="Open B03 full-size preview"
+              ><img
+                src="layouts/B03_personal_invitation_universal/B03_personal_invitation_universal.png"
+                alt="Personal Invitation flyer, B03"
+                loading="lazy"
+                width="612"
+                height="792"
+            /></a>
+            <div class="caption">
+              <div class="eyebrow">B03</div>
+              <h3>Personal Invitation</h3>
+              <p>A letter-style appeal with a quieter presentation.</p>
+              <div class="links">
+                <a
+                  href="layouts/B03_personal_invitation_universal/B03_personal_invitation_universal.png"
+                  target="_blank"
+                  >Full-size image ↗</a
+                ><a href="email_review/G01_First_Concepts_Review.pdf#page=4" target="_blank"
+                  >PDF page 4 ↗</a
+                >
+              </div>
+            </div>
+          </article>
+          <article class="concept">
+            <a
+              class="preview"
+              href="layouts/P01_recovery_happens_here_universal/P01_recovery_happens_here_universal.png"
+              target="_blank"
+              aria-label="Open P01 full-size preview"
+              ><img
+                src="layouts/P01_recovery_happens_here_universal/P01_recovery_happens_here_universal.png"
+                alt="Recovery Happens Here flyer, P01"
+                loading="lazy"
+                width="612"
+                height="792"
+            /></a>
+            <div class="caption">
+              <div class="eyebrow">P01</div>
+              <h3>Recovery Happens Here</h3>
+              <p>Coastal illustration and a warm community message.</p>
+              <div class="links">
+                <a
+                  href="layouts/P01_recovery_happens_here_universal/P01_recovery_happens_here_universal.png"
+                  target="_blank"
+                  >Full-size image ↗</a
+                ><a href="email_review/G01_First_Concepts_Review.pdf#page=5" target="_blank"
+                  >PDF page 5 ↗</a
+                >
+              </div>
+            </div>
+          </article>
+          <article class="concept">
+            <a
+              class="preview"
+              href="layouts/P02_coffee_and_community_universal/P02_coffee_and_community_universal.png"
+              target="_blank"
+              aria-label="Open P02 full-size preview"
+              ><img
+                src="layouts/P02_coffee_and_community_universal/P02_coffee_and_community_universal.png"
+                alt="Coffee and Community flyer, P02"
+                loading="lazy"
+                width="612"
+                height="792"
+            /></a>
+            <div class="caption">
+              <div class="eyebrow">P02</div>
+              <h3>Coffee and Community</h3>
+              <p>Coffee imagery with a welcoming, informal tone.</p>
+              <div class="links">
+                <a
+                  href="layouts/P02_coffee_and_community_universal/P02_coffee_and_community_universal.png"
+                  target="_blank"
+                  >Full-size image ↗</a
+                ><a href="email_review/G01_First_Concepts_Review.pdf#page=6" target="_blank"
+                  >PDF page 6 ↗</a
+                >
+              </div>
+            </div>
+          </article>
+          <article class="concept">
+            <a
+              class="preview"
+              href="layouts/P03_keep_a_good_place_going_universal/P03_keep_a_good_place_going_universal.png"
+              target="_blank"
+              aria-label="Open P03 full-size preview"
+              ><img
+                src="layouts/P03_keep_a_good_place_going_universal/P03_keep_a_good_place_going_universal.png"
+                alt="Keep a Good Place Going flyer, P03"
+                loading="lazy"
+                width="612"
+                height="792"
+            /></a>
+            <div class="caption">
+              <div class="eyebrow">P03</div>
+              <h3>Keep a Good Place Going</h3>
+              <p>Bold type with a restrained, low-ink layout.</p>
+              <div class="links">
+                <a
+                  href="layouts/P03_keep_a_good_place_going_universal/P03_keep_a_good_place_going_universal.png"
+                  target="_blank"
+                  >Full-size image ↗</a
+                ><a href="email_review/G01_First_Concepts_Review.pdf#page=7" target="_blank"
+                  >PDF page 7 ↗</a
+                >
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+      <section class="panel" id="original" role="tabpanel" aria-labelledby="tab-original" hidden>
+        <div class="intro"><h2>Original Concept</h2></div>
+        <div class="original">
+          <a href="email_review/Original_Concept.png" target="_blank"
+            ><img
+              src="email_review/Original_Concept.png"
+              alt="Original supplied fundraiser flyer concept"
+              width="1024"
+              height="1536"
+          /></a>
+          <aside>
+            <h3>The starting reference</h3>
+            <p>
+              This image is preserved unchanged. Its coffee-bar-only language and reconstructed
+              building image are part of the original concept, rather than the current project
+              scope.
+            </p>
+            <p>
+              The fundraiser covers the entire connected clubhouse. G02 uses authentic photographs
+              and updated project descriptions.
+            </p>
+            <a href="email_review/Original_Concept.png" download>Download the original PNG</a>
+          </aside>
+        </div>
+      </section>
+      <section class="feedback">
+        <div>
+          <div class="eyebrow">For the next draft</div>
+          <h2>What should carry forward?</h2>
+          <p>
+            Refer to IDs such as G02-A2 or G01-P02. It’s fine to choose elements from several
+            options.
+          </p>
+          <a href="email_review/FEEDBACK_GUIDE.txt" download>Download feedback prompts</a>
+        </div>
+        <ol>
+          <li>Which option best represents the club, and why?</li>
+          <li>Which headline, photographs, colors, and type treatment should we keep?</li>
+          <li>What feels unclear, too busy, too plain, or off-brand?</li>
+          <li>Are any facts or project descriptions incorrect?</li>
+          <li>Which elements would you combine in the next set?</li>
+        </ol>
+      </section>
+      <details>
+        <summary>Project context and design references</summary>
+        <p>
+          The project includes exterior siding and trim, substrate and weather protection, soffit
+          and selective fascia work, preparation and painting. Additional repairs and trades are
+          addressed as needed. $100,000 is a fundraising goal, not a fixed total project price.
+        </p>
+        <p>
+          G02 draws on established fundraising layouts: a place-led photograph, a clear appeal, a
+          visible goal, a concise scope, and a distinct response area. No sample campaign artwork
+          was copied.
+        </p>
+        <ul>
+          <li>
+            <a
+              href="https://direct-axis.net/nonprofit-direct-mail-examples/"
+              target="_blank"
+              rel="noreferrer"
+              >Direct Axis: nonprofit direct mail examples</a
+            >
+          </li>
+          <li>
+            <a
+              href="https://trillioncreative.com/our-work/brooklyn-heights-synagogue-case-for-support-brochure-design/"
+              target="_blank"
+              rel="noreferrer"
+              >Trillion: New Heights building campaign</a
+            >
+          </li>
+          <li>
+            <a
+              href="https://trillioncreative.com/our-work/the-tech-interactive-end-of-year-appeal/"
+              target="_blank"
+              rel="noreferrer"
+              >Trillion: The Tech Interactive appeal</a
+            >
+          </li>
+          <li>
+            <a
+              href="https://www.marissadegroot.com/fundraising-appeals"
+              target="_blank"
+              rel="noreferrer"
+              >Marissa DeGroot: fundraising appeals</a
+            >
+          </li>
+        </ul>
+        <p>
+          G02 photographs show the actual club. The whole-building image is from the club website’s
+          historical Street View asset; its capture date is unverified. The coffee-bar entrance
+          photograph was contributed to Google Maps by Corey Scott Hill in October 2025. The
+          meeting-room contributor is not yet verified. G01 includes generated coastal and coffee
+          illustrations; its building photographs are authentic.
+        </p>
+      </details>
+    </main>
+    <footer>
+      Unlisted review link · Search indexing disabled · Feedback drafts · Serenity Club of
+      Clearwater
+    </footer>
+    <script>
+      const buttons = [...document.querySelectorAll('[role="tab"]')]
+      function select(id, focus = false) {
+        if (!buttons.some((b) => b.dataset.tab === id)) id = 'g02'
+        buttons.forEach((b) => {
+          const active = b.dataset.tab === id
+          b.setAttribute('aria-selected', String(active))
+          b.tabIndex = active ? 0 : -1
+          if (active && focus) b.focus()
+        })
+        document.querySelectorAll('.panel').forEach((p) => (p.hidden = p.id !== id))
+        history.replaceState(null, '', '#' + id)
+      }
+      buttons.forEach((b, i) => {
+        b.addEventListener('click', () => select(b.dataset.tab))
+        b.addEventListener('keydown', (e) => {
+          let n
+          if (e.key === 'ArrowRight') n = (i + 1) % buttons.length
+          if (e.key === 'ArrowLeft') n = (i + buttons.length - 1) % buttons.length
+          if (e.key === 'Home') n = 0
+          if (e.key === 'End') n = buttons.length - 1
+          if (n !== undefined) {
+            e.preventDefault()
+            select(buttons[n].dataset.tab, true)
+          }
+        })
+      })
+      select(location.hash.slice(1) || 'g02')
+    </script>
+  </body>
+</html>

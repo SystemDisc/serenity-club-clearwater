@@ -67,6 +67,23 @@ const nextConfig: NextConfig = {
     return webpackConfig
   },
   reactStrictMode: true,
+  // Serve the internal review gallery as plain HTML, outside the app layouts.
+  async rewrites() {
+    return [
+      {
+        source: '/internal/fundraiser-review',
+        destination: '/internal/fundraiser-review/index.html',
+      },
+    ]
+  },
+  async headers() {
+    return [
+      {
+        source: '/internal/fundraiser-review/:path*',
+        headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow, nosnippet' }],
+      },
+    ]
+  },
   redirects,
   turbopack: {
     root: path.resolve(dirname),
