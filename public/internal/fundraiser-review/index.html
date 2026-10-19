@@ -140,10 +140,33 @@
         color: var(--muted);
         margin: 0;
       }
+      .review-status {
+        margin: 24px 0 30px;
+        padding: 16px 0;
+        border-top: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+        font-size: 15px;
+        color: var(--muted);
+      }
+      .review-status p {
+        margin: 0 0 8px;
+      }
+      .review-status p:last-child {
+        margin-bottom: 0;
+      }
+      .review-status strong {
+        color: var(--ink);
+      }
+      .format-label {
+        margin: 38px 0 18px;
+      }
       .grid {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 46px 28px;
+      }
+      .grid.business-options {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
       .preview {
         display: block;
@@ -181,6 +204,7 @@
       }
       .panel {
         animation: enter 0.2s ease-out;
+        scroll-margin-top: 88px;
       }
       .panel[hidden] {
         display: none;
@@ -277,6 +301,9 @@
         }
       }
       @media (max-width: 520px) {
+        .grid.business-options {
+          grid-template-columns: 1fr;
+        }
         header {
           padding: 30px 20px;
         }
@@ -354,13 +381,21 @@
   </head>
   <body>
     <header>
-      <div class="eyebrow">Serenity Club of Clearwater · Internal review · October 17, 2026</div>
+      <div class="eyebrow">
+        Serenity Club of Clearwater · Internal review · Updated October 18, 2026
+      </div>
       <h1>Clubhouse restoration.<br />Choose the next direction.</h1>
       <p>
-        Compare the original concept and three sets of flyer drafts. Choose the ideas worth carrying
+        Compare the original concept and four sets of flyer drafts. Choose the ideas worth carrying
         forward, then share feedback using each option’s ID.
       </p>
       <div class="downloads">
+        <a
+          class="download"
+          href="g04_review_drafts/review/G04_Serenity_Fundraiser_Labeled_Email_Review_2026-10-19.pdf"
+          download
+          >G04 email review PDF <span>3.2 MB</span></a
+        >
         <a class="download" href="email_review/G03_Illustrated_Directions_Review.pdf" download
           >G03 review PDF <span>10.8 MB</span></a
         ><a class="download" href="email_review/G02_Marketing_Directions_Review.pdf" download
@@ -372,12 +407,22 @@
         >
       </div>
       <p class="small">
-        Each PDF has a comparison page and six full-page options. Review drafts for discussion; the
-        final flyer will be developed after feedback.
+        G04 has five labeled review pages. G01–G03 each include a comparison page and six full-page
+        options. All sets are drafts for feedback; none are approved print files.
       </p>
     </header>
     <nav class="tabs" role="tablist" aria-label="Design sets">
-      <button id="tab-g03" role="tab" aria-selected="true" aria-controls="g03" data-tab="g03">
+      <button id="tab-g04" role="tab" aria-selected="true" aria-controls="g04" data-tab="g04">
+        G04 · Stakeholder review
+      </button>
+      <button
+        id="tab-g03"
+        role="tab"
+        aria-selected="false"
+        tabindex="-1"
+        aria-controls="g03"
+        data-tab="g03"
+      >
         G03 · Illustrated</button
       ><button
         id="tab-g02"
@@ -409,7 +454,195 @@
       </button>
     </nav>
     <main>
-      <section class="panel" id="g03" role="tabpanel" aria-labelledby="tab-g03">
+      <section class="panel" id="g04" role="tabpanel" aria-labelledby="tab-g04">
+        <div class="intro">
+          <h2>G04 · Stakeholder review</h2>
+          <p>
+            Five drafts for the entire connected clubhouse—meeting rooms plus coffee bar—with a
+            $100,000 fundraising goal. Please compare both business headline directions and the
+            three public formats.
+          </p>
+        </div>
+        <div class="links">
+          <a
+            href="g04_review_drafts/review/G04_Serenity_Fundraiser_Labeled_Review_2026-10-19.pdf"
+            download
+            >Full-resolution labeled review PDF · 22.5 MB</a
+          ><a href="g04_review_drafts/previews/G04_labeled_review_contact_sheet.png" target="_blank"
+            >Five-option preview sheet ↗</a
+          >
+        </div>
+        <aside class="review-status" aria-label="G04 review status">
+          <p><strong>Review drafts for stakeholder feedback. Not approved print files.</strong></p>
+          <p>
+            Reproduction rights for the current Google Street View clubhouse photo still need
+            verification, or a club-owned replacement, before final public distribution or printing.
+            Physical print and mail proofs are also pending.
+          </p>
+        </aside>
+        <div class="eyebrow format-label">Compare the two business headlines · Letter format</div>
+        <div class="grid business-options">
+          <article class="concept">
+            <a
+              class="preview"
+              href="g04_review_drafts/previews/G04_B04A_REVIEW.png"
+              target="_blank"
+              aria-label="Open G04 B04A labeled review preview"
+              ><img
+                src="g04_review_drafts/previews/G04_B04A_REVIEW.png"
+                alt="G04 B04A — Business option 1 — review draft"
+                loading="eager"
+                width="1224"
+                height="1640"
+            /></a>
+            <div class="caption">
+              <div class="eyebrow">B04A · Business option 1 · Review draft</div>
+              <h3>Restore Our Clubhouse.</h3>
+              <p>
+                <strong>Letter · 8.5 × 11 in</strong><br />A direct headline for the full connected
+                clubhouse. Current preferred starting point for clarity.
+              </p>
+              <div class="links">
+                <a href="g04_review_drafts/previews/G04_B04A_REVIEW.png" target="_blank"
+                  >Labeled review image ↗</a
+                ><a
+                  href="g04_review_drafts/review/G04_Serenity_Fundraiser_Labeled_Email_Review_2026-10-19.pdf#page=1"
+                  target="_blank"
+                  >Review PDF · page 1 ↗</a
+                >
+              </div>
+            </div>
+          </article>
+          <article class="concept">
+            <a
+              class="preview"
+              href="g04_review_drafts/previews/G04_B04B_REVIEW.png"
+              target="_blank"
+              aria-label="Open G04 B04B labeled review preview"
+              ><img
+                src="g04_review_drafts/previews/G04_B04B_REVIEW.png"
+                alt="G04 B04B — Business option 2 — review draft"
+                loading="eager"
+                width="1224"
+                height="1640"
+            /></a>
+            <div class="caption">
+              <div class="eyebrow">B04B · Business option 2 · Review draft</div>
+              <h3>Restore Our Coffee Bar. Renew Our Whole Clubhouse.</h3>
+              <p>
+                <strong>Letter · 8.5 × 11 in</strong><br />A coffee-bar lead followed by the
+                whole-clubhouse message. Compare this headline with B04A.
+              </p>
+              <div class="links">
+                <a href="g04_review_drafts/previews/G04_B04B_REVIEW.png" target="_blank"
+                  >Labeled review image ↗</a
+                ><a
+                  href="g04_review_drafts/review/G04_Serenity_Fundraiser_Labeled_Email_Review_2026-10-19.pdf#page=2"
+                  target="_blank"
+                  >Review PDF · page 2 ↗</a
+                >
+              </div>
+            </div>
+          </article>
+        </div>
+        <div class="eyebrow format-label">Public formats · Same whole-clubhouse campaign</div>
+        <div class="grid">
+          <article class="concept">
+            <a
+              class="preview"
+              href="g04_review_drafts/previews/G04_P04_REVIEW.png"
+              target="_blank"
+              aria-label="Open G04 P04 labeled review preview"
+              ><img
+                src="g04_review_drafts/previews/G04_P04_REVIEW.png"
+                alt="G04 P04 — Public flyer — review draft"
+                loading="lazy"
+                width="1224"
+                height="1640"
+            /></a>
+            <div class="caption">
+              <div class="eyebrow">P04 · Public flyer · Review draft</div>
+              <h3>Restore Our Clubhouse.</h3>
+              <p>
+                <strong>Letter · 8.5 × 11 in</strong><br />The whole-clubhouse appeal for a general
+                audience.
+              </p>
+              <div class="links">
+                <a href="g04_review_drafts/previews/G04_P04_REVIEW.png" target="_blank"
+                  >Labeled review image ↗</a
+                ><a
+                  href="g04_review_drafts/review/G04_Serenity_Fundraiser_Labeled_Email_Review_2026-10-19.pdf#page=3"
+                  target="_blank"
+                  >Review PDF · page 3 ↗</a
+                >
+              </div>
+            </div>
+          </article>
+          <article class="concept">
+            <a
+              class="preview"
+              href="g04_review_drafts/previews/G04_P04-H_REVIEW.png"
+              target="_blank"
+              aria-label="Open G04 P04-H labeled review preview"
+              ><img
+                src="g04_review_drafts/previews/G04_P04-H_REVIEW.png"
+                alt="G04 P04-H — Handout — review draft"
+                loading="lazy"
+                width="792"
+                height="1280"
+            /></a>
+            <div class="caption">
+              <div class="eyebrow">P04-H · Handout · Review draft</div>
+              <h3>A smaller handout</h3>
+              <p>
+                <strong>5.5 × 8.5 in</strong><br />A compact public handout with online and
+                mailed-check donation details.
+              </p>
+              <div class="links">
+                <a href="g04_review_drafts/previews/G04_P04-H_REVIEW.png" target="_blank"
+                  >Labeled review image ↗</a
+                ><a
+                  href="g04_review_drafts/review/G04_Serenity_Fundraiser_Labeled_Email_Review_2026-10-19.pdf#page=4"
+                  target="_blank"
+                  >Review PDF · page 4 ↗</a
+                >
+              </div>
+            </div>
+          </article>
+          <article class="concept">
+            <a
+              class="preview"
+              href="g04_review_drafts/previews/G04_P04-B_REVIEW.png"
+              target="_blank"
+              aria-label="Open G04 P04-B labeled review preview"
+              ><img
+                src="g04_review_drafts/previews/G04_P04-B_REVIEW.png"
+                alt="G04 P04-B — Bulletin board — review draft"
+                loading="lazy"
+                width="1224"
+                height="1640"
+            /></a>
+            <div class="caption">
+              <div class="eyebrow">P04-B · Bulletin board · Review draft</div>
+              <h3>A display for the board</h3>
+              <p>
+                <strong>Letter · 8.5 × 11 in</strong><br />Larger donation instructions and QR code
+                for viewing from a greater distance.
+              </p>
+              <div class="links">
+                <a href="g04_review_drafts/previews/G04_P04-B_REVIEW.png" target="_blank"
+                  >Labeled review image ↗</a
+                ><a
+                  href="g04_review_drafts/review/G04_Serenity_Fundraiser_Labeled_Email_Review_2026-10-19.pdf#page=5"
+                  target="_blank"
+                  >Review PDF · page 5 ↗</a
+                >
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+      <section class="panel" id="g03" role="tabpanel" aria-labelledby="tab-g03" hidden>
         <div class="intro">
           <h2>G03 · Illustrated directions</h2>
           <p>
@@ -983,8 +1216,8 @@
           <div class="eyebrow">For the next draft</div>
           <h2>What should carry forward?</h2>
           <p>
-            Refer to IDs such as G03-A2 or G01-P02. It’s fine to choose elements from several
-            options.
+            For G04, use B04A, B04B, P04, P04-H or P04-B. Which business headline is clearer? It’s
+            fine to carry forward elements from earlier rounds too.
           </p>
           <a href="email_review/FEEDBACK_GUIDE.txt" download>Download feedback prompts</a>
         </div>
@@ -1060,7 +1293,7 @@
     <script>
       const buttons = [...document.querySelectorAll('[role="tab"]')]
       function select(id, focus = false) {
-        if (!buttons.some((b) => b.dataset.tab === id)) id = 'g03'
+        if (!buttons.some((b) => b.dataset.tab === id)) id = 'g04'
         buttons.forEach((b) => {
           const active = b.dataset.tab === id
           b.setAttribute('aria-selected', String(active))
@@ -1084,7 +1317,7 @@
           }
         })
       })
-      select(location.hash.slice(1) || 'g03')
+      select(location.hash.slice(1) || 'g04')
     </script>
   </body>
 </html>
